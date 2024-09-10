@@ -260,7 +260,7 @@ class ItemInstallationController extends Controller
         if ($request->ajax()) {
 
             $term = trim($request->term);
-            $posts = DB::table('productive')->where('product_type','kham')->select('id','name as text')
+            $posts = DB::table('productive')/*->where('product_type','kham')*/->select('id','name as text')
                 ->where('name', 'LIKE',  '%' . $term. '%')
                 ->orderBy('name', 'asc')->simplePaginate(3);
 

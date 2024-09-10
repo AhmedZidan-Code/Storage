@@ -1,4 +1,4 @@
-<form id="form" enctype="multipart/form-data" method="POST" action="{{route('sales.update',$row->id)}}">
+<form id="form" enctype="multipart/form-data" method="POST" action="{{ route('sales.update', $row->id) }}">
     @csrf
     @method('PUT')
     <div class="row my-4 g-4">
@@ -6,35 +6,33 @@
         <div class="d-flex flex-column mb-7 fv-row col-sm-3">
             <!--begin::Label-->
             <label for="sales_number" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                <span class="required mr-1">  رقم الطلب</span>
+                <span class="required mr-1"> رقم الطلب</span>
             </label>
             <!--end::Label-->
-            <input id="sales_number" disabled required type="text"
-                   class="form-control form-control-solid" name="sales_number"
-                   value="{{$row->sales_number}}"/>
+            <input id="sales_number" disabled required type="text" class="form-control form-control-solid"
+                name="sales_number" value="{{ $row->sales_number }}" />
         </div>
 
         <div class="d-flex flex-column mb-7 fv-row col-sm-3">
             <!--begin::Label-->
             <label for="sales_date" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                <span class="required mr-1">  تاريخ الطلب</span>
+                <span class="required mr-1"> تاريخ الطلب</span>
             </label>
             <!--end::Label-->
-            <input id="sales_date" required type="date" class="form-control form-control-solid"
-                   name="sales_date"
-                   value="{{$row->sales_date}}"/>
+            <input id="sales_date" required type="date" class="form-control form-control-solid" name="sales_date"
+                value="{{ $row->sales_date }}" />
         </div>
 
 
         <div class="d-flex flex-column mb-7 fv-row col-sm-3">
             <!--begin::Label-->
             <label for="pay_method" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                <span class="required mr-1">  طريقة الشراء </span>
+                <span class="required mr-1"> طريقة الشراء </span>
             </label>
             <select id='pay_method' name="pay_method" class="form-control">
                 <option selected disabled>اختر طريقة الشراء</option>
-                <option @if($row->pay_method=='cash') selected @endif value="cash">كاش</option>
-                <option @if($row->pay_method=='debit') selected @endif value="debit">اجل</option>
+                <option @if ($row->pay_method == 'cash') selected @endif value="cash">كاش</option>
+                <option @if ($row->pay_method == 'debit') selected @endif value="debit">اجل</option>
 
             </select>
         </div>
@@ -42,10 +40,10 @@
         <div class="d-flex flex-column mb-7 fv-row col-sm-3">
             <!--begin::Label-->
             <label for="storage_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                <span class="required mr-1">   المخزن</span>
+                <span class="required mr-1"> المخزن</span>
             </label>
             <select id='storage_id' name="storage_id" style='width: 200px;'>
-                <option value="{{$row->storage_id}}">{{$row->storage->title??''}}</option>
+                <option value="{{ $row->storage_id }}">{{ $row->storage->title ?? '' }}</option>
             </select>
         </div>
 
@@ -53,105 +51,121 @@
         <div class="d-flex flex-column mb-7 fv-row col-sm-3">
             <!--begin::Label-->
             <label for="client_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                <span class="required mr-1">   المورد</span>
+                <span class="required mr-1"> المورد</span>
             </label>
             <select id='client_id' name="client_id" style='width: 200px;'>
-                <option value="{{$row->client_id}}">{{$row->client->name??''}}</option>
+                <option value="{{ $row->client_id }}">{{ $row->client->name ?? '' }}</option>
             </select>
         </div>
 
         <div class="d-flex flex-column mb-7 fv-row col-sm-3">
             <!--begin::Label-->
             <label for="fatora_number" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                <span class="required mr-1">  رقم الفاتورة</span>
+                <span class="required mr-1"> رقم الفاتورة</span>
             </label>
             <!--end::Label-->
             <input id="fatora_number" required type="text" class="form-control form-control-solid"
-                   name="fatora_number"
-                   value="{{$row->fatora_number}}"/>
+                name="fatora_number" value="{{ $row->fatora_number }}" />
         </div>
 
 
         <div class="col-md-10">
-            <table id="table-details"
-                   class="table table-bordered dt-responsive nowrap table-striped align-middle"
-                   style="width:70% !important;">
+            <table id="table-details" class="table table-bordered dt-responsive nowrap table-striped align-middle"
+                style="width: 100%;">
                 <thead>
-                <tr>
-                    <th> المنتج</th>
-                    <th> كود المنتج</th>
-                    <th>الوحدة</th>
-                    <th> الكمية</th>
-                    <th>سعر البيع</th>
-                    <th> القيمة الاجمالية</th>
-                    <th>العمليات</th>
-                </tr>
+                    <tr>
+                        <th> المنتج</th>
+                        <th> كود المنتج</th>
+                        <th>الوحدة</th>
+                        <th> الكمية</th>
+                        <th>سعر البيع</th>
+                        <th>بونص</th>
+                        <th>نسبة الخصم</th>
+                        <th>رقم التشغيلة</th>
+                        <th> القيمة الاجمالية</th>
+                        <th>العمليات</th>
+                    </tr>
                 </thead>
                 <tbody id="details-container">
-                @foreach(\App\Models\SalesDetails::where('sales_id',$row->id)->get() as $key=>$pivot)
-                    <tr id="tr-{{$key}}">
-                        {{--                <th>1</th>--}}
-                        <th>
-                            <div class="d-flex flex-column mb-7 fv-row col-sm-2 ">
-                                <label for="productive_id-{{$key}}"
-                                       class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                                    <span class="required mr-1">  </span>
-                                </label>
-                                <select class="changeKhamId" data-id="{{$key}}" name="productive_id[]"
-                                        id='productive_id-{{$key}}'
-                                        style='width: 200px;'>
-                                    <option selected
-                                            value="{{$pivot->productive_id}}">{{$pivot->productive->name??''}}</option>
-                                </select>
-                            </div>
-                        </th>
-                        <th>
-                            <input type="text" value="{{$pivot->productive_code}}" disabled
-                                   id="productive_code-{{$key}}">
-                        </th>
-                        <th>
-                            <input type="text" value="{{$pivot->productive->unit->title??''}}" disabled
-                                   id="unit-{{$key}}">
+                    @foreach (\App\Models\SalesDetails::where('sales_id', $row->id)->get() as $key => $pivot)
+                        <tr id="tr-{{ $key }}">
+                            {{--                <th>1</th> --}}
+                            <th>
+                                <div class="d-flex flex-column mb-7 fv-row col-sm-2 " style="width: 100%;">
+                                    <label for="productive_id-{{ $key }}"
+                                        class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                                        <span class="required mr-1"> </span>
+                                    </label>
+                                    <select class="changeKhamId" data-id="{{ $key }}" name="productive_id[]"
+                                        id='productive_id-{{ $key }}' style="width: 100%;">
+                                        <option selected value="{{ $pivot->productive_id }}">
+                                            {{ $pivot->productive->name ?? '' }}</option>
+                                    </select>
+                                </div>
+                            </th>
+                            <th>
+                                <input type="text" value="{{ $pivot->productive_code }}" disabled
+                                    id="productive_code-{{ $key }}" style="width: 100%;">
+                            </th>
+                            <th>
+                                <input type="text" value="{{ $pivot->productive->unit->title ?? '' }}" disabled
+                                    id="unit-{{ $key }}" style="width: 100%;">
 
-                        </th>
-                        <th>
-                            <input data-id="{{$key}}" onchange="callTotal()" onkeyup="callTotal()" type="number"
-                                   value="{{$pivot->amount}}" min="1"
-                                   name="amount[]" id="amount-{{$key}}">
+                            </th>
+                            <th>
+                                <input data-id="{{ $key }}" onchange="callTotal()" onkeyup="callTotal()"
+                                    type="number" value="{{ $pivot->amount }}" min="1" name="amount[]"
+                                    id="amount-{{ $key }}" style="width: 100%;">
 
-                        </th>
-                        <th>
-                            <input data-id="{{$key}}" step=".1" onchange="callTotal()" onkeyup="callTotal()"
-                                   type="number" value="{{$pivot->productive_sale_price}}" min="1"
-                                   name="productive_sale_price[]" id="productive_sale_price-{{$key}}">
+                            </th>
+                            <th>
+                                <input data-id="{{ $key }}" step=".1" onchange="callTotal()"
+                                    onkeyup="callTotal()" type="number" value="{{ $pivot->productive_sale_price }}"
+                                    min="1" name="productive_sale_price[]"
+                                    id="productive_sale_price-{{ $key }}" style="width: 100%;">
 
-                        </th>
-                        <th>
-                            <input type="number" disabled value="{{$pivot->total}}" min="1" name="total[]"
-                                   id="total-{{$key}}">
+                            </th>
+                            <th style="padding: 8px;">
+                                <input data-id="{{ $key }}" step=".1" type="number"
+                                    value="{{ $pivot->bouns }}" min="1" name="bouns[]"
+                                    id="bouns-{{ $key }}" style="width: 100px; text-align: center;">
+                            </th>
+                            <th style="padding: 8px;">
+                                <input data-id="{{ $key }}" step=".1" type="number"
+                                    value="{{ $pivot->discount_percentage }}" min="1"
+                                    name="discount_percentage[]" id="discount_percentage-{{ $key }}"
+                                    style="width: 100px; text-align: center;">
+                            </th>
+                            <th style="padding: 8px;">
+                                <input data-id="{{ $key }}" step=".1" type="number"
+                                    value="{{ $pivot->batch_number }}" min="1" name="batch_number[]"
+                                    id="batch_number-{{ $key }}" style="width: 100px; text-align: center;">
+                            </th>
+                            <th>
+                                <input type="number" disabled value="{{ $pivot->total }}" min="1"
+                                    name="total[]" id="total-{{ $key }}" style="width: 100%;">
 
-                        </th>
-                        <th>
-                            <button class="btn rounded-pill btn-danger waves-effect waves-light delete-sup"
-                                    data-id="{{$key}}">
-                    <span class="svg-icon svg-icon-3">
-                                <span class="svg-icon svg-icon-3">
-                                    <i class="fa fa-trash"></i>
-                                </span>
-                            </span>
-                            </button>
-                        </th>
-                    </tr>
-
-                @endforeach
+                            </th>
+                            <th>
+                                <button class="btn rounded-pill btn-danger waves-effect waves-light delete-sup"
+                                    data-id="{{ $key }}">
+                                    <span class="svg-icon svg-icon-3">
+                                        <span class="svg-icon svg-icon-3">
+                                            <i class="fa fa-trash"></i>
+                                        </span>
+                                    </span>
+                                </button>
+                            </th>
+                        </tr>
+                    @endforeach
                 </tbody>
                 <tfoot>
-                <tr>
-                    <th colspan="4" style="text-align: center; background-color: yellow">الاجمالي</th>
-                    <th colspan="3" id="total_productive_sale_price"
-                        style="text-align: center; background-color: #6c757d;color: white">{{$row->total}}
-                    </th>
-                </tr>
+                    <tr>
+                        <th colspan="4" style="text-align: center; background-color: yellow">الاجمالي</th>
+                        <th colspan="3" id="total_productive_sale_price"
+                            style="text-align: center; background-color: #6c757d;color: white">{{ $row->total }}
+                        </th>
+                    </tr>
                 </tfoot>
             </table>
         </div>
@@ -170,4 +184,3 @@
     </button>
 
 </form>
-

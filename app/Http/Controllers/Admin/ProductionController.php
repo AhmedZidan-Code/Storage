@@ -147,7 +147,6 @@ class ProductionController extends Controller
         foreach (ProductionDetails::where('production_id',$production->id)->get() as $pivot){
             $mainProductive=Productive::find($pivot->productive_id);
              $itemInstallation=ItemInstallation::where('productive_id',$pivot->productive_id)->first();
-
                 foreach(ItemInstallationDetails::where('item_installation_id',$itemInstallation->id)->get() as $rowDetails ){
                     ProductionMaterial::create([
                         'process'=>'production',
