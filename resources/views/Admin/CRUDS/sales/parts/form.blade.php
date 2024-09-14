@@ -150,10 +150,16 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="4" style="text-align: center; background-color: yellow">الاجمالي</th>
+                        <th colspan="3" style="text-align: center; background-color: yellow">الاجمالي</th>
                         <th colspan="3" id="total_productive_sale_price"
                             style="text-align: center; background-color: #6c757d;color: white">1
                         </th>
+                        <th colspan="2" style="text-align: center; background-color: aqua">نسبة الخصم الكلية</th>
+                        <th colspan="2" style="text-align: center; background-color: gray">
+                            <input type="number" value="0" min="0" max="99"
+                                name="total_discount" style="width: 100%;"> <!-- Adjusted width -->
+                        </th>
+
                     </tr>
                 </tfoot>
             </table>

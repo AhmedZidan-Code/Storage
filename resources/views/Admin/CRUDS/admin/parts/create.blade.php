@@ -12,12 +12,19 @@
 
         <div class="d-flex flex-column mb-7 fv-row col-sm-6">
             <!--begin::Label-->
-            <label class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                <span class="required mr-1">الاسم</span>
+            <label for="employee_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                <span class="required mr-1"> الموظف</span>
             </label>
-            <!--end::Label-->
-            <input required type="text" class="form-control form-control-solid" placeholder="اسم المسؤل" name="name" value=""/>
+
+            <select id="employee_id" name="employee_id" class="form-control">
+                <option selected disabled>اختر الموظف</option>
+                @foreach ($employees as $employee)
+                    <option value="{{ $employee->id }}"> {{ $employee->name }}</option>
+                @endforeach
+            </select>
+
         </div>
+
 
         <!--end::Input group-->
         <!--begin::Input group-->

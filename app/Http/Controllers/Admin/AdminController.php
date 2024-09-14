@@ -3,13 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Traits\LogActivityTrait;
 use App\Http\Traits\Upload_Files;
 use App\Models\Admin;
-use App\Models\AdminRole;
-use App\Models\AdminService;
-use App\Models\Category;
-use App\Models\Service;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
@@ -19,27 +15,24 @@ class AdminController extends Controller
 {
     use Upload_Files;
 
-
-
-
     public function index(Request $request)
     {
 
         if ($request->ajax()) {
-            $admins = Admin::query();
+            $admins = Admin::query()->with('employee');
             return Datatables::of($admins)
                 ->addColumn('action', function ($row) {
 
-                    $edit='';
-                    $delete='';
+                    $edit = '';
+                    $delete = '';
 
 //                    if(!auth()->user()->can('تعديل مستخدمين'))
 //                        $edit='hidden';
 //                    if(!auth()->user()->can('حذف مستخدمين'))
 //                        $delete='hidden';
 
-                        return '
-                            <button '.$edit.'   class="editBtn btn rounded-pill btn-primary waves-effect waves-light"
+                    return '
+                            <button ' . $edit . '   class="editBtn btn rounded-pill btn-primary waves-effect waves-light"
                                     data-id="' . $row->id . '"
                             <span class="svg-icon svg-icon-3">
                                 <span class="svg-icon svg-icon-3">
@@ -47,7 +40,7 @@ class AdminController extends Controller
                                 </span>
                             </span>
                             </button>
-                            <button '.$delete.'  class="btn rounded-pill btn-danger waves-effect waves-light delete"
+                            <button ' . $delete . '  class="btn rounded-pill btn-danger waves-effect waves-light delete"
                                     data-id="' . $row->id . '">
                             <span class="svg-icon svg-icon-3">
                                 <span class="svg-icon svg-icon-3">
@@ -57,29 +50,29 @@ class AdminController extends Controller
                             </button>
                        ';
 
-
-
                 })
-
+                ->editColumn('name', function ($admin) {
+                    return $admin->employee?->name;
+                })
 
                 ->editColumn('image', function ($admin) {
                     return ' <img height="60px" src="' . get_file($admin->image) . '" class=" w-60 rounded"
                              onclick="window.open(this.src)">';
                 })
 
-
                 ->editColumn('is_active', function ($row) {
                     $active = '';
-                    $operation='';
+                    $operation = '';
 //                    if (!checkPermission(39))
 //                        $operation='disabled';
-                    if ($row->is_active == 1)
+                    if ($row->is_active == 1) {
                         $active = 'checked';
+                    }
+
                     return '<div class="form-check form-switch">
-  <input ' .$operation. '  class="form-check-input activeBtn" data-id="' . $row->id . ' " type="checkbox" role="switch" id="flexSwitchCheckChecked" ' . $active . '  >
+  <input ' . $operation . '  class="form-check-input activeBtn" data-id="' . $row->id . ' " type="checkbox" role="switch" id="flexSwitchCheckChecked" ' . $active . '  >
 </div>';
                 })
-
 
                 ->editColumn('created_at', function ($admin) {
                     return date('Y/m/d', strtotime($admin->created_at));
@@ -87,161 +80,143 @@ class AdminController extends Controller
                 ->escapeColumns([])
                 ->make(true);
 
-
-        }
-        else{
+        } else {
 
         }
         return view('Admin.CRUDS.admin.index');
     }
 
-
     public function create()
     {
-        $roles=Role::get();
+        $roles = Role::get();
+        $employees = Employee::get();
 
-        return view('Admin.CRUDS.admin.parts.create',compact('roles'));
+        return view('Admin.CRUDS.admin.parts.create', compact('roles', 'employees'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:admins,email' ,
+            'employee_id' => 'required|exists:employees,id',
+            'email' => 'required|email|unique:admins,email',
             'password' => 'required',
 //             'business_name'=>'required',
-            'image'=>'required|mimes:jpeg,jpg,png,gif,svg,webp,avif',
-            'is_active'=>'required',
+            'image' => 'required|mimes:jpeg,jpg,png,gif,svg,webp,avif',
+            'is_active' => 'required',
 
         ]);
-        $data["image"] =  $this->uploadFiles('admins',$request->file('image'),null );
+        $data["image"] = $this->uploadFiles('admins', $request->file('image'), null);
 
-        $data['password']=bcrypt($request->password);
+        $data['password'] = bcrypt($request->password);
 
 //        $data['image'] = $this->createImageFromTextManual('admins' , $request->name ,256 , '#000', '#fff');
 
+        $admin = Admin::create($data);
 
-        $admin=Admin::create($data);
-
-        DB::table('model_has_roles')->where('model_id',$admin->id)->delete();
+        DB::table('model_has_roles')->where('model_id', $admin->id)->delete();
 
         $admin->assignRole($request->input('roles'));
-
-
 
         return response()->json(
             [
                 'code' => 200,
-                'message' => 'تمت العملية بنجاح!'
+                'message' => 'تمت العملية بنجاح!',
             ]);
     }
-
 
     public function show(Admin $admin)
     {
 
-        $html= view('Admin.CRUDS.admin.parts.show', compact('admin'))->render();
+        $html = view('Admin.CRUDS.admin.parts.show', compact('admin'))->render();
         return response()->json([
-           'code'=>200,
-           'html'=>$html,
+            'code' => 200,
+            'html' => $html,
         ]);
 
         //
     }
 
-
     public function edit(Admin $admin)
     {
 
-        $roles=Role::get();
+        $roles = Role::get();
+        $employees = Employee::get();
 
-        $adminRoles = DB::table("model_has_roles")->where("model_has_roles.model_id",$admin->id)
+        $adminRoles = DB::table("model_has_roles")->where("model_has_roles.model_id", $admin->id)
             ->get();
 
+        $admin->load('employee');
 
-
-        return view('Admin.CRUDS.admin.parts.edit', compact('admin','roles','adminRoles'));
+        return view('Admin.CRUDS.admin.parts.edit', compact('admin', 'roles', 'adminRoles', 'employees'));
 
     }
 
     public function update(Request $request, Admin $admin)
     {
         $data = $request->validate([
-            'name' => 'required',
+            'employee_id' => 'required|exists:employees,id',
             'email' => 'required|email|unique:admins,email,' . $admin->id,
             'password' => 'nullable',
 //            'business_name'=>'required',
-            'image'=>'nullable|mimes:jpeg,jpg,png,gif,svg,webp,avif',
-            'is_active'=>'nullable',
-
+            'image' => 'nullable|mimes:jpeg,jpg,png,gif,svg,webp,avif',
+            'is_active' => 'nullable',
 
         ]);
         if ($request->password) {
 
-            $data['password']=bcrypt($request->password);
+            $data['password'] = bcrypt($request->password);
 
         } else {
 
-            $data['password']=$admin->password;
-}
-        if ($request->image){
-            $data["image"] =  $this->uploadFiles('admins',$request->file('image'),null );
+            $data['password'] = $admin->password;
+        }
+        if ($request->image) {
+            $data["image"] = $this->uploadFiles('admins', $request->file('image'), null);
 
         }
-        $old=$admin;
+        $old = $admin;
         $admin->update($data);
 
-
-
-        DB::table('model_has_roles')->where('model_id',$admin->id)->delete();
-
+        DB::table('model_has_roles')->where('model_id', $admin->id)->delete();
 
         $admin->assignRole($request->input('roles'));
 
-
-
-        $html= view('Admin.CRUDS.admin.parts.header')->render();
-
-
+        $html = view('Admin.CRUDS.admin.parts.header')->render();
 
         return response()->json(
             [
                 'code' => 200,
                 'message' => 'تمت العملية بنجاح!',
-                'html'=>$html,
-                'name'=>$admin->name,
-                'logo'=>get_file($admin->image),
-                'business_name'=>$admin->business_name,
+                'html' => $html,
+                'name' => $admin->name,
+                'logo' => get_file($admin->image),
+                'business_name' => $admin->business_name,
             ]);
     }
 
-
     public function destroy(Admin $admin)
     {
-        $old=$admin;
+        $old = $admin;
 
         $admin->delete();
 
         return response()->json(
             [
                 'code' => 200,
-                'message' => 'تمت العملية بنجاح!'
+                'message' => 'تمت العملية بنجاح!',
             ]);
-    }//end fun
-
+    } //end fun
 
     public function activate(Request $request)
     {
 
         $admin = Admin::findOrFail($request->id);
-        $old=$admin;
-        if ($admin->is_active == '1'){
-
+        $old = $admin;
+        if ($admin->is_active == '1') {
 
             $admin->is_active = '0';
             $admin->save();
-        }
-        else {
+        } else {
 
             $admin->is_active = '1';
             $admin->save();
@@ -249,6 +224,5 @@ class AdminController extends Controller
 
         return response()->json(['status' => true]);
     }
-
 
 }

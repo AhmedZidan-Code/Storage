@@ -163,5 +163,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
 
     Route::resource('salesBills', \App\Http\Controllers\Admin\Reports\Bills\salesBillController::class);//setting
+    
+    
+    Route::resource('employees', \App\Http\Controllers\Admin\EmployeeController::class);
 
 });
