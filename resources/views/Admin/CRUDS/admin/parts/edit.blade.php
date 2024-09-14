@@ -20,7 +20,7 @@
             <select id="employee_id" name="employee_id" class="form-control">
                 <option selected disabled>اختر الموظف</option>
                 @foreach ($employees as $employee)
-                    <option value="{{ $employee->id }}" {{ $admin->employee_id == $employee->is ? 'selected' : '' }}>
+                    <option value="{{ $employee->id }}" {{ $admin->employee_id == $employee->id ? 'selected' : '' }}>
                         {{ $employee->name }}</option>
                 @endforeach
             </select>

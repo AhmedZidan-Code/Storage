@@ -69,11 +69,12 @@
 
 
 
-        <div class="col-md-10">
+        <div class="col-md-10" style="width: 100%;">
             <table id="table-details" class="table table-bordered dt-responsive nowrap table-striped align-middle"
                 style="width: 100%;">
                 <thead>
                     <tr>
+                        <th> الشركة</th>
                         <th> المنتج</th>
                         <th> كود المنتج</th>
                         <th>الوحدة</th>
@@ -89,6 +90,18 @@
                 <tbody id="details-container">
                     <tr id="tr-1">
                         {{--                <th>1</th> --}}
+                        <th>
+                            <div class="d-flex flex-column mb-7 fv-row col-sm-2 " style="width: 100%;">
+                                <label for="company_id"
+                                    class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                                    <span class="required mr-1"> </span>
+                                </label>
+                                <select class="companies" data-id="1" name="company_id[]" id='company_id'
+                                    style="width: 100%;">
+                                    <option selected disabled>- ابحث عن الشركة -</option>
+                                </select>
+                            </div>
+                        </th>
                         <th>
                             <div class="d-flex flex-column mb-7 fv-row col-sm-2 " style="width: 100%;">
                                 <label for="productive_id"
@@ -154,7 +167,7 @@
                         <th colspan="3" id="total_productive_sale_price"
                             style="text-align: center; background-color: #6c757d;color: white">1
                         </th>
-                        <th colspan="2" style="text-align: center; background-color: aqua">نسبة الخصم الكلية</th>
+                        <th colspan="3" style="text-align: center; background-color: aqua">نسبة الخصم الكلية</th>
                         <th colspan="2" style="text-align: center; background-color: gray">
                             <input type="number" value="0" min="0" max="99"
                                 name="total_discount" style="width: 100%;"> <!-- Adjusted width -->

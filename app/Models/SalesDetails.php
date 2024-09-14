@@ -13,6 +13,9 @@ class SalesDetails extends Model
     public function productive(){
         return $this->belongsTo(Productive::class,'productive_id');
     }
+    public function company(){
+        return $this->belongsTo(Company::class,'company_id');
+    }
     public function sales(){
         return $this->belongsTo(Sales::class,'sales_id');
     }

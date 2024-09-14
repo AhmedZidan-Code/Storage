@@ -77,6 +77,7 @@ class PurchasesController extends Controller
     {
         $data = $request->validate([
             'storage_id' => 'required|exists:storages,id',
+            'total_discount' => 'nullable|numeric|min:0|max:99',
             'purchases_date' => 'required|date',
             'pay_method' => 'required|in:debit,cash',
             'supplier_id' => 'required|exists:suppliers,id',
@@ -156,8 +157,13 @@ class PurchasesController extends Controller
             }
             DB::table('purchases_details')->insert($sql);
 
+            $total = PurchasesDetails::where('purchases_id', $purchases->id)->sum('total');
+            $totalAfterDiscount = $total - ($total / 100 * $data['total_discount'] ?? 0);
+
             $purchases->update([
-                'total' => PurchasesDetails::where('purchases_id', $purchases->id)->sum('total'),
+                'total' => $total,
+                'total_discount' => $data['total_discount'],
+                'total_after_discount' => $totalAfterDiscount,
             ]);
 
         }
@@ -182,6 +188,7 @@ class PurchasesController extends Controller
     {
         $data = $request->validate([
             'storage_id' => 'required|exists:storages,id',
+            'total_discount' => 'nullable|numeric|min:0|max:99',
             'purchases_date' => 'required|date',
             'pay_method' => 'required|in:debit,cash',
             'supplier_id' => 'required|exists:suppliers,id',
@@ -252,8 +259,13 @@ class PurchasesController extends Controller
             }
             DB::table('purchases_details')->insert($sql);
 
+            $total = PurchasesDetails::where('purchases_id', $purchases->id)->sum('total');
+            $totalAfterDiscount = $total - ($total / 100 * $data['total_discount'] ?? 0);
+
             $purchases->update([
-                'total' => PurchasesDetails::where('purchases_id', $purchases->id)->sum('total'),
+                'total' => $total,
+                'total_discount' => $data['total_discount'],
+                'total_after_discount' => $totalAfterDiscount,
             ]);
 
         }

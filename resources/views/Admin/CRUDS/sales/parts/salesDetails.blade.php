@@ -2,6 +2,7 @@
     <thead>
         <tr>
             <th>#</th>
+            <th>الشركة</th>
             <th>الصنف</th>
             <th>كود الصنف</th>
             <th>سعر بيع الصنف</th>
@@ -17,6 +18,7 @@
         @foreach ($rows as $row)
             <tr>
                 <th>{{ $row->id }}</th>
+                <th>{{ $row->company->title ?? '' }}</th>
                 <th>{{ $row->productive->name ?? '' }}</th>
                 <th>{{ $row->productive->code ?? '' }}</th>
                 <th>{{ $row->productive_sale_price }}</th>

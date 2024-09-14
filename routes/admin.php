@@ -166,5 +166,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     
     
     Route::resource('employees', \App\Http\Controllers\Admin\EmployeeController::class);
+    Route::get('getCompanies', [ \App\Http\Controllers\Admin\CompanyController::class, 'getCompanies'])->name('admin.get-companies');
 
 });

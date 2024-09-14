@@ -233,7 +233,7 @@ class ItemInstallationController extends Controller
     }
 
     public function getProductiveDetails($id){
-         $productive=Productive::where('product_type','kham')->findOrFail($id);
+         $productive=Productive::findOrFail($id);
          $productive_buy_price=$productive->packet_buy_price;
          $latestPurchaseForProductive=DB::table('purchases_details')->where('productive_id',$id)->orderBy('id', 'desc')->first();
           if ($latestPurchaseForProductive)

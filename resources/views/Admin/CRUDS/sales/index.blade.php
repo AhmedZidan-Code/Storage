@@ -26,7 +26,9 @@
                     <th>طريقة الدفع</th>
                     <th>العميل</th>
                     <th>رقم الفاتورة</th>
-                    <th>الاجمالي</th>
+                    <th> الاجمالي قبل الخصم</th>
+                    <th> نسبة الخصم</th>
+                    <th> الاجمالي بعد الخصم</th>
                     <th> تاريخ الانشاء</th>
                     <th>التفاصيل</th>
                     <th>العمليات</th>
@@ -86,6 +88,8 @@
             {data: 'client.name', name: 'client.name'},
             {data: 'fatora_number', name: 'fatora_number'},
             {data: 'total', name: 'total'},
+            {data: 'total_discount', name: 'total_discount'},
+            {data: 'total_after_discount', name: 'total_after_discount'},
             {data: 'created_at', name: 'created_at'},
             {data: 'details', name: 'details'},
             {data: 'action', name: 'action', orderable: false, searchable: false},

@@ -2,6 +2,16 @@
     {{--                <th>1</th>--}}
     <th >
         <div class="d-flex flex-column mb-7 fv-row col-sm-2 " style="width: 100%;">
+            <label for="company_id-{{$id}}" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                <span class="required mr-1">  </span>
+            </label>
+            <select class="companies" data-id="{{$id}}" name="company_id[]" id='company_id-{{$id}}' style="width: 100%;">
+                <option selected disabled value='0'>- ابحث عن الشركة  -</option>
+            </select>
+        </div>
+    </th>
+    <th >
+        <div class="d-flex flex-column mb-7 fv-row col-sm-2 " style="width: 100%;">
             <label for="productive_id-{{$id}}" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1">  </span>
             </label>

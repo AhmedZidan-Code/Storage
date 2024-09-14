@@ -76,6 +76,7 @@ class SalesController extends Controller
     {
         $data = $request->validate([
             'storage_id' => 'required|exists:storages,id',
+            'total_discount' => 'nullable|numeric|min:0|max:99',
             'sales_date' => 'required|date',
             'pay_method' => 'required|in:debit,cash',
             'client_id' => 'required|exists:clients,id',
@@ -84,6 +85,8 @@ class SalesController extends Controller
         ]);
 
         $datails = $request->validate([
+            'company_id' => 'required|array',
+            'company_id.*' => 'required|exists:companies,id',
             'productive_id' => 'required|array',
             'productive_id.*' => 'required',
             'amount' => 'required|array',
@@ -148,13 +151,39 @@ class SalesController extends Controller
                     'updated_at' => date('Y-m-d H:i:s'),
 
                 ];
+                $details = [
+
+                    'sales_id' => $sales->id,
+                    'company_id' => $request->company_id[$i],
+                    'productive_id' => $request->productive_id[$i],
+                    'productive_code' => $productive->code,
+                    'amount' => $request->amount[$i],
+                    'bouns' => $request->bouns[$i],
+                    'discount_percentage' => $request->discount_percentage[$i],
+                    'batch_number' => $request->batch_number[$i],
+                    'productive_sale_price' => $request->productive_sale_price[$i],
+                    'total' => $request->productive_sale_price[$i] * $request->amount[$i],
+                    'all_pieces' => $request->amount[$i] * $productive->num_pieces_in_package,
+                    'date' => date('Y-m-d'),
+                    'year' => date('Y'),
+                    'month' => date('m'),
+                    'publisher' => auth('admin')->user()->id,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+
+                ];
 
                 array_push($sql, $details);
             }
             DB::table('sales_details')->insert($sql);
 
+            $total = SalesDetails::where('sales_id', $sales->id)->sum('total');
+            $totalAfterDiscount = $total - ($total / 100 * $data['total_discount'] ?? 0);
+
             $sales->update([
-                'total' => SalesDetails::where('sales_id', $sales->id)->sum('total'),
+                'total' => $total,
+                'total_discount' => $data['total_discount'],
+                'total_after_discount' => $totalAfterDiscount,
             ]);
 
         }
@@ -179,6 +208,7 @@ class SalesController extends Controller
     {
         $data = $request->validate([
             'storage_id' => 'required|exists:storages,id',
+            'total_discount' => 'nullable|numeric|min:0|max:99',
             'sales_date' => 'required|date',
             'pay_method' => 'required|in:debit,cash',
             'client_id' => 'required|exists:clients,id',
@@ -187,6 +217,8 @@ class SalesController extends Controller
         ]);
 
         $datails = $request->validate([
+            'company_id' => 'required|array',
+            'company_id.*' => 'required|exists:companies,id',
             'productive_id' => 'required|array',
             'productive_id.*' => 'required',
             'amount' => 'required|array',
@@ -225,6 +257,7 @@ class SalesController extends Controller
                 $details = [
 
                     'sales_id' => $sales->id,
+                    'company_id' => $request->company_id[$i],
                     'productive_id' => $request->productive_id[$i],
                     'productive_code' => $productive->code,
                     'amount' => $request->amount[$i],
@@ -247,8 +280,13 @@ class SalesController extends Controller
             }
             DB::table('sales_details')->insert($sql);
 
+            $total = SalesDetails::where('sales_id', $sales->id)->sum('total');
+            $totalAfterDiscount = $total - ($total / 100 * $data['total_discount'] ?? 0);
+
             $sales->update([
-                'total' => SalesDetails::where('sales_id', $sales->id)->sum('total'),
+                'total' => $total,
+                'total_discount' => $data['total_discount'],
+                'total_after_discount' => $totalAfterDiscount,
             ]);
 
         }

@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('purchases', function (Blueprint $table) {
-            $table->float('discount')->default(0);
+            $table->float('total_discount')->default(0);
             $table->double('total_after_discount')->default(0);
         });
     }
@@ -27,7 +27,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('purchases', function (Blueprint $table) {
-            $table->dropColumn(['discount', 'total_after_discount']);
+            $table->dropColumn(['total_discount', 'total_after_discount']);
         });
     }
 };

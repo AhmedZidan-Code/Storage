@@ -101,6 +101,27 @@
                     });
                 })();
 
+                (function () {
+
+                    $("#company_id").select2({
+                        placeholder: 'Channel...',
+                        // width: '350px',
+                        allowClear: true,
+                        ajax: {
+                            url: '{{route('admin.get-companies')}}',
+                            dataType: 'json',
+                            delay: 250,
+                            data: function (params) {
+                                return {
+                                    term: params.term || '',
+                                    page: params.page || 1
+                                }
+                            },
+                            cache: true
+                        }
+                    });
+                })();
+
             </script>
 
             <script>
@@ -150,6 +171,24 @@
                         allowClear: true,
                         ajax: {
                             url: '{{route('admin.getProductiveTypeKham')}}',
+                            dataType: 'json',
+                            delay: 250,
+                            data: function (params) {
+                                return {
+                                    term: params.term || '',
+                                    page: params.page || 1
+                                }
+                            },
+                            cache: true
+                        }
+                    });
+
+                    $(`#company_id-${id}`).select2({
+                        placeholder: 'searching For Supplier...',
+                        // width: '350px',
+                        allowClear: true,
+                        ajax: {
+                            url: '{{route('admin.get-companies')}}',
                             dataType: 'json',
                             delay: 250,
                             data: function (params) {

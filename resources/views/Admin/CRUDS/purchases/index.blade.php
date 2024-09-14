@@ -27,7 +27,9 @@
                         <th>المورد</th>
                         <th>رقم الفاتورة</th>
                         <th>رقم فاتورة المورد</th>
-                        <th>الاجمالي</th>
+                        <th> الاجمالي قبل الخصم</th>
+                        <th> نسبة الخصم</th>
+                        <th> الاجمالي بعد الخصم</th>
                         <th> تاريخ الانشاء</th>
                         <th>المشتريات</th>
                         <th>العمليات</th>
@@ -110,6 +112,14 @@
             {
                 data: 'total',
                 name: 'total'
+            },
+            {
+                data: 'total_discount',
+                name: 'total_discount'
+            },
+            {
+                data: 'total_after_discount',
+                name: 'total_after_discount'
             },
             {
                 data: 'created_at',
