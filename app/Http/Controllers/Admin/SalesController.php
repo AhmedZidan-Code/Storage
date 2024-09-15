@@ -48,11 +48,41 @@ class SalesController extends Controller
                 ->addColumn('details', function ($row) {
                     return "<button data-id='$row->id' class='btn btn-outline-dark showDetails'>عرض تفاصيل الطلب</button>";
                 })
+                ->editColumn('status', function ($row) {
+                    $statuses = [
+                        'new' => ['text' => 'جديد', 'class' => 'btn-primary'],
+                        'in_progress' => ['text' => 'جاري التجهيز', 'class' => 'btn-info'],
+                        'complete' => ['text' => 'مكتمل', 'class' => 'btn-success'],
+                        'canceled' => ['text' => 'ملغي', 'class' => 'btn-danger'],
+                    ];
 
+                    $currentStatus = $statuses[$row->status];
+
+                    $dropdownHtml = '
+                        <div class="dropdown">
+                            <button class="btn ' . $currentStatus['class'] . ' dropdown-toggle" type="button" id="statusDropdown' . $row->id . '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                ' . $currentStatus['text'] . '
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="statusDropdown' . $row->id . '">';
+
+                    foreach ($statuses as $status => $info) {
+                        $dropdownHtml .= '
+                            <a class="dropdown-item" href="#" data-status="' . $status . '" data-row-id="' . $row->id . '">
+                                ' . $info['text'] . '
+                            </a>';
+                    }
+
+                    $dropdownHtml .= '
+                            </div>
+                        </div>';
+
+                    return $dropdownHtml;
+                })
                 ->editColumn('created_at', function ($admin) {
                     return date('Y/m/d', strtotime($admin->created_at));
                 })
                 ->escapeColumns([])
+
                 ->make(true);
 
         }
@@ -325,6 +355,33 @@ class SalesController extends Controller
         $html = view('Admin.CRUDS.sales.parts.details', compact('id'))->render();
 
         return response()->json(['status' => true, 'html' => $html, 'id' => $id]);
+    }
+
+    /**
+     * [Description for getStatusName]
+     *
+     * @param string $status
+     * @return string
+     */
+    public function getStatusName(string $status)
+    {
+        $name = [
+            'new' => '<span class="badge badge-primary">جديد</span>',
+            'in_progress' => '<span class="badge badge-info">جاري التجهيز</span>',
+            'complete' => '<span class="badge badge-success">مكتمل</span>',
+            'canceled' => '<span class="badge badge-danger">ملغي</span>',
+        ];
+
+        return $name[$status];
+    }
+
+    public function updateStatus(Request $request)
+    {
+        $row = Sales::findOrFail($request->id);
+        $row->status = $request->status;
+        $row->save();
+
+        return response()->json(['success' => true]);
     }
 
 }

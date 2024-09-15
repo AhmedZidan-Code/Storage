@@ -104,7 +104,7 @@
 
                 $('#submit').html('<span class="spinner-border spinner-border-sm mr-2" ' +
                     ' ></span> <span style="margin-left: 4px;">{{ trans('admin.working') }}</span>'
-                    ).attr('disabled', true);
+                ).attr('disabled', true);
                 $('#form-load').append(loader_form)
                 $('#form-load > form').hide()
             },
@@ -113,7 +113,7 @@
 
                 window.setTimeout(function() {
                     $('#submit').html('{{ trans('admin.submit') }}').attr('disabled',
-                    false);
+                        false);
 
                     if (data.code == 200) {
                         toastr.success(data.message)
@@ -231,7 +231,7 @@
     });
 
     $(document).on('click', '.editBtn', function() {
-        
+
         var id = $(this).data('id');
         $('#operationType').text('تعديل ');
         $('#form-load').html(loader_form)
@@ -246,4 +246,15 @@
 
 
     });
+</script>
+<script>
+    $(document).on('click', '.editBtn-p', function() {
+        var id = $(this).data('id');
+
+
+        var url = "{{ route("$url.edit", ':id') }}";
+        url = url.replace(':id', id)
+
+        window.location.href = url;
+    })
 </script>

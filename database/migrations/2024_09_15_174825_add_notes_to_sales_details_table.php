@@ -14,9 +14,8 @@ return new class extends Migration
     public function up()
     {
         Schema::table('sales_details', function (Blueprint $table) {
-            $table->unsignedBigInteger('company_id')->nullable()->after('id');
-            $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade')->onUpdate('cascade');
-
+            $table->string('notes')->nullable()->after('year');
+            $table->boolean('is_prepared')->default(0)->after('notes');
         });
     }
 
@@ -28,7 +27,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('sales_details', function (Blueprint $table) {
-           $table->dropColumn('company_id');
+            $table->dropColumn(['notes', 'is_prepared']);
         });
     }
 };

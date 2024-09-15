@@ -15,4 +15,7 @@ class Sales extends Model
     public function storage(){
         return $this->belongsTo(Storage::class,'storage_id');
     }
+    public function details(){
+        return $this->hasMany(SalesDetails::class,'sales_id');
+    }
 }
