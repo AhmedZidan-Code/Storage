@@ -77,6 +77,8 @@
                                 <span>  الفروع</span></a></li>
                         <li><a href="{{route('storages.index')}}"><i class="mdi mdi-album"></i> <span>المخازن </span></a>
                         </li>
+                        <li><a href="{{route('prepare-items.index')}}"><i class="mdi mdi-album"></i> <span>تحضير الاصناف </span></a>
+                        </li>
 
                     </ul>
                 </li>
