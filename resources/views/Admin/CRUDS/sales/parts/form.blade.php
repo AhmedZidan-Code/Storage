@@ -74,7 +74,6 @@
                 style="width: 100%;">
                 <thead>
                     <tr>
-                        <th> الشركة</th>
                         <th> المنتج</th>
                         <th> كود المنتج</th>
                         <th>الوحدة</th>
@@ -92,18 +91,6 @@
                         {{--                <th>1</th> --}}
                         <th>
                             <div class="d-flex flex-column mb-7 fv-row col-sm-2 " style="width: 100%;">
-                                <label for="company_id"
-                                    class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                                    <span class="required mr-1"> </span>
-                                </label>
-                                <select class="companies" data-id="1" name="company_id[]" id='company_id'
-                                    style="width: 100%;">
-                                    <option selected disabled>- ابحث عن الشركة -</option>
-                                </select>
-                            </div>
-                        </th>
-                        <th>
-                            <div class="d-flex flex-column mb-7 fv-row col-sm-2 " style="width: 100%;">
                                 <label for="productive_id"
                                     class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                                     <span class="required mr-1"> </span>
@@ -116,6 +103,9 @@
                         </th>
                         <th>
                             <input type="text" disabled id="productive_code-1" style="width: 100%;">
+                            <input name="company_id[]" data-id="1" type="hidden"
+                                value="" id="company_id-1">
+
                         </th>
                         <th>
                             <input type="text" disabled id="unit-1" style="width: 100%;">
@@ -138,7 +128,7 @@
                         </th>
                         <th>
                             <input type="number" value="0" min="0" name="discount_percentage[]"
-                                id="discount_percentage-1" style="width: 100%;"> <!-- Adjusted width -->
+                                id="discount_percentage-1" style="width: 100%;" onkeyup="callTotal()"> <!-- Adjusted width -->
                         </th>
                         <th>
                             <input type="number" value="0" min="0" name="batch_number[]"
@@ -163,16 +153,20 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="3" style="text-align: center; background-color: yellow">الاجمالي</th>
-                        <th colspan="3" id="total_productive_sale_price"
+                        <th colspan="2" style="text-align: center; background-color: yellow">الاجمالي</th>
+                        <th colspan="2" id="total_productive_sale_price"
                             style="text-align: center; background-color: #6c757d;color: white">1
                         </th>
-                        <th colspan="3" style="text-align: center; background-color: aqua">نسبة الخصم الكلية</th>
+                        <th colspan="1" style="text-align: center; background-color: aqua">نسبة الخصم الكلية</th>
                         <th colspan="2" style="text-align: center; background-color: gray">
-                            <input type="number" value="0" min="0" max="99"
-                                name="total_discount" style="width: 100%;"> <!-- Adjusted width -->
+                            <input type="number"  id="total_discount" value="0" min="0" max="99"
+                                name="total_discount" style="width: 100%;" onkeyup="totalAfterDiscount()"> <!-- Adjusted width -->
                         </th>
-
+                        <th colspan="2" style="text-align: center; background-color: rgb(196, 251, 30)"> الاجمالي بعد الخصم الكلي</th>
+                        <th colspan="1" style="text-align: center; background-color: rgb(173, 222, 185)">
+                            <input type="text" id="total_after_discount" value="" 
+                                name="total_discount" style="width: 100%;" disabled> <!-- Adjusted width -->
+                        </th>
                     </tr>
                 </tfoot>
             </table>

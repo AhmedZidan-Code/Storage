@@ -15,7 +15,7 @@ class ProductiveController extends Controller
     {
 
         if ($request->ajax()) {
-            $rows = Productive::query()->with(['unit','category']);
+            $rows = Productive::query()->with(['unit','category', 'company']);
             return DataTables::of( $rows)
                 ->addColumn('action', function ($row) {
 
@@ -47,15 +47,10 @@ class ProductiveController extends Controller
                 })
 
 
-                ->editColumn('product_type', function ($row) {
-                     if ($row->product_type=='tam')
-                         return 'تام';
-                     elseif ($row->product_type=='kham')
-                         return 'خام';
-                      else
-                          return '';
+                // ->add('company', function ($row) {
+                //      return $row->company->title;
 
-                })
+                // })
 
                 ->editColumn('created_at', function ($admin) {
                     return date('Y/m/d', strtotime($admin->created_at));
@@ -83,7 +78,6 @@ class ProductiveController extends Controller
         $data = $request->validate([
             'code' => 'required' ,
             'name'=>'required|unique:productive,name',
-            'product_type'=>'required|in:tam,kham',
             'one_buy_price' => 'required',
             'packet_buy_price' => 'required',
             'one_sell_price' => 'required',
@@ -91,6 +85,7 @@ class ProductiveController extends Controller
             'num_pieces_in_package' => 'required',
             'unit_id'=>'required|exists:unites,id',
             'category_id'=>'required|exists:categories,id',
+            'company_id'=>'required|exists:companies,id',
 
         ]);
 
@@ -113,7 +108,7 @@ class ProductiveController extends Controller
 
 
 
-        $row=Productive::find($id);
+        $row=Productive::with('company')->find($id);
         $categories=Category::get();
         $unites=Unite::get();
 
@@ -133,6 +128,7 @@ class ProductiveController extends Controller
             'num_pieces_in_package' => 'required',
             'unit_id'=>'required|exists:unites,id',
             'category_id'=>'required|exists:categories,id',
+            'company_id'=>'required|exists:companies,id',
         ]);
 
         $row=Productive::find($id);

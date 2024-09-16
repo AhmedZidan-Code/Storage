@@ -55,6 +55,11 @@ class SalesController extends Controller
                         'complete' => ['text' => 'مكتمل', 'class' => 'btn-success'],
                         'canceled' => ['text' => 'ملغي', 'class' => 'btn-danger'],
                     ];
+                    $statusesWithoutNew = [
+                        'in_progress' => ['text' => 'جاري التجهيز', 'class' => 'btn-info'],
+                        'complete' => ['text' => 'مكتمل', 'class' => 'btn-success'],
+                        'canceled' => ['text' => 'ملغي', 'class' => 'btn-danger'],
+                    ];
 
                     $currentStatus = $statuses[$row->status];
 
@@ -65,7 +70,7 @@ class SalesController extends Controller
                             </button>
                             <div class="dropdown-menu" aria-labelledby="statusDropdown' . $row->id . '">';
 
-                    foreach ($statuses as $status => $info) {
+                    foreach ($statusesWithoutNew as $status => $info) {
                         $dropdownHtml .= '
                             <a class="dropdown-item" href="#" data-status="' . $status . '" data-row-id="' . $row->id . '">
                                 ' . $info['text'] . '
@@ -127,7 +132,7 @@ class SalesController extends Controller
             'discount_percentage' => 'required|array',
             'batch_number' => 'required|array',
             'bouns.*' => 'required',
-            'discount_percentage.*' => 'required',
+            'discount_percentage.*' => 'required|numeric|max:100|min:0',
             'batch_number.*' => 'required',
         ]);
 
@@ -192,7 +197,7 @@ class SalesController extends Controller
                     'discount_percentage' => $request->discount_percentage[$i],
                     'batch_number' => $request->batch_number[$i],
                     'productive_sale_price' => $request->productive_sale_price[$i],
-                    'total' => $request->productive_sale_price[$i] * $request->amount[$i],
+                    'total' => ($request->productive_sale_price[$i] * $request->amount[$i]) - (($request->productive_sale_price[$i] * $request->amount[$i]) * $request->discount_percentage[$i] / 100),
                     'all_pieces' => $request->amount[$i] * $productive->num_pieces_in_package,
                     'date' => date('Y-m-d'),
                     'year' => date('Y'),
@@ -259,7 +264,7 @@ class SalesController extends Controller
             'discount_percentage' => 'required|array',
             'batch_number' => 'required|array',
             'bouns.*' => 'required',
-            'discount_percentage.*' => 'required',
+            'discount_percentage.*' => 'nullable|numeric|min:0|max:99',
             'batch_number.*' => 'required',
         ]);
 
@@ -295,7 +300,7 @@ class SalesController extends Controller
                     'discount_percentage' => $request->discount_percentage[$i],
                     'batch_number' => $request->batch_number[$i],
                     'productive_sale_price' => $request->productive_sale_price[$i],
-                    'total' => $request->productive_sale_price[$i] * $request->amount[$i],
+                    'total' => ($request->productive_sale_price[$i] * $request->amount[$i]) - (($request->productive_sale_price[$i] * $request->amount[$i]) * $request->discount_percentage[$i] / 100),
                     'all_pieces' => $request->amount[$i] * $productive->num_pieces_in_package,
                     'date' => $sales->date,
                     'year' => $sales->year,

@@ -26,7 +26,7 @@ class PreparingItemController extends Controller
                     $delete = '';
 
                     return '
-                           <button ' . $edit . '   class="editBtn-p btn rounded-pill btn-primary waves-effect waves-light"
+                           <button ' . $edit . '   class=" btn rounded-pill btn-primary waves-effect waves-light showDetails"
                                     data-id="' . $row->id . '"
                             <span class="svg-icon svg-icon-3">
                                 <span class="svg-icon svg-icon-3">
@@ -50,7 +50,9 @@ class PreparingItemController extends Controller
 
         $row = Sales::find($id);
 
-        return view('Admin.CRUDS.prepare_items.edit', compact('row'));
+        $view = view('Admin.CRUDS.prepare_items.parts.editForm', compact('row'))->render();
+
+        return response()->json(['view' => $view, 'row' => $row]);
     }
 
     public function update(Request $request, $id)
@@ -84,6 +86,10 @@ class PreparingItemController extends Controller
     public function updateIsPrepared(Request $request)
     {
         $row = SalesDetails::findOrFail($request->id);
+        if ($request->is_prepared == 1) {
+            $row->amount = $request->amount;
+            $row->notes = $request->notes;
+        }
         $row->is_prepared = $request->is_prepared;
         $row->save();
 

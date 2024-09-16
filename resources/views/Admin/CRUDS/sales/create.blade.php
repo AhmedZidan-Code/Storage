@@ -91,7 +91,7 @@
                     }
                 });
             })();
-            
+
             (function() {
                 $("#company_id").select2({
                     placeholder: 'Channel...',
@@ -210,6 +210,7 @@
                         $(`#unit-${rowId}`).val(res.unit);
                         $(`#productive_code-${rowId}`).val(res.code);
                         $(`#productive_sale_price-${rowId}`).val(res.productive_sale_price);
+                        $(`#company_id-${rowId}`).val(res.productive.company_id);
                         callTotal();
 
                     },
@@ -224,6 +225,7 @@
             function callTotal() {
                 var amounts = document.getElementsByName('amount[]');
                 var prices = document.getElementsByName('productive_sale_price[]');
+                var discounts = document.getElementsByName('discount_percentage[]');
 
                 var total = 0;
                 var subTotal = 0;
@@ -231,14 +233,20 @@
                     subTotal = 1;
                     var amount = amounts[i];
                     var price = prices[i];
-                    subTotal = amount.value * price.value;
+                    var discount = discounts[i];
+                    subTotal = amount.value * price.value - (amount.value * price.value * discount.value / 100);
                     var rowId = amount.getAttribute('data-id');
                     $(`#total-${rowId}`).val(subTotal);
                     total = total + subTotal;
                 }
-
-
+                
                 $('#total_productive_sale_price').text(total);
+                totalAfterDiscount();
+            }
+
+            function totalAfterDiscount() {
+                let total = parseFloat($('#total_productive_sale_price').text());
+                $('#total_after_discount').val(total - (total * $('#total_discount').val() / 100))
             }
         </script>
         <script>
@@ -257,14 +265,14 @@
 
                         $('#submit').html('<span class="spinner-border spinner-border-sm mr-2" ' +
                             ' ></span> <span style="margin-left: 4px;">{{ trans('admin.working') }}</span>'
-                            ).attr('disabled', true);
+                        ).attr('disabled', true);
                     },
                     complete: function() {},
                     success: function(data) {
 
                         window.setTimeout(function() {
                             $('#submit').html('{{ trans('admin.submit') }}').attr('disabled',
-                            false);
+                                false);
 
                             if (data.code == 200) {
                                 toastr.success(data.message)

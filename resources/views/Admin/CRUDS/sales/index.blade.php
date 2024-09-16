@@ -34,8 +34,8 @@
                         <th> نسبة الخصم</th>
                         <th> الاجمالي بعد الخصم</th>
                         <th> تاريخ الانشاء</th>
-                        <th> الحالة </th>
                         <th>التفاصيل</th>
+                        <th> الحالة </th>
                         <th>العمليات</th>
                     </tr>
                 </thead>
@@ -83,7 +83,6 @@
     </div>
 @endsection
 @section('js')
-
     <script>
         var columns = [{
                 data: 'id',
@@ -127,12 +126,12 @@
                 name: 'created_at'
             },
             {
-                data: 'status',
-                name: 'status'
-            },
-            {
                 data: 'details',
                 name: 'details'
+            },
+            {
+                data: 'status',
+                name: 'status'
             },
             {
                 data: 'action',
@@ -177,10 +176,10 @@
                 let newStatus = $(this).data('status');
                 let rowId = $(this).data('row-id');
                 let button = $(this).closest('.dropdown').find('button');
-                let url = '{{route('admin.update-sales-status')}}';
+                let url = '{{ route('admin.update-sales-status') }}';
 
                 $.ajax({
-                    url: url, 
+                    url: url,
                     method: 'POST',
                     data: {
                         id: rowId,

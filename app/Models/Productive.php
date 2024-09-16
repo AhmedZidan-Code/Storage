@@ -20,4 +20,8 @@ class Productive extends Model
     public function credit(){
         return $this->hasMany(RasiedAyni::class,'productive_id')->orderBy('branch_id', 'DESC');;
     }
+    public function company()
+    {
+        return $this->belongsTo(Company::class, 'company_id');
+    }
 }
