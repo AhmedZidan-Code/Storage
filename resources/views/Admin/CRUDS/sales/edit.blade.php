@@ -77,6 +77,7 @@
                     placeholder: 'Channel...',
                     // width: '350px',
                     allowClear: true,
+                     disabled: true ,
                     ajax: {
                         url: '{{ route('admin.getProductiveTypeKham') }}',
                         dataType: 'json',

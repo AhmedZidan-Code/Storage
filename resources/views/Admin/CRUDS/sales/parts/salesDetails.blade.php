@@ -10,6 +10,7 @@
             <th>نسبة الخصم</th>
             <th>رقم التشغيل</th>
             <th>الكمية</th>
+            <th>ملاحظات</th>
             <th>الاجمالي</th>
 
         </tr>
@@ -26,6 +27,7 @@
                 <th>{{ $row->discount_percentage }}</th>
                 <th>{{ $row->batch_number }}</th>
                 <th>{{ $row->amount }}</th>
+                <th>{{ $row->notes }}</th>
                 <th>{{ $row->total }}</th>
 
             </tr>

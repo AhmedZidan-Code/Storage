@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Sales;
+use App\Http\Controllers\Controller;
 use App\Models\Productive;
+use App\Models\Sales;
 use App\Models\SalesDetails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
 use Yajra\DataTables\Facades\DataTables;
 
 class StoreManagerController extends Controller
@@ -118,6 +118,7 @@ class StoreManagerController extends Controller
             'bouns.*' => 'required',
             'discount_percentage.*' => 'nullable|numeric|min:0|max:99',
             'batch_number.*' => 'required',
+            'notes.*' => 'nullable',
         ]);
 
         if (count($request->amount) != count($request->productive_id)) {
@@ -129,7 +130,7 @@ class StoreManagerController extends Controller
         }
 
         $sales = Sales::findOrFail($id);
-        $sales->update($data);
+        $sales->update($data+['status' => 'complete']);
 
         SalesDetails::where('sales_id', $id)->delete();
 
@@ -158,6 +159,7 @@ class StoreManagerController extends Controller
                     'year' => $sales->year,
                     'month' => $sales->month,
                     'publisher' => $sales->publisher,
+                    'notes' => $request->notes[$i],
                     'created_at' => $sales->created_at,
                     'updated_at' => date('Y-m-d H:i:s'),
 

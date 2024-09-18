@@ -32,18 +32,6 @@
                     placeholder: 'Channel...',
                     // width: '350px',
                     allowClear: true,
-                    ajax: {
-                        url: '{{ route('admin.getStorages') }}',
-                        dataType: 'json',
-                        delay: 250,
-                        data: function(params) {
-                            return {
-                                term: params.term || '',
-                                page: params.page || 1
-                            }
-                        },
-                        cache: true
-                    }
                 });
             })();
         </script>
@@ -56,18 +44,6 @@
                     placeholder: 'Channel...',
                     // width: '350px',
                     allowClear: true,
-                    ajax: {
-                        url: '{{ route('admin.getClients') }}',
-                        dataType: 'json',
-                        delay: 250,
-                        data: function(params) {
-                            return {
-                                term: params.term || '',
-                                page: params.page || 1
-                            }
-                        },
-                        cache: true
-                    }
                 });
             })();
         </script>
@@ -80,18 +56,6 @@
                     placeholder: 'Channel...',
                     // width: '350px',
                     allowClear: true,
-                    ajax: {
-                        url: '{{ route('admin.getProductiveTypeKham') }}',
-                        dataType: 'json',
-                        delay: 250,
-                        data: function(params) {
-                            return {
-                                term: params.term || '',
-                                page: params.page || 1
-                            }
-                        },
-                        cache: true
-                    }
                 });
             })();
         </script>
@@ -142,18 +106,6 @@
                     placeholder: 'searching For Supplier...',
                     // width: '350px',
                     allowClear: true,
-                    ajax: {
-                        url: '{{ route('admin.getProductiveTypeKham') }}',
-                        dataType: 'json',
-                        delay: 250,
-                        data: function(params) {
-                            return {
-                                term: params.term || '',
-                                page: params.page || 1
-                            }
-                        },
-                        cache: true
-                    }
                 });
 
             }

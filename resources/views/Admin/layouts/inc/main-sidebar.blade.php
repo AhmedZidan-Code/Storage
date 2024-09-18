@@ -82,6 +82,17 @@
 
                     </ul>
                 </li>
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="fa fa-users-cog"></i>
+                        <span> المسئولون عن المخازن </span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{route('store-managers.index')}}"><i class="fa fa-route"></i> <span>متابعة تحضير الصناف </span></a>
+                        </li>
+
+                    </ul>
+                </li>
 
 
 

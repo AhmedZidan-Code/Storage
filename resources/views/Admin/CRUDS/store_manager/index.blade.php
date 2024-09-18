@@ -26,7 +26,6 @@
                         <th> نسبة الخصم</th>
                         <th> الاجمالي بعد الخصم</th>
                         <th> تاريخ الانشاء</th>
-                        <th> الحالة </th>
                         <th>العمليات</th>
                     </tr>
                 </thead>
@@ -115,10 +114,6 @@
             {
                 data: 'created_at',
                 name: 'created_at'
-            },
-            {
-                data: 'status',
-                name: 'status'
             },
             {
                 data: 'action',

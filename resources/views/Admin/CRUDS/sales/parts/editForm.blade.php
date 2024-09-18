@@ -97,7 +97,7 @@
                                         <span class="required mr-1"> </span>
                                     </label>
                                     <select class="changeKhamId" data-id="{{ $key }}" name="productive_id[]"
-                                        id='productive_id-{{ $key }}' style="width: 100%;">
+                                        id='productive_id-{{ $key }}' style="width: 100%;" readonly style="pointer-events: none;">
                                         <option selected value="{{ $pivot->productive_id }}">
                                             {{ $pivot->productive->name ?? '' }}</option>
                                     </select>
@@ -129,7 +129,7 @@
                             </th>
                             <th style="padding: 8px;">
                                 <input data-id="{{ $key }}" step=".1" type="number"
-                                    value="{{ $pivot->bouns }}" min="1" name="bouns[]"
+                                    value="{{ $pivot->bouns }}" min="0" name="bouns[]"
                                     id="bouns-{{ $key }}" style="width: 100px; text-align: center;">
                             </th>
                             <th style="padding: 8px;">
@@ -140,7 +140,7 @@
                             </th>
                             <th style="padding: 8px;">
                                 <input data-id="{{ $key }}" step=".1" type="number"
-                                    value="{{ $pivot->batch_number }}" min="1" name="batch_number[]"
+                                    value="{{ $pivot->batch_number }}" min="0" name="batch_number[]"
                                     id="batch_number-{{ $key }}" style="width: 100px; text-align: center;">
                             </th>
                             <th>
