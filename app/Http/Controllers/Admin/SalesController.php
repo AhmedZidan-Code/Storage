@@ -12,6 +12,13 @@ use Yajra\DataTables\DataTables;
 
 class SalesController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:عرض الفواتير,admin')->only('index');
+        $this->middleware('permission:تعديل الفواتير,admin')->only(['edit', 'update']);
+        $this->middleware('permission:إنشاء الفواتير,admin')->only(['create', 'store']);
+        $this->middleware('permission:حذف الفواتير,admin')->only('destroy');
+    }
     public function index(Request $request)
     {
 

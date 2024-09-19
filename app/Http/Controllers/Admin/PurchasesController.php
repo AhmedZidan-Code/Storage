@@ -13,6 +13,13 @@ use Yajra\DataTables\DataTables;
 
 class PurchasesController extends Controller
 {
+            public function __construct()
+    {
+        $this->middleware('permission:عرض المشتريات,admin')->only('index');
+        $this->middleware('permission:تعديل المشتريات,admin')->only(['edit', 'update']);
+        $this->middleware('permission:إنشاء المشتريات,admin')->only(['create', 'store']);
+        $this->middleware('permission:حذف المشتريات,admin')->only('destroy');
+    }
     public function index(Request $request)
     {
 

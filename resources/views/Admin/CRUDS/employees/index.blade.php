@@ -8,25 +8,27 @@
     <div class="card">
         <div class="card-header d-flex align-items-center">
             <h5 class="card-title mb-0 flex-grow-1">الموظفون</h5>
+            @canAdminAny('إنشاء الموظفون')
 
-                <div>
-                    <button id="addBtn" class="btn btn-primary">اضافة موظف</button>
-                </div>
+            <div>
+                <button id="addBtn" class="btn btn-primary">اضافة موظف</button>
+            </div>
+            @endcanAdminAny
 
         </div>
         <div class="card-body">
             <table id="table" class="table table-bordered dt-responsive nowrap table-striped align-middle"
-                   style="width:100%">
+                style="width:100%">
                 <thead>
-                <tr>
-                    <th>#</th>
-                    <th>الاسم</th>
-                    <th>الهاتف</th>
-                    <th>الشركة</th>
-                    <th>المخزن</th>
-                    <th>تاريخ الانشاء</th>
-                    <th>العمليات</th>
-                </tr>
+                    <tr>
+                        <th>#</th>
+                        <th>الاسم</th>
+                        <th>الهاتف</th>
+                        <th>الشركة</th>
+                        <th>المخزن</th>
+                        <th>تاريخ الانشاء</th>
+                        <th>العمليات</th>
+                    </tr>
                 </thead>
             </table>
         </div>
@@ -43,7 +45,8 @@
                     <h2><span id="operationType"></span> موظف </h2>
                     <!--end::Modal title-->
                     <!--begin::Close-->
-                    <button class="btn btn-sm btn-icon btn-active-color-primary" type="button" data-bs-dismiss="modal" aria-label="Close">
+                    <button class="btn btn-sm btn-icon btn-active-color-primary" type="button" data-bs-dismiss="modal"
+                        aria-label="Close">
                         <i class="fa fa-times"></i>
                     </button>
                     <!--end::Close-->
@@ -69,21 +72,42 @@
         </div>
         <!--end::Modal dialog-->
     </div>
-
 @endsection
 @section('js')
     <script>
-        var columns = [
-            {data: 'id', name: 'id'},
-            {data: 'name', name: 'name'},
-            {data: 'phone_number', name: 'phone_number'},
-            {data: 'company.title', name: 'company.title'},
-            {data: 'storage.title', name: 'storage.title'},
-            {data: 'created_at', name: 'created_at'},
-            {data: 'action', name: 'action', orderable: false, searchable: false},
+        var columns = [{
+                data: 'id',
+                name: 'id'
+            },
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'phone_number',
+                name: 'phone_number'
+            },
+            {
+                data: 'company.title',
+                name: 'company.title'
+            },
+            {
+                data: 'storage.title',
+                name: 'storage.title'
+            },
+            {
+                data: 'created_at',
+                name: 'created_at'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
         ];
     </script>
-    @include('Admin.layouts.inc.ajax',['url'=>'employees'])
+    @include('Admin.layouts.inc.ajax', ['url' => 'employees'])
 
     {{-- <script>
         $(document).on('change','#governorate_id',function (){
@@ -97,5 +121,4 @@
             },1000)
         })
     </script> --}}
-
 @endsection

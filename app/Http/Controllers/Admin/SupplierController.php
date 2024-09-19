@@ -10,6 +10,13 @@ use Yajra\DataTables\DataTables;
 
 class SupplierController extends Controller
 {
+            public function __construct()
+    {
+        $this->middleware('permission:عرض الموردين,admin')->only('index');
+        $this->middleware('permission:تعديل الموردين,admin')->only(['edit', 'update']);
+        $this->middleware('permission:إنشاء الموردين,admin')->only(['create', 'store']);
+        $this->middleware('permission:حذف الموردين,admin')->only('destroy');
+    }
     public function index(Request $request)
     {
 

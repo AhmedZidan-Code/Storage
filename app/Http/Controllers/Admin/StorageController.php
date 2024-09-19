@@ -10,6 +10,13 @@ use Yajra\DataTables\DataTables;
 
 class StorageController extends Controller
 {
+            public function __construct()
+    {
+        $this->middleware('permission:عرض المخازن,admin')->only('index');
+        $this->middleware('permission:تعديل المخازن,admin')->only(['edit', 'update']);
+        $this->middleware('permission:إنشاء المخازن,admin')->only(['create', 'store']);
+        $this->middleware('permission:حذف المخازن,admin')->only('destroy');
+    }
     public function index(Request $request)
     {
 

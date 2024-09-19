@@ -18,7 +18,7 @@
                 </tr>
             </thead>
             <tbody id="details-container">
-                @foreach (\App\Models\SalesDetails::where('sales_id', $row->id)->get() as $key => $pivot)
+                @foreach ($row->details as $key => $pivot)
                     <tr id="tr-{{ $key }}">
                         {{--                <th>1</th> --}}
                         <th>

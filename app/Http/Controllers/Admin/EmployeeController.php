@@ -11,6 +11,13 @@ use Yajra\DataTables\Facades\DataTables;
 
 class EmployeeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:عرض الموظفون,admin')->only('index');
+        $this->middleware('permission:تعديل الموظفون,admin')->only(['edit', 'update']);
+        $this->middleware('permission:إنشاء الموظفون,admin')->only(['create', 'store']);
+        $this->middleware('permission:حذف الموظفون,admin')->only('destroy');
+    }
     public function index(Request $request)
     {
         if ($request->ajax()) {

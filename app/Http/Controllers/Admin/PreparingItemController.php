@@ -11,6 +11,12 @@ use Yajra\DataTables\Facades\DataTables;
 
 class PreparingItemController extends Controller
 {
+        public function __construct()
+    {
+        $this->middleware('permission:عرض الاصناف,admin')->only('index');
+        $this->middleware('permission:تعديل الاصناف,admin')->only(['edit', 'update', 'updateIsPrepared']);
+
+    }
     public function index(Request $request)
     {
         $user = auth('admin')->user();
@@ -47,8 +53,8 @@ class PreparingItemController extends Controller
     }
     public function edit($id)
     {
-
-        $row = Sales::find($id);
+        $user = auth('admin')->user();
+        $row = Sales::with(['details' => fn($q) => $q->where('company_id', $user->employee->company_id)])->find($id);
 
         $view = view('Admin.CRUDS.prepare_items.parts.editForm', compact('row'))->render();
 

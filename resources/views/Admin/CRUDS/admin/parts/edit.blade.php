@@ -26,6 +26,21 @@
             </select>
 
         </div>
+        <div class="d-flex flex-column mb-7 fv-row col-sm-6">
+            <!--begin::Label-->
+            <label for="employee_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                <span class="required mr-1"> الدور</span>
+            </label>
+
+            <select id="role_id" name="role_id" class="form-control">
+                <option selected disabled>اختر الدور</option>
+                @foreach ($roles as $role)
+                    <option value="{{ $role->id }}" {{ $adminRoles?->role_id == $role->id ? 'selected' : '' }}>
+                        {{ $role->name }}</option>
+                @endforeach
+            </select>
+
+        </div>
 
 
         <!--end::Input group-->

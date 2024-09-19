@@ -12,6 +12,11 @@ use Yajra\DataTables\Facades\DataTables;
 
 class StoreManagerController extends Controller
 {
+            public function __construct()
+    {
+        $this->middleware('permission:عرض المسئولون عن المخازن,admin')->only('index');
+        $this->middleware('permission:تعديل المسئولون عن المخازن,admin')->only(['edit', 'update']);
+    }
     public function index(Request $request)
     {
 

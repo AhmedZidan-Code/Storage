@@ -105,9 +105,9 @@
             <input id="num_pieces_in_package" required type="number" min="0"
                 class="form-control form-control-solid" name="num_pieces_in_package" value="" />
         </div>
-        <div class="d-flex flex-column mb-7 fv-row col-sm-4 " style="width: 100%;">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4 " >
             <label for="company_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                <span class="required mr-1"> </span>
+                <span class="required mr-1"> الشركة</span>
             </label>
             <select class="companies" name="company_id" id='company_id' style="width: 100%;">
                 <option selected disabled>- ابحث عن الشركة -</option>

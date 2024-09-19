@@ -9,27 +9,28 @@
         <div class="card-header d-flex align-items-center">
             <h5 class="card-title mb-0 flex-grow-1">المستخدمين</h5>
 
-{{--            @can('اضافة مستخدمين')--}}
-                <div>
-                    <button id="addBtn" class="btn btn-primary">اضافة مستخدم</button>
-                </div>
-{{--            @endcan--}}
+            {{--            @can('اضافة مستخدمين') --}}
+            <div>
+                <button id="addBtn" class="btn btn-primary">اضافة مستخدم</button>
+            </div>
+            {{--            @endcan --}}
 
         </div>
         <div class="card-body">
             <table id="table" class="table table-bordered dt-responsive nowrap table-striped align-middle"
-                   style="width:100%">
+                style="width:100%">
                 <thead>
-                <tr>
-                    <th>#</th>
-                    <th>الصورة</th>
-                    <th>الاسم</th>
-                    <th>البريد الالكتروني</th>
-                    <th>التفعيل</th>
+                    <tr>
+                        <th>#</th>
+                        <th>الصورة</th>
+                        <th>الاسم</th>
+                        <th>الدور</th>
+                        <th>البريد الالكتروني</th>
+                        <th>التفعيل</th>
 
-                    <th> تاريخ الانشاء</th>
-                    <th>العمليات</th>
-                </tr>
+                        <th> تاريخ الانشاء</th>
+                        <th>العمليات</th>
+                    </tr>
                 </thead>
             </table>
         </div>
@@ -46,7 +47,8 @@
                     <h2><span id="operationType"></span> مستخدم </h2>
                     <!--end::Modal title-->
                     <!--begin::Close-->
-                    <button class="btn btn-sm btn-icon btn-active-color-primary" type="button" data-bs-dismiss="modal" aria-label="Close">
+                    <button class="btn btn-sm btn-icon btn-active-color-primary" type="button" data-bs-dismiss="modal"
+                        aria-label="Close">
                         <i class="fa fa-times"></i>
                     </button>
                     <!--end::Close-->
@@ -72,44 +74,69 @@
         </div>
         <!--end::Modal dialog-->
     </div>
-
 @endsection
 @section('js')
     <script>
-        var columns = [
-            {data: 'id', name: 'id'},
-            {data: 'image', name: 'image'},
-            {data: 'name', name: 'name'},
-            {data: 'email', name: 'email'},
-            {data: 'is_active', name: 'is_active'},
+        var columns = [{
+                data: 'id',
+                name: 'id'
+            },
+            {
+                data: 'image',
+                name: 'image'
+            },
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'roles[0].name',
+                name: 'roles[0].name'
+            },
+            {
+                data: 'email',
+                name: 'email'
+            },
+            {
+                data: 'is_active',
+                name: 'is_active'
+            },
 
-            {data: 'created_at', name: 'created_at'},
+            {
+                data: 'created_at',
+                name: 'created_at'
+            },
 
-            {data: 'action', name: 'action', orderable: false, searchable: false},
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
         ];
     </script>
-    @include('Admin.layouts.inc.ajax',['url'=>'admins'])
+    @include('Admin.layouts.inc.ajax', ['url' => 'admins'])
     <!--datatable js-->
 
-    {{--    <script src="{{url('assets')}}/dashboard/js/pages/datatables.init.js"></script>--}}
-    {{--    <script>--}}
-    {{--        document.addEventListener("DOMContentLoaded", function () {--}}
-    {{--            new DataTable("#buttons-datatables", {dom: "Bfrtip", buttons: ["copy", "csv", "excel", "print", "pdf"]})--}}
-    {{--        })--}}
-    {{--    </script>--}}
+    {{--    <script src="{{url('assets')}}/dashboard/js/pages/datatables.init.js"></script> --}}
+    {{--    <script> --}}
+    {{--        document.addEventListener("DOMContentLoaded", function () { --}}
+    {{--            new DataTable("#buttons-datatables", {dom: "Bfrtip", buttons: ["copy", "csv", "excel", "print", "pdf"]}) --}}
+    {{--        }) --}}
+    {{--    </script> --}}
 
     <script>
-        $(document).on('change','.activeBtn',function (){
-            var id=$(this).attr('data-id');
+        $(document).on('change', '.activeBtn', function() {
+            var id = $(this).attr('data-id');
 
             $.ajax({
                 type: 'GET',
-                url: "{{route('admin.active.admin')}}",
+                url: "{{ route('admin.active.admin') }}",
                 data: {
                     id: id,
                 },
 
-                success: function (res) {
+                success: function(res) {
                     if (res['status'] == true) {
 
                         toastr.success("تمت العملية بنجاح")
@@ -119,7 +146,7 @@
 
                     }
                 },
-                error: function (data) {
+                error: function(data) {
                     // location.reload();
                 }
             });
@@ -127,5 +154,4 @@
 
         })
     </script>
-
 @endsection

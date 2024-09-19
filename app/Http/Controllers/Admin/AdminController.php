@@ -7,6 +7,7 @@ use App\Http\Traits\Upload_Files;
 use App\Models\Admin;
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\DataTables;
@@ -15,22 +16,22 @@ class AdminController extends Controller
 {
     use Upload_Files;
 
+    public function __construct()
+    {
+        $this->middleware('permission:عرض المستخدمين,admin')->only('index');
+        $this->middleware('permission:تعديل المستخدمين,admin')->only(['edit', 'update', 'activate']);
+        $this->middleware('permission:إنشاء المستخدمين,admin')->only(['create', 'store']);
+        $this->middleware('permission:حذف المستخدمين,admin')->only('destroy');
+    }
     public function index(Request $request)
     {
-
         if ($request->ajax()) {
-            $admins = Admin::query()->with('employee');
+            $admins = Admin::query()->with(['employee', 'roles']);
             return Datatables::of($admins)
                 ->addColumn('action', function ($row) {
 
                     $edit = '';
                     $delete = '';
-
-//                    if(!auth()->user()->can('تعديل مستخدمين'))
-//                        $edit='hidden';
-//                    if(!auth()->user()->can('حذف مستخدمين'))
-//                        $delete='hidden';
-
                     return '
                             <button ' . $edit . '   class="editBtn btn rounded-pill btn-primary waves-effect waves-light"
                                     data-id="' . $row->id . '"
@@ -103,6 +104,7 @@ class AdminController extends Controller
 //             'business_name'=>'required',
             'image' => 'required|mimes:jpeg,jpg,png,gif,svg,webp,avif',
             'is_active' => 'required',
+            'role_id' => 'required|exists:roles,id',
 
         ]);
         $data["image"] = $this->uploadFiles('admins', $request->file('image'), null);
@@ -111,11 +113,11 @@ class AdminController extends Controller
 
 //        $data['image'] = $this->createImageFromTextManual('admins' , $request->name ,256 , '#000', '#fff');
 
-        $admin = Admin::create($data);
+        $admin = Admin::create(Arr::except($data, 'role_id'));
 
         DB::table('model_has_roles')->where('model_id', $admin->id)->delete();
 
-        $admin->assignRole($request->input('roles'));
+        $admin->assignRole($request->input('role_id'));
 
         return response()->json(
             [
@@ -143,7 +145,7 @@ class AdminController extends Controller
         $employees = Employee::get();
 
         $adminRoles = DB::table("model_has_roles")->where("model_has_roles.model_id", $admin->id)
-            ->get();
+            ->first();
 
         $admin->load('employee');
 
@@ -160,7 +162,7 @@ class AdminController extends Controller
 //            'business_name'=>'required',
             'image' => 'nullable|mimes:jpeg,jpg,png,gif,svg,webp,avif',
             'is_active' => 'nullable',
-
+            'role_id' => 'required|exists:roles,id',
         ]);
         if ($request->password) {
 
@@ -175,11 +177,11 @@ class AdminController extends Controller
 
         }
         $old = $admin;
-        $admin->update($data);
+        $admin->update(Arr::except($data, 'role_id'));
 
         DB::table('model_has_roles')->where('model_id', $admin->id)->delete();
 
-        $admin->assignRole($request->input('roles'));
+        $admin->assignRole($request->input('role_id'));
 
         $html = view('Admin.CRUDS.admin.parts.header')->render();
 
