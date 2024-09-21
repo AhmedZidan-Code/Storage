@@ -4,9 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\Admin;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,14 +18,17 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // \App\Models\User::factory(10)->create();
-        $admin = Admin::create([
-            'email'=>'admin@admin.com',
-            'password'=>Hash::make(123456789)
-        ]);
+        $this->call(RolesAndPermissionsSeeder::class);
         
+        $admin = Admin::create([
+            'email' => 'admin@admin.com',
+            'password' => Hash::make(123456789),
+        ]);
+
         $role = Role::firstOrCreate(['name' => 'admin', 'guard_name' => 'admin']);
 
         $admin->assignRole($role);
+        $role->givePermissionTo(Permission::all());
 
     }
 }

@@ -105,6 +105,7 @@ class StoreManagerController extends Controller
             'pay_method' => 'required|in:debit,cash',
             'client_id' => 'required|exists:clients,id',
             'fatora_number' => 'required|unique:sales,fatora_number,' . $id,
+            'representative_id' => 'required|exists:representatives,id',
 
         ]);
 

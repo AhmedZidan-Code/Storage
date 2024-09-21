@@ -137,7 +137,9 @@
                                     name="total[]" id="total-{{ $key }}" style="width: 100%;">
                             </th>
                             <th>
-                                {{ $pivot->is_prepared == 1 ? 'تم التجهيز' : 'لم يتم التجهيز' }}
+                                <span class="badge bg-{{ $pivot->is_prepared == 1 ? 'success' : 'warning' }}">
+                                    {{ $pivot->is_prepared == 1 ? 'تم التجهيز' : 'لم يتم التجهيز' }}
+                                </span>
                             </th>
                             <th>
                                 <textarea name="notes[]" data-id="{{ $pivot->id }}" id="notes-{{ $pivot->id }}" readonly> {{ $pivot->notes }}</textarea>
@@ -168,7 +170,19 @@
             </table>
         </div>
     </div>
-    <button form="form" type="submit" id="submit" class="btn btn-primary">
-        <span class="indicator-label">اتمام</span>
-    </button>
+    <div class="row">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
+            <label for="representative_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                <span class="required mr-1"> المندوب</span>
+            </label>
+            <select id="representative_id" name="representative_id" style="width: 200px;">
+            </select>
+        </div>
+        <div class="d-flex flex-column mb-7 fv-row col-sm-3 mt-3">
+
+            <button form="form" type="submit" id="submit" class="btn btn-primary">
+                <span class="indicator-label">اتمام</span>
+            </button>
+        </div>
+    </div>
 </form>

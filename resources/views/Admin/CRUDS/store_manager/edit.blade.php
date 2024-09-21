@@ -23,6 +23,27 @@
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
         <script>
+                    (function() {
+
+            $("#representative_id").select2({
+                placeholder: 'Channel...',
+                // width: '350px',
+                allowClear: true,
+                ajax: {
+                    url: '{{ route('admin.getRepresentatives') }}',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function(params) {
+                        return {
+                            term: params.term || '',
+                            page: params.page || 1
+                        }
+                    },
+                    cache: true
+                }
+            });
+        })();
+
             $(document).ready(function() {
                 callTotal();
             });

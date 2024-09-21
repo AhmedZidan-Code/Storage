@@ -28,6 +28,11 @@
         // ];
 
     }
+    filterData = function(d) {
+                    d.from_date = $('#from_date').val();
+                    d.to_date = $('#to_date').val();
+                    d.representative_id = $('#representative_id').val();
+                };
     $(function() {
         $("#table").DataTable({
             processing: true,
@@ -37,7 +42,10 @@
 
             bLengthChange: true,
             serverSide: true,
-            ajax: newUrl,
+            ajax: {
+                url: newUrl,
+                data: filterData
+            },
             columns: columns,
             // order: [
             //     [0, "asc"]
@@ -77,7 +85,9 @@
         });
 
     });
-
+    $('#filter').on('click', function(e) {
+         $("#table").DataTable().draw();
+    });
     $(document).on('click', '#addBtn', function() {
         $('#form-load').html(loader_form)
         $('#operationType').text('{{ trans('admin.add') }}');

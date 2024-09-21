@@ -24,6 +24,15 @@ class SalesController extends Controller
 
         if ($request->ajax()) {
             $rows = Sales::query()->with(['storage', 'client']);
+
+            if ($request->filled('from_date') && $request->filled('to_date')) {
+                $rows->whereBetween('sales_date', [$request->from_date, $request->to_date]);
+            }
+
+            if ($request->filled('representative_id')) {
+                $rows->where('representative_id', $request->representative_id);
+            }
+
             return DataTables::of($rows)
                 ->addColumn('action', function ($row) {
 

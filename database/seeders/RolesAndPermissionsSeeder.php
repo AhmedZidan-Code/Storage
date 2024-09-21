@@ -37,7 +37,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
         foreach ($controllers as $controller) {
             foreach ($actions as $action) {
-                Permission::updateOrCreate(['name' => "{$action} {$controller}"], ['name' => "{$action} {$controller}", 'group' => $controller, 'guard_name' => 'admin']);
+                Permission::updateOrCreate(['name' => "{$action} {$controller}"], ['name' => "{$action} {$controller}", 'name_slug' => "{$action} {$controller}", 'group' => $controller, 'group_slug' => $controller, 'guard_name' => 'admin']);
             }
         }
 
@@ -46,7 +46,7 @@ class RolesAndPermissionsSeeder extends Seeder
         ]; // add your custom permissions here
 
         foreach ($customs as $name => $group) {
-            Permission::updateOrCreate(['name' => $name], ['name' => $name, 'group' => $group, 'guard_name' => 'admin']);
+            Permission::updateOrCreate(['name' => $name], ['name' => $name, 'name_slug' => $name, 'group' => $group, 'group_slug' => $group, 'guard_name' => 'admin']);
         }
 
     }
