@@ -131,6 +131,8 @@
     </div>
 @endsection
 @section('js')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         var columns = [{
                 data: 'id',
@@ -194,6 +196,7 @@
                 var rowId = $(this).data('id');
                 var amount = $('#amount-' + rowId).val();
                 var notes = $('#notes-' + rowId).val();
+                var batch_number = $('#batch_number-' + rowId).val();
 
                 let url = '{{ route('update.prepare-status') }}';
 
@@ -204,6 +207,7 @@
                         id: rowId,
                         amount: amount,
                         notes: notes,
+                        batch_number: batch_number,
                         is_prepared: isPrepared
                     },
                     success: function(response) {
@@ -221,6 +225,40 @@
                         $(this).prop('checked', !isPrepared);
                     }
                 });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Initialize Select2 inside the modal once it's shown
+            $('#Modal').on('shown.bs.modal', function() {
+                // Initialize the select2 elements with modal as dropdown parent
+                $('.select2').select2({
+                    dropdownParent: $('#Modal')
+                });
+                $(`.batch_number`).select2({
+                    dropdownParent: $('#Modal'),
+                    placeholder: 'رقم التشغيلة...',
+                    // width: '350px',
+                    allowClear: true,
+                    ajax: {
+                        url: '{{ route('admin.getBatches') }}',
+                        dataType: 'json',
+                        delay: 250,
+                        data: function(params) {
+                            return {
+                                term: params.term || '',
+                                page: params.page || 1
+                            }
+                        },
+                        cache: true
+                    }
+                });
+            });
+
+            // Optional: Destroy select2 if the modal is hidden to avoid reinitialization issues
+            $('#Modal').on('hidden.bs.modal', function() {
+                $('.select2').select2('destroy');
             });
         });
     </script>

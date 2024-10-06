@@ -10,9 +10,9 @@
                     <th> الشركة</th>
                     <th> المنتج</th>
                     <th> كود المنتج</th>
-                    <th>رقم التشغيلة</th>
                     <th>الوحدة</th>
                     <th> الكمية</th>
+                    <th>رقم التشغيلة</th>
                     <th>ملاحظات</th>
                     <th>حالة تحضير الصنف</th>
                 </tr>
@@ -44,17 +44,20 @@
                         <th>
                             {{ $pivot->productive_code }}
                         </th>
-                        <th style="padding: 8px;">
-                            {{ $pivot->batch_number }}
-                        </th>
                         <th>
                             {{ $pivot->productive->unit->title ?? '' }}
                         </th>
                         <th>
                             <input data-id="{{ $pivot->id }}" onchange="callTotal()" onkeyup="callTotal()"
                                 type="number" value="{{ $pivot->amount }}" min="1" name="amount[]"
-                                id="amount-{{ $pivot->id }}" style="width: 100%;">
+                                id="amount-{{ $pivot->id }}" style="width: 100%;" readonly>
 
+                        </th>
+                        <th style="padding: 8px;">
+                            <select data-id="{{ $key }}" name="batch_number[]" class="select2 batch_number"
+                                id='batch_number-{{ $pivot->id }}' style='width: 200px;'>
+                                <option selected value="{{ $pivot->batch_number}}" > {{ $pivot->batch_number}}</option>
+                            </select>
                         </th>
                         <th>
                             <textarea name="notes[]" data-id="{{ $pivot->id }}" id="notes-{{ $pivot->id }}"> {{ $pivot->notes }}</textarea>

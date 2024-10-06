@@ -81,15 +81,18 @@
         <div class="col-md-10">
             <table id="table-details" class="table table-bordered dt-responsive nowrap table-striped align-middle"
                 style="width:70% !important; border: 1px solid #dee2e6; text-align: center;">
-                <thead style="background-color: #f8f9fa;">
+                <thead >
                     <tr>
-                        <th style="padding: 8px;">المنتج</th>
-                        <th style="padding: 8px;">كود المنتج</th>
-                        <th style="padding: 8px;">الوحدة</th>
-                        <th style="padding: 8px;">الكمية</th>
-                        <th style="padding: 8px;">سعر الشراء</th>
-                        <th style="padding: 8px;">القيمة الاجمالية</th>
-                        <th style="padding: 8px;">العمليات</th>
+                        <th>المنتج</th>
+                        <th>كود المنتج</th>
+                        <th>الوحدة</th>
+                        <th>الكمية</th>
+                        <th>سعر الشراء</th>
+                        <th>بونص</th>
+                        <th>نسبة الخصم</th>
+                        <th>رقم التشغيلة</th>
+                        <th>القيمة الاجمالية</th>
+                        <th>العمليات</th>
                     </tr>
                 </thead>
                 <tbody id="details-container">
@@ -125,23 +128,23 @@
                                     style="width: 100px; text-align: center;">
                             </th>
                             <th style="padding: 8px;">
-                                <input data-id="{{ $key }}" step=".1" type="number"
-                                    value="{{ $pivot->bouns }}" min="1" name="bouns[]"
+                                <input data-id="{{ $key }}"  type="number"
+                                    value="{{ $pivot->bouns }}"  name="bouns[]"
                                     id="bouns-{{ $key }}" style="width: 100px; text-align: center;">
                             </th>
                             <th style="padding: 8px;">
-                                <input data-id="{{ $key }}" step=".1" type="number"
-                                    value="{{ $pivot->discount_percentage }}" min="1"
+                                <input data-id="{{ $key }}"  type="number"
+                                    value="{{ $pivot->discount_percentage }}"
                                     name="discount_percentage[]" id="discount_percentage-{{ $key }}"
-                                    style="width: 100px; text-align: center;">
+                                    style="width: 100px; text-align: center;" onkeyup="callTotal()">
                             </th>
                             <th style="padding: 8px;">
-                                <input data-id="{{ $key }}" step=".1" type="number"
-                                    value="{{ $pivot->batch_number }}" min="1" name="batch_number[]"
+                                <input data-id="{{ $key }}" type="number"
+                                    value="{{ $pivot->batch_number }}"  name="batch_number[]"
                                     id="batch_number-{{ $key }}" style="width: 100px; text-align: center;">
                             </th>
                             <th style="padding: 8px;">
-                                <input type="number" disabled value="{{ $pivot->total }}" min="1"
+                                <input type="number" disabled value="{{ $pivot->total }}" 
                                     name="total[]" id="total-{{ $key }}"
                                     style="width: 100px; text-align: center;">
                             </th>
@@ -156,18 +159,22 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="3" style="text-align: center; background-color: yellow; padding: 10px;">
-                            الاجمالي</th>
-                        <th colspan="3" id="total_productive_buy_price"
-                            style="text-align: center; background-color: #6c757d; color: white; padding: 10px;">
-                            {{ $row->total }}
+                        <th colspan="1" style="text-align: center; background-color: yellow">الاجمالي</th>
+                        <th colspan="2" id="total_productive_buy_price"
+                            style="text-align: center; background-color: #6c757d;color: white">{{$row->total}}
                         </th>
-                        <th colspan="2" style="text-align: center; background-color: aqua">نسبة الخصم الكلية</th>
+                        <th colspan="1" style="text-align: center; background-color: aqua">نسبة الخصم الكلية</th>
                         <th colspan="2" style="text-align: center; background-color: gray">
-                            <input type="number" value="0" min="0" max="99"
-                                name="total_discount" style="width: 100%;"> <!-- Adjusted width -->
+                            <input type="number" id="total_discount" value="{{$row->total_discount}}" min="0" max="99"
+                                name="total_discount" style="width: 100%;" onkeyup="totalAfterDiscount()">
+                            <!-- Adjusted width -->
                         </th>
-
+                        <th colspan="2" style="text-align: center; background-color: rgb(196, 251, 30)"> الاجمالي
+                            بعد الخصم الكلي</th>
+                        <th colspan="2" style="text-align: center; background-color: rgb(173, 222, 185)">
+                            <input type="text" id="total_after_discount" value="{{$row->total_after_discount}}" name="total_discount"
+                                style="width: 100%;" disabled> <!-- Adjusted width -->
+                        </th>
                     </tr>
                 </tfoot>
             </table>

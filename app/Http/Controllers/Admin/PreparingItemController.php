@@ -7,6 +7,7 @@ use App\Models\Sales;
 use App\Models\SalesDetails;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\Facades\DataTables;
 
 class PreparingItemController extends Controller
@@ -36,7 +37,7 @@ class PreparingItemController extends Controller
                                     data-id="' . $row->id . '"
                             <span class="svg-icon svg-icon-3">
                                 <span class="svg-icon svg-icon-3">
-                                    <i class="fa fa-edit"></i>
+                                    تحضير الصنف
                                 </span>
                             </span>
                             </button>';
@@ -95,11 +96,38 @@ class PreparingItemController extends Controller
         if ($request->is_prepared == 1) {
             $row->amount = $request->amount;
             $row->notes = $request->notes;
+            $row->batch_number = $request->batch_number;
         }
         $row->is_prepared = $request->is_prepared;
         $row->save();
 
         return response()->json(['success' => true]);
+    }
+
+    public function getBatchNumbers(Request $request)
+    {
+        if ($request->ajax()) {
+            $batchs = DB::table('purchases_details')
+                ->select(['batch_number as text', 'batch_number as id'])
+                ->where('batch_number', '!=', null)
+                ->distinct()
+                ->simplePaginate(3);
+
+            $morePages = true;
+            $pagination_obj = json_encode($batchs);
+            if (empty($batchs->nextPageUrl())) {
+                $morePages = false;
+            }
+            $results = array(
+                "results" => $batchs->items(),
+                "pagination" => array(
+                    "more" => $morePages,
+                ),
+            );
+
+            return \Response::json($results);
+
+        }
     }
 
 }

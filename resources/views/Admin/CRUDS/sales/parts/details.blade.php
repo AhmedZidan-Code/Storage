@@ -37,7 +37,7 @@
     </th>
     <th>
         <input type="number" value="0" min="0" name="discount_percentage[]"
-            id="discount_percentage-{{ $id }}" style="width: 100%;">
+            id="discount_percentage-{{ $id }}" style="width: 100%;" onkeyup="callTotal()">
     </th>
     <th>
         <input type="number" value="0" min="0" name="batch_number[]" id="batch_number-{{ $id }}"

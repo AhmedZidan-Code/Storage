@@ -140,7 +140,7 @@ class PurchasesController extends Controller
                 $productive = Productive::findOrFail($request->productive_id[$i]);
 
                 $details = [
-
+                    'storage_id' => $purchases->storage_id,
                     'purchases_id' => $purchases->id,
                     'productive_id' => $request->productive_id[$i],
                     'productive_code' => $productive->code,
@@ -149,7 +149,7 @@ class PurchasesController extends Controller
                     'batch_number' => $request->batch_number[$i],
                     'amount' => $request->amount[$i],
                     'productive_buy_price' => $request->productive_buy_price[$i],
-                    'total' => $request->productive_buy_price[$i] * $request->amount[$i],
+                    'total' => ($request->productive_buy_price[$i] * $request->amount[$i]) - (($request->productive_buy_price[$i] * $request->amount[$i]) * $request->discount_percentage[$i] / 100),
                     'all_pieces' => $request->amount[$i] * $productive->num_pieces_in_package,
                     'date' => date('Y-m-d'),
                     'year' => date('Y'),
@@ -243,6 +243,7 @@ class PurchasesController extends Controller
 
                 $details = [
 
+                    'storage_id' => $purchases->storage_id,
                     'purchases_id' => $purchases->id,
                     'productive_id' => $request->productive_id[$i],
                     'productive_code' => $productive->code,
@@ -251,7 +252,7 @@ class PurchasesController extends Controller
                     'discount_percentage' => $request->discount_percentage[$i],
                     'batch_number' => $request->batch_number[$i],
                     'productive_buy_price' => $request->productive_buy_price[$i],
-                    'total' => $request->productive_buy_price[$i] * $request->amount[$i],
+                    'total' => ($request->productive_buy_price[$i] * $request->amount[$i]) - (($request->productive_buy_price[$i] * $request->amount[$i]) * $request->discount_percentage[$i] / 100),
                     'all_pieces' => $request->amount[$i] * $productive->num_pieces_in_package,
                     'date' => $purchases->date,
                     'year' => $purchases->year,

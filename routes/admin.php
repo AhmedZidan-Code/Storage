@@ -137,6 +137,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
     // Prepare Items
     Route::resource('prepare-items', PreparingItemController::class);
+    Route::get('batch-numbers', [PreparingItemController::class, 'getBatchNumbers'])->name('admin.getBatches');
     Route::post('update-status', [PreparingItemController::class, 'updateIsPrepared'])->name('update.prepare-status');
     
     Route::resource('store-managers', StoreManagerController::class);

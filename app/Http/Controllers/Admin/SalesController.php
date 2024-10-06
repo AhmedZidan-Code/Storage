@@ -182,28 +182,9 @@ class SalesController extends Controller
                 $details = [];
                 $productive = Productive::findOrFail($request->productive_id[$i]);
 
+
                 $details = [
-
-                    'sales_id' => $sales->id,
-                    'productive_id' => $request->productive_id[$i],
-                    'productive_code' => $productive->code,
-                    'amount' => $request->amount[$i],
-                    'bouns' => $request->bouns[$i],
-                    'discount_percentage' => $request->discount_percentage[$i],
-                    'batch_number' => $request->batch_number[$i],
-                    'productive_sale_price' => $request->productive_sale_price[$i],
-                    'total' => $request->productive_sale_price[$i] * $request->amount[$i],
-                    'all_pieces' => $request->amount[$i] * $productive->num_pieces_in_package,
-                    'date' => date('Y-m-d'),
-                    'year' => date('Y'),
-                    'month' => date('m'),
-                    'publisher' => auth('admin')->user()->id,
-                    'created_at' => date('Y-m-d H:i:s'),
-                    'updated_at' => date('Y-m-d H:i:s'),
-
-                ];
-                $details = [
-
+                    'storage_id' => $sales->storage_id,
                     'sales_id' => $sales->id,
                     'company_id' => $request->company_id[$i],
                     'productive_id' => $request->productive_id[$i],
@@ -306,7 +287,7 @@ class SalesController extends Controller
                 $productive = Productive::findOrFail($request->productive_id[$i]);
 
                 $details = [
-
+                    'storage_id' => $sales->storage_id,
                     'sales_id' => $sales->id,
                     'company_id' => $request->company_id[$i],
                     'productive_id' => $request->productive_id[$i],
