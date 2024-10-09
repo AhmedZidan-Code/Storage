@@ -26,14 +26,15 @@ use App\Http\Controllers\Admin\StoreManagerController;
 use App\Http\Controllers\Admin\Area\ProvinceController;
 use App\Http\Controllers\Admin\HeadBackSalesController;
 use App\Http\Controllers\Admin\PreparingItemController;
+use App\Http\Controllers\Admin\RepresentativeController;
 use App\Http\Controllers\Admin\SupplierVoucherController;
 use App\Http\Controllers\Admin\ItemInstallationController;
 use App\Http\Controllers\Admin\HeadBackPurchasesController;
+use App\Http\Controllers\Admin\ClientPaymentSettingController;
 use App\Http\Controllers\Admin\Reports\Bills\SalesBillController;
 use App\Http\Controllers\Admin\Reports\Bills\PurchasesBillController;
 use App\Http\Controllers\Admin\Reports\AccountStatements\SupplierAccountStatmentController;
 use App\Http\Controllers\Admin\Reports\AccountStatements\CustomerAccountStatementController;
-use App\Http\Controllers\Admin\RepresentativeController;
 
 // Authentication Routes
 Route::get('admin/login', [AuthController::class, 'loginView'])->name('admin.login');
@@ -145,4 +146,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     // representatives
     Route::resource('representatives', RepresentativeController::class);
     Route::get('representatives-data', [RepresentativeController::class,'getRepresentatives'])->name('admin.getRepresentatives');
+
+    // client-payment-settings
+    Route::resource('client-payment-settings', ClientPaymentSettingController::class);
+
 });

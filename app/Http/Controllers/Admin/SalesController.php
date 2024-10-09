@@ -6,12 +6,28 @@ use App\Http\Controllers\Controller;
 use App\Models\Productive;
 use App\Models\Sales;
 use App\Models\SalesDetails;
+use Carbon\Carbon;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Yajra\DataTables\DataTables;
 
 class SalesController extends Controller
 {
+    /**
+     * STATUSES
+     *
+     * @var array
+     */
+    private const STATUSES = [
+        'new' => ['text' => 'جديد', 'class' => 'btn-primary'],
+        'in_progress' => ['text' => 'جاري التجهيز', 'class' => 'btn-info'],
+        'complete' => ['text' => 'مكتمل', 'class' => 'btn-success'],
+        'canceled' => ['text' => 'ملغي', 'class' => 'btn-danger'],
+    ];
+
     public function __construct()
     {
         $this->middleware('permission:عرض الفواتير,admin')->only('index');
@@ -19,111 +35,146 @@ class SalesController extends Controller
         $this->middleware('permission:إنشاء الفواتير,admin')->only(['create', 'store']);
         $this->middleware('permission:حذف الفواتير,admin')->only('destroy');
     }
+
+    /**
+     * [Description for index]
+     *
+     * @param Request $request
+     * 
+     * @return JsonResponse|View
+     * 
+     */
     public function index(Request $request)
     {
-
-        if ($request->ajax()) {
-            $rows = Sales::query()->with(['storage', 'client']);
-
-            if ($request->filled('from_date') && $request->filled('to_date')) {
-                $rows->whereBetween('sales_date', [$request->from_date, $request->to_date]);
-            }
-
-            if ($request->filled('representative_id')) {
-                $rows->where('representative_id', $request->representative_id);
-            }
-
-            return DataTables::of($rows)
-                ->addColumn('action', function ($row) {
-
-                    $edit = '';
-                    $delete = '';
-
-                    return '
-
-                           <button ' . $edit . '   class="editBtn-p btn rounded-pill btn-primary waves-effect waves-light"
-                                    data-id="' . $row->id . '"
-                            <span class="svg-icon svg-icon-3">
-                                <span class="svg-icon svg-icon-3">
-                                    <i class="fa fa-edit"></i>
-                                </span>
-                            </span>
-                            </button>
-                            <button ' . $delete . '  class="btn rounded-pill btn-danger waves-effect waves-light delete"
-                                    data-id="' . $row->id . '">
-                            <span class="svg-icon svg-icon-3">
-                                <span class="svg-icon svg-icon-3">
-                                    <i class="fa fa-trash"></i>
-                                </span>
-                            </span>
-                            </button>
-                       ';
-
-                })
-
-                ->addColumn('details', function ($row) {
-                    return "<button data-id='$row->id' class='btn btn-outline-dark showDetails'>عرض تفاصيل الطلب</button>";
-                })
-                ->editColumn('status', function ($row) {
-                    $statuses = [
-                        'new' => ['text' => 'جديد', 'class' => 'btn-primary'],
-                        'in_progress' => ['text' => 'جاري التجهيز', 'class' => 'btn-info'],
-                        'complete' => ['text' => 'مكتمل', 'class' => 'btn-success'],
-                        'canceled' => ['text' => 'ملغي', 'class' => 'btn-danger'],
-                    ];
-                    $statusesWithoutNew = [
-                        'in_progress' => ['text' => 'جاري التجهيز', 'class' => 'btn-info'],
-                        'complete' => ['text' => 'مكتمل', 'class' => 'btn-success'],
-                        'canceled' => ['text' => 'ملغي', 'class' => 'btn-danger'],
-                    ];
-
-                    $currentStatus = $statuses[$row->status];
-
-                    $dropdownHtml = '
-                        <div class="dropdown">
-                            <button class="btn ' . $currentStatus['class'] . ' dropdown-toggle" type="button" id="statusDropdown' . $row->id . '" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                ' . $currentStatus['text'] . '
-                            </button>
-                            <div class="dropdown-menu" aria-labelledby="statusDropdown' . $row->id . '">';
-
-                    foreach ($statusesWithoutNew as $status => $info) {
-                        $dropdownHtml .= '
-                            <a class="dropdown-item" href="#" data-status="' . $status . '" data-row-id="' . $row->id . '">
-                                ' . $info['text'] . '
-                            </a>';
-                    }
-
-                    $dropdownHtml .= '
-                            </div>
-                        </div>';
-
-                    return $dropdownHtml;
-                })
-                ->editColumn('created_at', function ($admin) {
-                    return date('Y/m/d', strtotime($admin->created_at));
-                })
-                ->escapeColumns([])
-
-                ->make(true);
-
+        if (!$request->ajax()) {
+            return view('Admin.CRUDS.sales.index');
         }
 
-        return view('Admin.CRUDS.sales.index');
+        $query = Sales::query()->with(['storage', 'client']);
+
+        $this->applyFilters($query, $request);
+
+        return $this->generateDataTable($query);
+    }
+
+    /**
+     * [Description for applyFilters]
+     *
+     * @param mixed $query
+     * @param Request $request
+     * 
+     * @return void
+     * 
+     */
+    private function applyFilters($query, Request $request)
+    {
+        if ($request->filled('from_date') && $request->filled('to_date')) {
+            $query->whereBetween('sales_date', [$request->from_date, $request->to_date]);
+        }
+
+        if ($request->filled('representative_id')) {
+            $query->where('representative_id', $request->representative_id);
+        }
+    }
+
+    /**
+     * [Description for generateDataTable]
+     *
+     * @param mixed $query
+     * 
+     * @return JsonResponse
+     * 
+     */
+    private function generateDataTable($query)
+    {
+        return DataTables::of($query)
+            ->addColumn('action', function ($row) {
+                return $this->generateActionButtons($row);
+            })
+            ->addColumn('details', function ($row) {
+                return "<button data-id='$row->id' class='btn btn-outline-dark showDetails'>عرض تفاصيل الطلب</button>";
+            })
+            ->editColumn('status', function ($row) {
+                return $this->generateStatusDropdown($row);
+            })
+            ->editColumn('created_at', function ($admin) {
+                return date('Y/m/d', strtotime($admin->created_at));
+            })
+            ->escapeColumns([])
+            ->make(true);
+    }
+
+    /**
+     * [Description for generateActionButtons]
+     *
+     * @param mixed $row
+     * 
+     * @return string
+     * 
+     */
+    private function generateActionButtons($row)
+    {
+        return '
+            <button class="editBtn-p btn rounded-pill btn-primary waves-effect waves-light"
+                    data-id="' . $row->id . '">
+                <span class="svg-icon svg-icon-3">
+                    <i class="fa fa-edit"></i>
+                </span>
+            </button>
+            <button class="btn rounded-pill btn-danger waves-effect waves-light delete"
+                    data-id="' . $row->id . '">
+                <span class="svg-icon svg-icon-3">
+                    <i class="fa fa-trash"></i>
+                </span>
+            </button>';
+    }
+
+    private function generateStatusDropdown($row)
+    {
+        $currentStatus = self::STATUSES[$row->status];
+        $statusesWithoutNew = array_diff_key(self::STATUSES, ['new' => []]);
+
+        $dropdownHtml = "<div class='dropdown'>
+            <button class='btn {$currentStatus['class']} dropdown-toggle' type='button'
+                    id='statusDropdown{$row->id}' data-toggle='dropdown'
+                    aria-haspopup='true' aria-expanded='false'>
+                {$currentStatus['text']}
+            </button>
+            <div class='dropdown-menu' aria-labelledby='statusDropdown{$row->id}'>";
+
+        foreach ($statusesWithoutNew as $status => $info) {
+            $dropdownHtml .= "<a class='dropdown-item' href='#'
+                                data-status='{$status}'
+                                data-row-id='{$row->id}'>
+                                {$info['text']}
+                             </a>";
+        }
+
+        return $dropdownHtml . '</div></div>';
     }
 
     public function create()
     {
-        $model = DB::table('sales')->latest('id')->select('id')->first();
-        if ($model) {
-            $count = $model->id;
-        } else {
-            $count = 0;
-        }
-
-        return view('Admin.CRUDS.sales.create', compact('count'));
+        $lastId = DB::table('sales')->latest('id')->value('id') ?? 0;
+        return view('Admin.CRUDS.sales.create', ['count' => $lastId]);
     }
 
     public function store(Request $request)
+    {
+        try {
+            return DB::transaction(function () use ($request) {
+                [$data, $details] = $this->validateData($request);
+                $sales = $this->createSalesRecord($data);
+                $this->processDetailsAndUpdateTotals($request, $sales, $data['total_discount'] ?? 0);
+
+                return $this->successResponse('تمت العملية بنجاح!');
+            });
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage());
+        }
+    }
+
+    private function validateData(Request $request, $id = null)
     {
         $data = $request->validate([
             'storage_id' => 'required|exists:storages,id',
@@ -131,11 +182,10 @@ class SalesController extends Controller
             'sales_date' => 'required|date',
             'pay_method' => 'required|in:debit,cash',
             'client_id' => 'required|exists:clients,id',
-            'fatora_number' => 'required|unique:sales,fatora_number',
-
+            'fatora_number' => 'required|unique:sales,fatora_number' . ($id ? ',' . $id : ''),
         ]);
 
-        $datails = $request->validate([
+        $details = $request->validate([
             'company_id' => 'required|array',
             'company_id.*' => 'required|exists:companies,id',
             'productive_id' => 'required|array',
@@ -152,202 +202,147 @@ class SalesController extends Controller
             'batch_number.*' => 'required',
         ]);
 
-        if (count($request->amount) != count($request->productive_id)) {
-            return response()->json(
-                [
-                    'code' => 421,
-                    'message' => 'المنتج مطلوب',
-                ]);
+        if (count($request->amount) !== count($request->productive_id)) {
+            throw ValidationException::withMessages(['المنتج مطلوب']);
         }
 
-        $purchases_number = 1;
-        $latestModel = DB::table('sales')->latest('id')->select('id')->first();
-        if ($latestModel) {
-            $purchases_number = $latestModel->id + 1;
+        return [$data, $details];
+    }
+
+    private function createSalesRecord(array $data)
+    {
+        $now = Carbon::now();
+        $latestId = DB::table('sales')->latest('id')->value('id') ?? 0;
+
+        return Sales::create(array_merge($data, [
+            'publisher' => auth('admin')->user()->id,
+            'sales_number' => $latestId + 1,
+            'date' => $now->toDateString(),
+            'month' => $now->month,
+            'year' => $now->year,
+        ]));
+    }
+
+    private function processDetailsAndUpdateTotals(Request $request, Sales $sales, $totalDiscount)
+    {
+        if (empty($request->productive_id)) {
+            return;
         }
 
-        $data['publisher'] = auth('admin')->user()->id;
-        $data['sales_number'] = $purchases_number;
-        $data['date'] = date('Y-m-d');
-        $data['month'] = date('m');
-        $data['year'] = date('Y');
+        $detailsData = $this->prepareDetailsData($request, $sales);
+        DB::table('sales_details')->insert($detailsData);
 
-        $sales = Sales::create($data);
+        $this->updateSalesTotals($sales, $totalDiscount);
+    }
 
-        $sql = [];
+    private function prepareDetailsData(Request $request, Sales $sales)
+    {
+        $detailsData = [];
+        $now = Carbon::now();
 
-        if ($request->productive_id) {
-            for ($i = 0; $i < count($request->productive_id); $i++) {
+        foreach ($request->productive_id as $i => $productiveId) {
+            $productive = Productive::findOrFail($productiveId);
+            $salePrice = $request->productive_sale_price[$i];
+            $amount = $request->amount[$i];
+            $discountPercentage = $request->discount_percentage[$i];
 
-                $details = [];
-                $productive = Productive::findOrFail($request->productive_id[$i]);
-
-
-                $details = [
-                    'storage_id' => $sales->storage_id,
-                    'sales_id' => $sales->id,
-                    'company_id' => $request->company_id[$i],
-                    'productive_id' => $request->productive_id[$i],
-                    'productive_code' => $productive->code,
-                    'amount' => $request->amount[$i],
-                    'bouns' => $request->bouns[$i],
-                    'discount_percentage' => $request->discount_percentage[$i],
-                    'batch_number' => $request->batch_number[$i],
-                    'productive_sale_price' => $request->productive_sale_price[$i],
-                    'total' => ($request->productive_sale_price[$i] * $request->amount[$i]) - (($request->productive_sale_price[$i] * $request->amount[$i]) * $request->discount_percentage[$i] / 100),
-                    'all_pieces' => $request->amount[$i] * $productive->num_pieces_in_package,
-                    'date' => date('Y-m-d'),
-                    'year' => date('Y'),
-                    'month' => date('m'),
-                    'publisher' => auth('admin')->user()->id,
-                    'created_at' => date('Y-m-d H:i:s'),
-                    'updated_at' => date('Y-m-d H:i:s'),
-
-                ];
-
-                array_push($sql, $details);
-            }
-            DB::table('sales_details')->insert($sql);
-
-            $total = SalesDetails::where('sales_id', $sales->id)->sum('total');
-            $totalAfterDiscount = $total - ($total / 100 * $data['total_discount'] ?? 0);
-
-            $sales->update([
-                'total' => $total,
-                'total_discount' => $data['total_discount'],
-                'total_after_discount' => $totalAfterDiscount,
-            ]);
-
+            $detailsData[] = [
+                'storage_id' => $sales->storage_id,
+                'sales_id' => $sales->id,
+                'company_id' => $request->company_id[$i],
+                'productive_id' => $productiveId,
+                'productive_code' => $productive->code,
+                'amount' => $amount,
+                'bouns' => $request->bouns[$i],
+                'discount_percentage' => $discountPercentage,
+                'batch_number' => $request->batch_number[$i],
+                'productive_sale_price' => $salePrice,
+                'total' => $this->calculateTotal($salePrice, $amount, $discountPercentage),
+                'all_pieces' => $amount * $productive->num_pieces_in_package,
+                'date' => $sales->date,
+                'year' => $sales->year,
+                'month' => $sales->month,
+                'publisher' => $sales->publisher,
+                'created_at' => $sales->created_at ?? $now,
+                'updated_at' => $now,
+            ];
         }
 
-        return response()->json(
-            [
-                'code' => 200,
-                'message' => 'تمت العملية بنجاح!',
-            ]);
+        return $detailsData;
+    }
+
+    private function calculateTotal($salePrice, $amount, $discountPercentage)
+    {
+        $subtotal = $salePrice * $amount;
+        return $subtotal - ($subtotal * $discountPercentage / 100);
+    }
+
+    private function updateSalesTotals(Sales $sales, $totalDiscount)
+    {
+        $total = SalesDetails::where('sales_id', $sales->id)->sum('total');
+        $totalAfterDiscount = $total - ($total * $totalDiscount / 100);
+
+        $sales->update([
+            'total' => $total,
+            'total_discount' => $totalDiscount,
+            'total_after_discount' => $totalAfterDiscount,
+        ]);
+    }
+
+    private function successResponse($message, $code = 200)
+    {
+        return response()->json([
+            'code' => $code,
+            'message' => $message,
+        ]);
+    }
+
+    private function errorResponse($message, $code = 500)
+    {
+        return response()->json([
+            'code' => $code,
+            'message' => 'حدث خطأ أثناء معالجة الطلب',
+            'error' => $message,
+        ]);
     }
 
     public function edit($id)
     {
-
-        $row = Sales::find($id);
-
+        $row = Sales::findOrFail($id);
         return view('Admin.CRUDS.sales.edit', compact('row'));
-
     }
 
     public function update(Request $request, $id)
     {
-        $data = $request->validate([
-            'storage_id' => 'required|exists:storages,id',
-            'total_discount' => 'nullable|numeric|min:0|max:99',
-            'sales_date' => 'required|date',
-            'pay_method' => 'required|in:debit,cash',
-            'client_id' => 'required|exists:clients,id',
-            'fatora_number' => 'required|unique:sales,fatora_number,' . $id,
+        try {
+            return DB::transaction(function () use ($request, $id) {
+                [$data, $details] = $this->validateData($request, $id);
 
-        ]);
+                $sales = Sales::findOrFail($id);
+                $sales->update($data);
 
-        $datails = $request->validate([
-            'company_id' => 'required|array',
-            'company_id.*' => 'required|exists:companies,id',
-            'productive_id' => 'required|array',
-            'productive_id.*' => 'required',
-            'amount' => 'required|array',
-            'amount.*' => 'required',
-            'productive_sale_price' => 'required|array',
-            'productive_sale_price.*' => 'required',
-            'bouns' => 'required|array',
-            'discount_percentage' => 'required|array',
-            'batch_number' => 'required|array',
-            'bouns.*' => 'required',
-            'discount_percentage.*' => 'nullable|numeric|min:0|max:99',
-            'batch_number.*' => 'required',
-        ]);
+                SalesDetails::where('sales_id', $id)->delete();
+                $this->processDetailsAndUpdateTotals($request, $sales, $data['total_discount'] ?? 0);
 
-        if (count($request->amount) != count($request->productive_id)) {
-            return response()->json(
-                [
-                    'code' => 421,
-                    'message' => 'المنتج مطلوب',
-                ]);
+                return $this->successResponse('تمت العملية بنجاح!');
+            });
+        } catch (\Exception $e) {
+            return $this->errorResponse($e->getMessage());
         }
-
-        $sales = Sales::findOrFail($id);
-        $sales->update($data);
-
-        SalesDetails::where('sales_id', $id)->delete();
-
-        $sql = [];
-
-        if ($request->productive_id) {
-            for ($i = 0; $i < count($request->productive_id); $i++) {
-
-                $details = [];
-                $productive = Productive::findOrFail($request->productive_id[$i]);
-
-                $details = [
-                    'storage_id' => $sales->storage_id,
-                    'sales_id' => $sales->id,
-                    'company_id' => $request->company_id[$i],
-                    'productive_id' => $request->productive_id[$i],
-                    'productive_code' => $productive->code,
-                    'amount' => $request->amount[$i],
-                    'bouns' => $request->bouns[$i],
-                    'discount_percentage' => $request->discount_percentage[$i],
-                    'batch_number' => $request->batch_number[$i],
-                    'productive_sale_price' => $request->productive_sale_price[$i],
-                    'total' => ($request->productive_sale_price[$i] * $request->amount[$i]) - (($request->productive_sale_price[$i] * $request->amount[$i]) * $request->discount_percentage[$i] / 100),
-                    'all_pieces' => $request->amount[$i] * $productive->num_pieces_in_package,
-                    'date' => $sales->date,
-                    'year' => $sales->year,
-                    'month' => $sales->month,
-                    'publisher' => $sales->publisher,
-                    'created_at' => $sales->created_at,
-                    'updated_at' => date('Y-m-d H:i:s'),
-
-                ];
-
-                array_push($sql, $details);
-            }
-            DB::table('sales_details')->insert($sql);
-
-            $total = SalesDetails::where('sales_id', $sales->id)->sum('total');
-            $totalAfterDiscount = $total - ($total / 100 * $data['total_discount'] ?? 0);
-
-            $sales->update([
-                'total' => $total,
-                'total_discount' => $data['total_discount'],
-                'total_after_discount' => $totalAfterDiscount,
-            ]);
-
-        }
-
-        return response()->json(
-            [
-                'code' => 200,
-                'message' => 'تمت العملية بنجاح!',
-            ]);
     }
 
     public function destroy($id)
     {
-
-        $row = Sales::find($id);
-
-        $row->delete();
-
-        return response()->json(
-            [
-                'code' => 200,
-                'message' => 'تمت العملية بنجاح!',
-            ]);
-    } //end fun
+        Sales::findOrFail($id)->delete();
+        return $this->successResponse('تمت العملية بنجاح!');
+    }
 
     public function getSalesDetails($id)
     {
         $purchase = Sales::findOrFail($id);
-        $rows = SalesDetails::where('sales_id', $id)->with(['productive', 'sales'])->get();
+        $rows = SalesDetails::where('sales_id', $id)
+            ->with(['productive', 'sales'])
+            ->get();
         return view('Admin.CRUDS.sales.parts.salesDetails', compact('rows'));
     }
 
@@ -355,35 +350,15 @@ class SalesController extends Controller
     {
         $id = rand(2, 999999999999999);
         $html = view('Admin.CRUDS.sales.parts.details', compact('id'))->render();
-
         return response()->json(['status' => true, 'html' => $html, 'id' => $id]);
-    }
-
-    /**
-     * [Description for getStatusName]
-     *
-     * @param string $status
-     * @return string
-     */
-    public function getStatusName(string $status)
-    {
-        $name = [
-            'new' => '<span class="badge badge-primary">جديد</span>',
-            'in_progress' => '<span class="badge badge-info">جاري التجهيز</span>',
-            'complete' => '<span class="badge badge-success">مكتمل</span>',
-            'canceled' => '<span class="badge badge-danger">ملغي</span>',
-        ];
-
-        return $name[$status];
     }
 
     public function updateStatus(Request $request)
     {
-        $row = Sales::findOrFail($request->id);
-        $row->status = $request->status;
-        $row->save();
+        $sales = Sales::findOrFail($request->id);
+        $sales->status = $request->status;
+        $sales->save();
 
         return response()->json(['success' => true]);
     }
-
 }

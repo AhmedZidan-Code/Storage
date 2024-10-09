@@ -9,27 +9,27 @@
         <div class="card-header d-flex align-items-center">
             <h5 class="card-title mb-0 flex-grow-1">العملاء</h5>
 
-                <div>
-                    <button id="addBtn" class="btn btn-primary">اضافة عميل</button>
-                </div>
+            <div>
+                <button id="addBtn" class="btn btn-primary">اضافة عميل</button>
+            </div>
 
         </div>
         <div class="card-body">
             <table id="table" class="table table-bordered dt-responsive nowrap table-striped align-middle"
-                   style="width:100%">
+                style="width:100%">
                 <thead>
-                <tr>
-                    <th>#</th>
-                    <th>الاسم</th>
-                    <th>الكود</th>
-                    <th>الهاتف</th>
-                    <th>المحافظة</th>
-                    <th>المدينة</th>
-                    <th>المديونية السابقة </th>
-                    <th>العنوان</th>
-                    <th> تاريخ الانشاء</th>
-                    <th>العمليات</th>
-                </tr>
+                    <tr>
+                        <th>#</th>
+                        <th>الاسم</th>
+                        <th>الكود</th>
+                        <th>الهاتف</th>
+                        <th>المحافظة</th>
+                        <th>المدينة</th>
+                        <th>المديونية السابقة </th>
+                        <th>العنوان</th>
+                        <th> تاريخ الانشاء</th>
+                        <th>العمليات</th>
+                    </tr>
                 </thead>
             </table>
         </div>
@@ -46,7 +46,8 @@
                     <h2><span id="operationType"></span> عميل </h2>
                     <!--end::Modal title-->
                     <!--begin::Close-->
-                    <button class="btn btn-sm btn-icon btn-active-color-primary" type="button" data-bs-dismiss="modal" aria-label="Close">
+                    <button class="btn btn-sm btn-icon btn-active-color-primary" type="button" data-bs-dismiss="modal"
+                        aria-label="Close">
                         <i class="fa fa-times"></i>
                     </button>
                     <!--end::Close-->
@@ -72,36 +73,98 @@
         </div>
         <!--end::Modal dialog-->
     </div>
-
 @endsection
 @section('js')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
     <script>
-        var columns = [
-            {data: 'id', name: 'id'},
-            {data: 'name', name: 'name'},
-            {data: 'code', name: 'code'},
-            {data: 'phone', name: 'phone'},
-            {data: 'governorate.title', name: 'governorate.title'},
-            {data: 'city.title', name: 'city.title'},
-            {data: 'previous_indebtedness', name: 'previous_indebtedness'},
-            {data: 'address', name: 'address'},
-            {data: 'created_at', name: 'created_at'},
-            {data: 'action', name: 'action', orderable: false, searchable: false},
+        $(document).ready(function() {
+            $('#Modal').on('shown.bs.modal', function() {
+                setTimeout(() => {
+                    $('.representative_id').select2({
+                        dropdownParent: $('#Modal'),
+                        placeholder: 'المندوب...',
+                        allowClear: true,
+                        ajax: {
+                            url: '{{ route('admin.getRepresentatives') }}',
+                            dataType: 'json',
+                            delay: 250,
+                            data: function(params) {
+                                return {
+                                    term: params.term || '',
+                                    page: params.page || 1
+                                }
+                            },
+                            cache: true
+                        }
+                    });
+                }, 1000);
+
+            });
+
+            $('#Modal').on('hidden.bs.modal', function() {
+                $('.representative_id').select2('destroy'); // Use the specific class here too
+            });
+        });
+    </script>
+    <script>
+        var columns = [{
+                data: 'id',
+                name: 'id'
+            },
+            {
+                data: 'name',
+                name: 'name'
+            },
+            {
+                data: 'code',
+                name: 'code'
+            },
+            {
+                data: 'phone',
+                name: 'phone'
+            },
+            {
+                data: 'governorate.title',
+                name: 'governorate.title'
+            },
+            {
+                data: 'city.title',
+                name: 'city.title'
+            },
+            {
+                data: 'previous_indebtedness',
+                name: 'previous_indebtedness'
+            },
+            {
+                data: 'address',
+                name: 'address'
+            },
+            {
+                data: 'created_at',
+                name: 'created_at'
+            },
+            {
+                data: 'action',
+                name: 'action',
+                orderable: false,
+                searchable: false
+            },
         ];
     </script>
-    @include('Admin.layouts.inc.ajax',['url'=>'clients'])
+    @include('Admin.layouts.inc.ajax', ['url' => 'clients'])
 
     <script>
-        $(document).on('change','#governorate_id',function (){
-            var from_id=$(this).val();
+        $(document).on('change', '#governorate_id', function() {
+            var from_id = $(this).val();
 
-            var route="{{route('admin.getCitiesForGovernorate',':id')}}";
-            route=route.replace(':id',from_id);
+            var route = "{{ route('admin.getCitiesForGovernorate', ':id') }}";
+            route = route.replace(':id', from_id);
 
-            setTimeout(function (){
+            setTimeout(function() {
                 $('#city_id').load(route);
-            },1000)
+            }, 1000)
         })
     </script>
-
 @endsection

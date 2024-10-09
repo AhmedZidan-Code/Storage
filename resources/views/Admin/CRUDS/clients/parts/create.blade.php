@@ -1,6 +1,6 @@
 <!--begin::Form-->
 
-<form id="form" enctype="multipart/form-data" method="POST" action="{{route('clients.store')}}">
+<form id="form" enctype="multipart/form-data" method="POST" action="{{ route('clients.store') }}">
     @csrf
     <div class="row g-4">
 
@@ -11,7 +11,8 @@
                 <span class="required mr-1">الاسم</span>
             </label>
             <!--end::Label-->
-            <input id="name" required type="text" class="form-control form-control-solid" name="name" value=""/>
+            <input id="name" required type="text" class="form-control form-control-solid" name="name"
+                value="" />
         </div>
 
         <div class="d-flex flex-column mb-7 fv-row col-sm-4">
@@ -20,7 +21,8 @@
                 <span class="required mr-1">الكود</span>
             </label>
             <!--end::Label-->
-            <input id="code" required type="text" class="form-control form-control-solid" name="code" value=""/>
+            <input id="code" required type="text" class="form-control form-control-solid" name="code"
+                value="" />
         </div>
 
 
@@ -30,9 +32,36 @@
                 <span class="required mr-1">الهاتف</span>
             </label>
             <!--end::Label-->
-            <input id="phone" required type="text" class="form-control form-control-solid" name="phone" value=""/>
+            <input id="phone" required type="text" class="form-control form-control-solid" name="phone"
+                value="" />
         </div>
 
+        <div class="d-flex flex-column mb-7 fv-row col-sm-6">
+            <!--begin::Label-->
+            <label for="payment_category" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                <span class="required mr-1"> فئة السداد</span>
+            </label>
+
+            <select id="payment_category" name="payment_category" class="form-control">
+                <option selected disabled>اختر الفئة</option>
+                @foreach ($paymentCategories as $value => $category)
+                    <option value="{{ $value }}"> {{ $category }}</option>
+                @endforeach
+            </select>
+
+        </div>
+
+        <div class="d-flex flex-column mb-7 fv-row col-sm-6">
+            <!--begin::Label-->
+            <label for="representative_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                <span class="required mr-1"> اختر المندوب</span>
+            </label>
+
+            <select  name="representative_id" class="select2 representative_id"
+                id='representative_id' style='width: 200px;'>
+            </select>
+
+        </div>
 
 
         <div class="d-flex flex-column mb-7 fv-row col-sm-4">
@@ -43,8 +72,8 @@
 
             <select id="governorate_id" name="governorate_id" class="form-control">
                 <option selected disabled>اختر المحافظة</option>
-                @foreach($governorates as $governorate)
-                    <option value="{{$governorate->id}}"> {{$governorate->title}}</option>
+                @foreach ($governorates as $governorate)
+                    <option value="{{ $governorate->id }}"> {{ $governorate->title }}</option>
                 @endforeach
             </select>
 
@@ -68,17 +97,17 @@
                 <span class="required mr-1">المديونية السابقة</span>
             </label>
             <!--end::Label-->
-            <input id="previous_indebtedness" min="0" required type="number" class="form-control form-control-solid" name="previous_indebtedness" value=""/>
+            <input id="previous_indebtedness" min="0" required type="number"
+                class="form-control form-control-solid" name="previous_indebtedness" value="" />
         </div>
 
 
         <div class="col-md-12 my-4">
-            <label for="address">  العنوان  </label>
+            <label for="address"> العنوان </label>
 
             <div class="form-floating ">
 
-                            <textarea class="form-control " name="address" placeholder=""
-                                      id="address"></textarea>
+                <textarea class="form-control " name="address" placeholder="" id="address"></textarea>
             </div>
         </div>
 

@@ -16,4 +16,7 @@ class Client extends Model
     public function governorate(){
         return $this->belongsTo(Area::class,'governorate_id');
     }
+    public function representative(){
+        return $this->belongsTo(Representative::class,'representative_id');
+    }
 }

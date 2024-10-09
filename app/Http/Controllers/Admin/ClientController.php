@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enum\PaymentCategory;
 use App\Http\Controllers\Controller;
 use App\Models\Area;
 use App\Models\Client;
@@ -63,7 +64,9 @@ class ClientController extends Controller
     public function create()
     {
         $governorates = Area::where('from_id', null)->get();
-        return view('Admin.CRUDS.clients.parts.create', compact('governorates'));
+        $paymentCategories = PaymentCategory::getCategoriesSelect();
+
+        return view('Admin.CRUDS.clients.parts.create', compact('governorates', 'paymentCategories'));
     }
 
     public function store(Request $request)
@@ -73,6 +76,8 @@ class ClientController extends Controller
             'code' => 'required|unique:clients,code',
             'phone' => 'required|unique:clients,phone',
             'governorate_id' => 'required|exists:areas,id',
+            'payment_category' => 'required',
+            'representative_id' => 'required|exists:representatives,id',
             'city_id' => 'required|exists:areas,id',
             'address' => 'nullable',
             'previous_indebtedness' => 'required|integer',
@@ -95,8 +100,9 @@ class ClientController extends Controller
         $row = Client::find($id);
         $governorates = Area::where('from_id', null)->get();
         $cities = Area::where('from_id', $row->governorate_id)->get();
+        $paymentCategories = PaymentCategory::getCategoriesSelect();
 
-        return view('Admin.CRUDS.clients.parts.edit', compact('row', 'governorates', 'cities'));
+        return view('Admin.CRUDS.clients.parts.edit', compact('row', 'governorates', 'cities', 'paymentCategories'));
 
     }
 
@@ -107,6 +113,8 @@ class ClientController extends Controller
             'code' => 'required|unique:clients,code,' . $id,
             'phone' => 'required|unique:clients,phone,' . $id,
             'governorate_id' => 'required|exists:areas,id',
+            'payment_category' => 'required|in:1,2,3,4',
+            'representative_id' => 'required|exists:representatives,id',
             'city_id' => 'required|exists:areas,id',
             'address' => 'nullable',
             'previous_indebtedness' => 'required|integer',

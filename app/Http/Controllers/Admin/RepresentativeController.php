@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Branch;
-use App\Models\Storage;
-use Illuminate\Http\Request;
-use App\Models\Representative;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
+use App\Models\Branch;
+use App\Models\Representative;
+use App\Models\Storage;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -177,24 +177,23 @@ class RepresentativeController extends Controller
             ]);
     }
 
-        public function getRepresentatives(Request $request)
+    public function getRepresentatives(Request $request)
     {
         if ($request->ajax()) {
-            $representatives = DB::table('representatives') ->select('id', 'full_name as text')
+            $representatives = DB::table('representatives')->select('id', 'full_name as text')
                 ->orderBy('full_name', 'asc')->simplePaginate(3);
-
-            $morePages = true;
-            $pagination_obj = json_encode($representatives);
-            if (empty($representatives->nextPageUrl())) {
-                $morePages = false;
-            }
+                $morePages = true;
+                $pagination_obj = json_encode($representatives);
+                if (empty($representatives->nextPageUrl())) {
+                    $morePages = false;
+                }
             $results = array(
                 "results" => $representatives->items(),
                 "pagination" => array(
                     "more" => $morePages,
                 ),
             );
-
+ 
             return \Response::json($results);
 
         }

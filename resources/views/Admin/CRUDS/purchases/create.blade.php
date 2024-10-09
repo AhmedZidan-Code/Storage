@@ -241,6 +241,7 @@
                             if (data.code == 200) {
                                 toastr.success(data.message)
                                 $('#form')[0].reset();
+                                setTimeout(()=>location.reload(true),500)
 
                             } else {
                                 toastr.error(data.message)

@@ -133,6 +133,11 @@
                         <li><a href="{{ route('admin.customerAccountStatements') }}"><i class="mdi mdi-album"></i>
                                 <span>كشف حساب عميل </span></a>
                         </li>
+                        @canAdminAny('عرض إعدادات تسديد العملاء') 
+                        <li><a href="{{ route('client-payment-settings.index') }}"><i class="mdi mdi-album"></i>
+                                <span>إعدادات تسديد العملاء </span></a>
+                        </li>
+                        @endcanAdminAny
 
                     </ul>
                 </li>
