@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enum\PaymentCategory;
 use App\Http\Controllers\Controller;
 use App\Models\Client;
 use App\Models\Esalat;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Symfony\Component\Console\Input\Input;
+use Illuminate\Validation\Rule;
 use Yajra\DataTables\DataTables;
 
 class EsalatController extends Controller
@@ -25,7 +26,6 @@ class EsalatController extends Controller
                     $edit = '';
                     $delete = '';
 
-
                     return '
 
                             <button ' . $delete . '  class="btn rounded-pill btn-danger waves-effect waves-light delete"
@@ -38,7 +38,6 @@ class EsalatController extends Controller
                             </button>
                        ';
 
-
                 })
                 ->editColumn('created_at', function ($admin) {
                     return date('Y/m/d', strtotime($admin->created_at));
@@ -46,12 +45,10 @@ class EsalatController extends Controller
                 ->escapeColumns([])
                 ->make(true);
 
-
         }
 
         return view('Admin.CRUDS.esalat.index');
     }
-
 
     public function create()
     {
@@ -65,16 +62,19 @@ class EsalatController extends Controller
             'client_id' => 'required|exists:clients,id',
             'paid' => 'required|regex:/^\d+(\.\d{1,2})?$/',
             'date_esal' => 'required|date',
+            'payment_category' => 'required',
+            'client_payment_setting_id' => [Rule::requiredIf($request->payment_category != PaymentCategory::ON_DELIVERED->value)],
             'notes' => 'nullable',
         ]);
 
         $client = Client::findOrFail($request->client_id);
-        if ($client->previous_indebtedness < $request->paid)
+        if ($client->previous_indebtedness < $request->paid) {
             return response()->json(
                 [
                     'code' => 421,
-                    'message' => 'قيمة الايصال اكبر من المديونية'
+                    'message' => 'قيمة الايصال اكبر من المديونية',
                 ]);
+        }
 
         $data['publisher'] = auth('admin')->user()->id;
         $data['year'] = date('Y');
@@ -89,14 +89,12 @@ class EsalatController extends Controller
             'previous_indebtedness' => $dept - $request->paid,
         ]);
 
-
         return response()->json(
             [
                 'code' => 200,
-                'message' => 'تمت العملية بنجاح!'
+                'message' => 'تمت العملية بنجاح!',
             ]);
     }
-
 
     public function destroy($id)
     {
@@ -114,15 +112,14 @@ class EsalatController extends Controller
         return response()->json(
             [
                 'code' => 200,
-                'message' => 'تمت العملية بنجاح!'
+                'message' => 'تمت العملية بنجاح!',
             ]);
-    }//end fun
+    } //end fun
 
     public function getClientForEsalat()
     {
         $clients = Client::get();
         return view('Admin.CRUDS.esalat.parts.clients', compact('clients'));
-
 
     }
 
@@ -165,67 +162,58 @@ class EsalatController extends Controller
 //        }
 //    }
 
-
-    public function getClients(Request $request){
+    public function getClients(Request $request)
+    {
         if ($request->ajax()) {
 
             $term = trim($request->term);
-            $posts = DB::table('clients')->select('id','name as text')
-                ->where('name', 'LIKE',  '%' . $term. '%')
+            $posts = DB::table('clients')->select('id', 'name as text')
+                ->where('name', 'LIKE', '%' . $term . '%')
                 ->orderBy('name', 'asc')->simplePaginate(3);
 
-            $morePages=true;
-            $pagination_obj= json_encode($posts);
-            if (empty($posts->nextPageUrl())){
-                $morePages=false;
+            $morePages = true;
+            $pagination_obj = json_encode($posts);
+            if (empty($posts->nextPageUrl())) {
+                $morePages = false;
             }
             $results = array(
                 "results" => $posts->items(),
                 "pagination" => array(
-                    "more" => $morePages
-                )
+                    "more" => $morePages,
+                ),
             );
 
             return \Response::json($results);
 
         }
 
-}
+    }
 
-    public function getClients2(Request $request){
+    public function getClients2(Request $request)
+    {
 
-        $searchTerm=$request->searchTerm;
-        $client_id=$request->client_id;
-
-
-
+        $searchTerm = $request->searchTerm;
+        $client_id = $request->client_id;
 
         $clients = Client::paginate(2);
         $clients_list = Client::count();
         $data = array();
-        foreach($clients as $client){
-            if ($client['id'] == $client_id){
-                $selected=true;
-            }else{
-                $selected=false;
+        foreach ($clients as $client) {
+            if ($client['id'] == $client_id) {
+                $selected = true;
+            } else {
+                $selected = false;
 
             }
-            $data[] = array("id"=>$client['id'], "text"=>$client['name'],'selected'=>$selected);
+            $data[] = array("id" => $client['id'], "text" => $client['name'], 'selected' => $selected);
         }
 
-
-        echo json_encode(array('items'=>$data,'total'=>$clients_list));
-
-
-
-
-
-
-
+        echo json_encode(array('items' => $data, 'total' => $clients_list));
 
     }
 
-    public function testing(){
+    public function testing()
+    {
         return view('testing');
     }
 

@@ -19,8 +19,6 @@ return new class extends Migration
             ->after('phone');
            $table->unsignedBigInteger('representative_id')->nullable()->after('payment_category');
            $table->foreign('representative_id')->references('id')->on('representatives')->onDelete('cascade')->onUpdate('cascade');
- 
-
         });
     }
 

@@ -1,40 +1,40 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\AuthController;
-use App\Http\Controllers\Admin\HomeController;
-use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\SalesController;
+use App\Http\Controllers\Admin\Area\CountryController;
+use App\Http\Controllers\Admin\Area\ProvinceController;
+use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\BranchController;
-use App\Http\Controllers\Admin\ClientController;
-use App\Http\Controllers\Admin\EsalatController;
-use App\Http\Controllers\Admin\CompanyController;
-use App\Http\Controllers\Admin\SettingController;
-use App\Http\Controllers\Admin\StorageController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ClientController;
+use App\Http\Controllers\Admin\ClientPaymentSettingController;
+use App\Http\Controllers\Admin\CompanyController;
+use App\Http\Controllers\Admin\DestructionController;
 use App\Http\Controllers\Admin\EmployeeController;
-use App\Http\Controllers\Admin\SupplierController;
-use App\Http\Controllers\Admin\PurchasesController;
+use App\Http\Controllers\Admin\EsalatController;
+use App\Http\Controllers\Admin\HeadBackPurchasesController;
+use App\Http\Controllers\Admin\HeadBackSalesController;
+use App\Http\Controllers\Admin\HomeController;
+use App\Http\Controllers\Admin\ItemInstallationController;
+use App\Http\Controllers\Admin\PreparingItemController;
 use App\Http\Controllers\Admin\ProductionController;
 use App\Http\Controllers\Admin\ProductiveController;
+use App\Http\Controllers\Admin\PurchasesController;
 use App\Http\Controllers\Admin\RasiedAyniController;
-use App\Http\Controllers\Admin\DestructionController;
-use App\Http\Controllers\Admin\Area\CountryController;
-use App\Http\Controllers\Admin\StoreManagerController;
-use App\Http\Controllers\Admin\Area\ProvinceController;
-use App\Http\Controllers\Admin\HeadBackSalesController;
-use App\Http\Controllers\Admin\PreparingItemController;
-use App\Http\Controllers\Admin\RepresentativeController;
-use App\Http\Controllers\Admin\SupplierVoucherController;
-use App\Http\Controllers\Admin\ItemInstallationController;
-use App\Http\Controllers\Admin\HeadBackPurchasesController;
-use App\Http\Controllers\Admin\ClientPaymentSettingController;
-use App\Http\Controllers\Admin\Reports\Bills\SalesBillController;
-use App\Http\Controllers\Admin\Reports\Bills\PurchasesBillController;
-use App\Http\Controllers\Admin\Reports\AccountStatements\SupplierAccountStatmentController;
 use App\Http\Controllers\Admin\Reports\AccountStatements\CustomerAccountStatementController;
+use App\Http\Controllers\Admin\Reports\AccountStatements\SupplierAccountStatmentController;
+use App\Http\Controllers\Admin\Reports\Bills\PurchasesBillController;
+use App\Http\Controllers\Admin\Reports\Bills\SalesBillController;
+use App\Http\Controllers\Admin\RepresentativeController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\SalesController;
+use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\StorageController;
+use App\Http\Controllers\Admin\StoreManagerController;
+use App\Http\Controllers\Admin\SupplierController;
+use App\Http\Controllers\Admin\SupplierVoucherController;
+use App\Http\Controllers\Admin\UnitController;
+use Illuminate\Support\Facades\Route;
 
 // Authentication Routes
 Route::get('admin/login', [AuthController::class, 'loginView'])->name('admin.login');
@@ -140,14 +140,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::resource('prepare-items', PreparingItemController::class);
     Route::get('batch-numbers', [PreparingItemController::class, 'getBatchNumbers'])->name('admin.getBatches');
     Route::post('update-status', [PreparingItemController::class, 'updateIsPrepared'])->name('update.prepare-status');
-    
+
     Route::resource('store-managers', StoreManagerController::class);
-    
+
     // representatives
     Route::resource('representatives', RepresentativeController::class);
-    Route::get('representatives-data', [RepresentativeController::class,'getRepresentatives'])->name('admin.getRepresentatives');
+    Route::get('representatives-data', [RepresentativeController::class, 'getRepresentatives'])->name('admin.getRepresentatives');
 
     // client-payment-settings
     Route::resource('client-payment-settings', ClientPaymentSettingController::class);
+    Route::post('client-payment-settings-data', [ClientPaymentSettingController::class, 'getClientPaymentSetting'])->name('admin.getClientPaymentSettings');
 
 });

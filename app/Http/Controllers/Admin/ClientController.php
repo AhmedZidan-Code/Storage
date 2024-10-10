@@ -94,6 +94,14 @@ class ClientController extends Controller
             ]);
     }
 
+    public function show(Client $client)
+    {
+        return response()->json([
+            'client' => $client,
+            'category' => PaymentCategory::getCategoriesSelect()[$client->payment_category],
+        ]);
+    }
+
     public function edit($id)
     {
 

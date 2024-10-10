@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enum\PaymentCategory;
 use App\Http\Controllers\Controller;
+use App\Models\Client;
 use App\Models\ClientPaymentSetting;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
@@ -131,5 +132,15 @@ class ClientPaymentSettingController extends Controller
                 'code' => 200,
                 'message' => 'تمت العملية بنجاح!',
             ]);
+    }
+
+    public function getClientPaymentSetting(Request $request)
+    {
+        $client = Client::findOrFail($request->client_id);
+        return response()->json(
+            [
+                'data' => ClientPaymentSetting::where(['month' => $request->month, 'payment_category' => $client->payment_category])->get(),
+            ]);
+
     }
 }
