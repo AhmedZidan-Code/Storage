@@ -20,7 +20,8 @@ class ClientPaymentSettingController extends Controller
     }
     public function index(Request $request)
     {
-
+        // payment_month
+        // client_payment_setting_id
         if ($request->ajax()) {
             $rows = ClientPaymentSetting::query();
             return DataTables::of($rows)
@@ -136,10 +137,15 @@ class ClientPaymentSettingController extends Controller
 
     public function getClientPaymentSetting(Request $request)
     {
-        $client = Client::findOrFail($request->client_id);
+        $client = Client::find($request->client_id);
         return response()->json(
             [
-                'data' => ClientPaymentSetting::where(['month' => $request->month, 'payment_category' => $client->payment_category])->get(),
+                'data' => ClientPaymentSetting::where('month', $request->month)
+                    ->when(
+                        $client?->payment_category,
+                        fn($q) => $q->where('payment_category', $client?->payment_category)
+                    )
+                    ->get(),
             ]);
 
     }

@@ -4,7 +4,7 @@
     @csrf
     <div class="row g-4">
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-6">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
             <!--begin::Label-->
             <label for="payment_category" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> فئة السداد</span>
@@ -18,12 +18,12 @@
             </select>
 
         </div>
-        <div class="d-flex flex-column mb-7 fv-row col-sm-6">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
             <!--begin::Label-->
             <label for="month" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> الشهر</span>
             </label>
-            <select id="month" name="month" class="form-control">
+            <select id="payment_month" name="month" class="form-control">
                 <option selected disabled>اختر الشهر</option>
                 @for ($month = 1; $month <= 12; $month++)
                     <option value="{{ $month }}"> {{ $month }}</option>
@@ -32,7 +32,7 @@
 
         </div>
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-12">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
             <!--begin::Label-->
             <label for="title" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1">اسم الفترة</span>

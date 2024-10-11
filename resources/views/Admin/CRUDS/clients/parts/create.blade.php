@@ -5,7 +5,7 @@
     <div class="row g-4">
 
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
             <!--begin::Label-->
             <label for="name" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1">الاسم</span>
@@ -15,7 +15,7 @@
                 value="" />
         </div>
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
             <!--begin::Label-->
             <label for="code" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1">الكود</span>
@@ -26,7 +26,7 @@
         </div>
 
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
             <!--begin::Label-->
             <label for="phone" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1">الهاتف</span>
@@ -36,7 +36,7 @@
                 value="" />
         </div>
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-6">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
             <!--begin::Label-->
             <label for="payment_category" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> فئة السداد</span>
@@ -51,7 +51,7 @@
 
         </div>
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-6">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-3 ml-2">
             <!--begin::Label-->
             <label for="representative_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> اختر المندوب</span>
@@ -64,7 +64,7 @@
         </div>
 
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
             <!--begin::Label-->
             <label for="governorate_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> المحافظة</span>
@@ -79,7 +79,7 @@
 
         </div>
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
             <!--begin::Label-->
             <label for="city_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> المدينة</span>
@@ -91,7 +91,7 @@
 
         </div>
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-3 ">
             <!--begin::Label-->
             <label for="previous_indebtedness" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1">المديونية السابقة</span>
