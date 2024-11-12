@@ -98,6 +98,7 @@
                 e.preventDefault();
                 var rowId = $(this).attr('data-id');
                 $(`#tr-${rowId}`).remove();
+                callTotal();
             })
         </script>
 
@@ -241,7 +242,7 @@
                             if (data.code == 200) {
                                 toastr.success(data.message)
                                 $('#form')[0].reset();
-                                setTimeout(()=>location.reload(true),500)
+                                setTimeout(() => location.reload(true), 500)
 
                             } else {
                                 toastr.error(data.message)

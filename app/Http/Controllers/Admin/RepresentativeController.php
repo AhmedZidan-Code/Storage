@@ -39,6 +39,15 @@ class RepresentativeController extends Controller
                                 </span>
                             </span>
                             </button>
+
+                           <button ' . $edit . '   class="details btn rounded-pill btn-primary waves-effect waves-light"
+                                    data-id="' . $row->id . '"
+                            <span class="svg-icon svg-icon-3">
+                                <span class="svg-icon svg-icon-3">
+                                    <i class="fa fa-eye"></i>
+                                </span>
+                            </span>
+                            </button>
                             <button ' . $delete . '  class="btn rounded-pill btn-danger waves-effect waves-light delete"
                                     data-id="' . $row->id . '">
                             <span class="svg-icon svg-icon-3">
@@ -182,20 +191,32 @@ class RepresentativeController extends Controller
         if ($request->ajax()) {
             $representatives = DB::table('representatives')->select('id', 'full_name as text')
                 ->orderBy('full_name', 'asc')->simplePaginate(3);
-                $morePages = true;
-                $pagination_obj = json_encode($representatives);
-                if (empty($representatives->nextPageUrl())) {
-                    $morePages = false;
-                }
+            $morePages = true;
+            $pagination_obj = json_encode($representatives);
+            if (empty($representatives->nextPageUrl())) {
+                $morePages = false;
+            }
             $results = array(
                 "results" => $representatives->items(),
                 "pagination" => array(
                     "more" => $morePages,
                 ),
             );
- 
+
             return \Response::json($results);
 
         }
+    }
+
+    /**
+     * [Description for edit]
+     * @param Representative $representative
+     * @return View
+     */
+    public function details($id)
+    {
+        $representative = Representative::with('clients')->findOrFail($id);
+        return view('Admin.CRUDS.representative.parts.details', compact('representative'));
+
     }
 }

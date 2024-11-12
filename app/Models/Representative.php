@@ -25,4 +25,12 @@ class Representative extends Model
     {
         return $this->belongsTo(Branch::class, 'branch_id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\belongsToMany
+     */
+    public function clients()
+    {
+        return $this->belongsToMany(Client::class, 'representative_clients');
+    }
 }

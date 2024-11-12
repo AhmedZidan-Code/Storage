@@ -128,7 +128,7 @@ class HeadBackSalesController extends Controller
                 $productive = Productive::findOrFail($request->productive_id[$i]);
 
                 $details = [
-
+                    'storage_id' => $productive->storage_id,
                     'head_back_sales_id' => $headBackSales->id,
                     'productive_id' => $request->productive_id[$i],
                     'productive_code' => $productive->code,
@@ -224,7 +224,7 @@ class HeadBackSalesController extends Controller
                 $productive = Productive::findOrFail($request->productive_id[$i]);
 
                 $details = [
-
+                    'storage_id' => $productive->storage_id,
                     'head_back_sales_id' => $headBackSales->id,
                     'productive_id' => $request->productive_id[$i],
                     'productive_code' => $productive->code,

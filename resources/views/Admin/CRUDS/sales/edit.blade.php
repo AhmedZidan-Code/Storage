@@ -77,7 +77,7 @@
                     placeholder: 'Channel...',
                     // width: '350px',
                     allowClear: true,
-                     disabled: true ,
+                    disabled: true,
                     ajax: {
                         url: '{{ route('admin.getProductiveTypeKham') }}',
                         dataType: 'json',
@@ -99,6 +99,7 @@
                 e.preventDefault();
                 var rowId = $(this).attr('data-id');
                 $(`#tr-${rowId}`).remove();
+                callTotal();
             })
         </script>
 

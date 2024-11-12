@@ -101,6 +101,24 @@
                     </ul>
                 </li>
                 @endcanAdminAny
+                
+
+                {{-- @canAdminAny('عرض الفروع','عرض المخازن','عرض الاصناف') --}}
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="fa fa-users-cog"></i>
+                        <span> المناديب</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        {{-- @canAdminAny('عرض الفروع') --}}
+
+                        <li><a href="{{ route('representatives.index') }}"><i class="mdi mdi-album"></i>
+                                <span> المناديب</span></a></li>
+                        {{-- @endcanAdminAny --}}
+                    </ul>
+                </li>
+                {{-- @endcanAdminAny --}}
+
                 @canAdminAny('عرض المسئولون عن المخازن')
 
                 <li>
@@ -177,13 +195,12 @@
                         <li><a href="{{ route('rasied_ayni.index') }}"><i class="mdi mdi-album"></i> <span> رصيد اول
                                     مدة </span></a>
                         </li>
-
+                        <li><a href="{{ route('productive-movement.index') }}"><i class="mdi mdi-album"></i> <span>حركة الاصناف</span></a>
+                        </li>
 
                     </ul>
                 </li>
                 @endcanAdminAny
-
-
 
                 @canAdminAny('عرض المشتريات')
 

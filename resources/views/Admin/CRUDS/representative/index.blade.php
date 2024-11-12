@@ -43,7 +43,7 @@
                 <!--begin::Modal header-->
                 <div class="modal-header">
                     <!--begin::Modal title-->
-                    <h2><span id="operationType"></span> مستخدم </h2>
+                    <h2><span id="operationType"></span> مندوب </h2>
                     <!--end::Modal title-->
                     <!--begin::Close-->
                     <button class="btn btn-sm btn-icon btn-active-color-primary" type="button" data-bs-dismiss="modal"
@@ -115,4 +115,99 @@
         ];
     </script>
     @include('Admin.layouts.inc.ajax', ['url' => 'representatives'])
+    <script>
+        $(document).on('click', '.details', function() {
+            var id = $(this).data('id');
+            $('#operationType').text('عملاء ');
+            $('#form-load').html(loader_form)
+            $('#Modal').modal('show')
+
+            var url = "{{ route('representatives.details', ':id') }}";
+            url = url.replace(':id', id)
+
+            setTimeout(function() {
+                $('#form-load').load(url)
+            }, 1000)
+
+        })
+    </script>
+    <script>
+        $(document).on('click', '.delete-client', function() {
+
+            swal.fire({
+                title: "{{ trans('admin.submit delete') }}",
+                text: "{{ trans('admin.delete text') }}",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "{{ trans('admin.submit') }}",
+                cancelButtonText: "{{ trans('admin.cancel') }}",
+                okButtonText: "{{ trans('admin.submit') }}",
+                closeOnConfirm: false
+            }).then((result) => {
+                if (!result.isConfirmed) {
+                    return true;
+                }
+                let clientId = $(this).data('client-id');
+                let representativeId = $(this).data('representative-id');
+                console.log(clientId);
+                console.log(representativeId);
+
+                var url = "{{ route('representative-clients.delete') }}";
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {
+                        client_id: clientId,
+                        representative_id: representativeId
+                    },
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                            'content') // For CSRF token in Laravel
+                    },
+                    beforeSend: function() {
+                        $('.loader-ajax').show()
+
+                    },
+                    success: function(data) {
+
+                        window.setTimeout(function() {
+                            $('.loader-ajax').hide()
+                            if (data.code == 200) {
+                                toastr.success(data.message)
+                                location.reload();
+                                $('#table').DataTable().ajax.reload(null, false);
+                            } else {
+                                toastr.error('{{ trans('admin.error') }}')
+                            }
+
+                        }, 1000);
+                    },
+                    error: function(data) {
+
+                        if (data.status === 500) {
+                            toastr.error('{{ trans('admin.error') }}')
+                        }
+
+
+                        if (data.status === 422) {
+                            var errors = $.parseJSON(data.responseText);
+
+                            $.each(errors, function(key, value) {
+                                if ($.isPlainObject(value)) {
+                                    $.each(value, function(key, value) {
+                                        toastr.error(value)
+                                    });
+
+                                } else {
+
+                                }
+                            });
+                        }
+                    }
+
+                });
+            });
+        });
+    </script>
 @endsection

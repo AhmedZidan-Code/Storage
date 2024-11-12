@@ -98,6 +98,7 @@
                 e.preventDefault();
                 var rowId = $(this).attr('data-id');
                 $(`#tr-${rowId}`).remove();
+                callTotal();
             })
         </script>
 

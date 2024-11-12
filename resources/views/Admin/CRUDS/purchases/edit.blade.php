@@ -98,6 +98,7 @@
                 e.preventDefault();
                 var rowId = $(this).attr('data-id');
                 $(`#tr-${rowId}`).remove();
+                callTotal();
             })
         </script>
 
@@ -229,14 +230,14 @@
 
                         $('#submit').html('<span class="spinner-border spinner-border-sm mr-2" ' +
                             ' ></span> <span style="margin-left: 4px;">{{ trans('admin.working') }}</span>'
-                            ).attr('disabled', true);
+                        ).attr('disabled', true);
                     },
                     complete: function() {},
                     success: function(data) {
 
                         window.setTimeout(function() {
                             $('#submit').html('{{ trans('admin.submit') }}').attr('disabled',
-                            false);
+                                false);
 
                             if (data.code == 200) {
                                 toastr.success(data.message)

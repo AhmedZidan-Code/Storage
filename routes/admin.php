@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\Reports\AccountStatements\CustomerAccountStatemen
 use App\Http\Controllers\Admin\Reports\AccountStatements\SupplierAccountStatmentController;
 use App\Http\Controllers\Admin\Reports\Bills\PurchasesBillController;
 use App\Http\Controllers\Admin\Reports\Bills\SalesBillController;
+use App\Http\Controllers\Admin\RepresentativeClientController;
 use App\Http\Controllers\Admin\RepresentativeController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SalesController;
@@ -34,6 +35,7 @@ use App\Http\Controllers\Admin\StoreManagerController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\SupplierVoucherController;
 use App\Http\Controllers\Admin\UnitController;
+use App\Http\Controllers\Admin\Reports\Productive\ProductiveMovementController;
 use Illuminate\Support\Facades\Route;
 
 // Authentication Routes
@@ -145,10 +147,19 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
     // representatives
     Route::resource('representatives', RepresentativeController::class);
+    Route::get('representatives/{representative}/details', [RepresentativeController::class, 'details'])->name('representatives.details');
     Route::get('representatives-data', [RepresentativeController::class, 'getRepresentatives'])->name('admin.getRepresentatives');
+
+    // representative-clients
+    Route::get('representative-clients', [RepresentativeClientController::class, 'index'])->name('representative-clients.index');
+    Route::post('representative-clients/delete', [RepresentativeClientController::class, 'destroy'])->name('representative-clients.delete');
+    Route::post('add-clients-to-representative', [RepresentativeClientController::class, 'AddClientsToRepresentative'])->name('add-clients-to-representative.create');
 
     // client-payment-settings
     Route::resource('client-payment-settings', ClientPaymentSettingController::class);
     Route::post('client-payment-settings-data', [ClientPaymentSettingController::class, 'getClientPaymentSetting'])->name('admin.getClientPaymentSettings');
+    
+    // ProductiveMovement
+    Route::resource('productive-movement',  ProductiveMovementController::class);
 
 });

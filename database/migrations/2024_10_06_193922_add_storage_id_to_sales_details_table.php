@@ -16,7 +16,6 @@ return new class extends Migration
         Schema::table('sales_details', function (Blueprint $table) {
             $table->unsignedBigInteger('storage_id')->nullable()->after('id');
             $table->foreign('storage_id')->references('id')->on('storages')->onDelete('cascade')->onUpdate('cascade');
-
         });
     }
 
