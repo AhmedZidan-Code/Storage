@@ -38,7 +38,7 @@ class ProductiveMovementController extends Controller
                 ->unionAll($buildQuery('destruction_details', 'date', 'اهلاك', 6));
 
             // Order the final result
-            $query->orderBy('date', 'DESC');
+            $query->orderBy('date', 'ASC');
 
             return DataTables::of($query)
                 ->addIndexColumn()

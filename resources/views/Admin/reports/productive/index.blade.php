@@ -61,52 +61,54 @@
 
         </div>
         <div class="card-body">
-            <table id="table" class="table table-bordered dt-responsive nowrap table-striped align-middle"
-                style="width:100%">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th> التاريخ </th>
-                        <th> نوع الحركة </th>
-                        <th> الكمية </th>
-                        <th> الرصيد </th>
-                    </tr>
-                </thead>
-            </table>
+            @if (request('product_id'))
+                <table id="table" class="table table-bordered dt-responsive nowrap table-striped align-middle"
+                    style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th> التاريخ </th>
+                            <th> نوع الحركة </th>
+                            <th> الكمية </th>
+                            <th> الرصيد </th>
+                        </tr>
+                    </thead>
+                </table>
+                <table class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:20%">
+                    <tbody>
+                        <tr>
+                            <th> رصيد عيني </th>
+                            <th> {{ $rasied_ayni }} </th>
+                        </tr>
+                        <tr>
+                            <th> مبيعات </th>
+                            <th> {{ $sales }} </th>
+                        </tr>
+                        <tr>
+                            <th> مشتريات </th>
+                            <th> {{ $purchases }} </th>
+                        </tr>
+                        <tr>
+                            <th> مرتجع مبيعات </th>
+                            <th> {{ $hadback_sales }} </th>
+                        </tr>
+                        <tr>
+                            <th> مرتجع مشتريات</th>
+                            <th> {{ $hadback_purchases }} </th>
+                        </tr>
+                        <tr>
+                            <th> اهلاك </th>
+                            <th> {{ $destruction }} </th>
+                        </tr>
+                        <tr>
+                            <th> الاجمالي </th>
+                            <th> {{ $rasied_ayni + $purchases + $hadback_sales - ($sales + $hadback_purchases + $destruction) }}
+                            </th>
+                        </tr>
+                    </tbody>
+                </table>
+            @endif
 
-            <table class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:20%">
-                <tbody>
-                    <tr>
-                        <th> رصيد عيني </th>
-                        <th> {{ $rasied_ayni }} </th>
-                    </tr>
-                    <tr>
-                        <th> مبيعات </th>
-                        <th> {{ $sales }} </th>
-                    </tr>
-                    <tr>
-                        <th> مشتريات </th>
-                        <th> {{ $purchases }} </th>
-                    </tr>
-                    <tr>
-                        <th> مرتجع مبيعات </th>
-                        <th> {{ $hadback_sales }} </th>
-                    </tr>
-                    <tr>
-                        <th> مرتجع مشتريات</th>
-                        <th> {{ $hadback_purchases }} </th>
-                    </tr>
-                    <tr>
-                        <th> اهلاك </th>
-                        <th> {{ $destruction }} </th>
-                    </tr>
-                    <tr>
-                        <th> الاجمالي </th>
-                        <th> {{ $rasied_ayni + $purchases + $hadback_sales - ($sales + $hadback_purchases + $destruction) }}
-                        </th>
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </div>
 @endsection
