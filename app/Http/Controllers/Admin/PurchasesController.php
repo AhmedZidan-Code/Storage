@@ -39,6 +39,9 @@ class PurchasesController extends Controller
             ->addColumn('action', function ($row) {
                 return $this->generateActionButtons($row);
             })
+            ->addColumn('supplier_name', function ($row) {
+                return $row->supplier?->name;
+            })
             ->addColumn('details', function ($row) {
                 return "<button data-id='$row->id' class='btn btn-outline-dark showDetails'>عرض تفاصيل الطلب</button>";
             })

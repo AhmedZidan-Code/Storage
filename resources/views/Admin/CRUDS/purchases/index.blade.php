@@ -98,8 +98,8 @@
                 name: 'pay_method'
             },
             {
-                data: 'supplier.name',
-                name: 'supplier.name'
+                data: 'supplier_name',
+                name: 'supplier_name'
             },
             {
                 data: 'fatora_number',
