@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\Area\ProvinceController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ClientAdjustmentController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\ClientPaymentSettingController;
 use App\Http\Controllers\Admin\CompanyController;
@@ -17,6 +18,7 @@ use App\Http\Controllers\Admin\HeadBackSalesController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\ItemInstallationController;
 use App\Http\Controllers\Admin\PreparingItemController;
+use App\Http\Controllers\Admin\ProductAdjustmentController;
 use App\Http\Controllers\Admin\ProductionController;
 use App\Http\Controllers\Admin\ProductiveController;
 use App\Http\Controllers\Admin\PurchasesController;
@@ -25,6 +27,7 @@ use App\Http\Controllers\Admin\Reports\AccountStatements\CustomerAccountStatemen
 use App\Http\Controllers\Admin\Reports\AccountStatements\SupplierAccountStatmentController;
 use App\Http\Controllers\Admin\Reports\Bills\PurchasesBillController;
 use App\Http\Controllers\Admin\Reports\Bills\SalesBillController;
+use App\Http\Controllers\Admin\Reports\Productive\ProductiveMovementController;
 use App\Http\Controllers\Admin\RepresentativeClientController;
 use App\Http\Controllers\Admin\RepresentativeController;
 use App\Http\Controllers\Admin\RoleController;
@@ -35,7 +38,6 @@ use App\Http\Controllers\Admin\StoreManagerController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\SupplierVoucherController;
 use App\Http\Controllers\Admin\UnitController;
-use App\Http\Controllers\Admin\Reports\Productive\ProductiveMovementController;
 use Illuminate\Support\Facades\Route;
 
 // Authentication Routes
@@ -49,6 +51,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
     // Admin Management
     Route::resource('admins', AdminController::class);
+    Route::get('get-employees', [EmployeeController::class, 'getEmployee'])->name('admin.getEmployees');
+    Route::get('get-clients', [ClientAdjustmentController::class, 'getClients'])->name('admin.getClients');
     Route::get('activateAdmin', [AdminController::class, 'activate'])->name('admin.active.admin');
 
     // Roles and Settings
@@ -158,8 +162,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     // client-payment-settings
     Route::resource('client-payment-settings', ClientPaymentSettingController::class);
     Route::post('client-payment-settings-data', [ClientPaymentSettingController::class, 'getClientPaymentSetting'])->name('admin.getClientPaymentSettings');
-    
+
     // ProductiveMovement
-    Route::resource('productive-movement',  ProductiveMovementController::class);
+    Route::resource('productive-movement', ProductiveMovementController::class);
+
+    // product-adjustments
+    Route::resource('product-adjustments', ProductAdjustmentController::class);
+    Route::get('makeRowDetailsForProductAdjustment', [ProductAdjustmentController::class, 'makeRowDetailsForProductAdjustment'])->name('admin.makeRowDetailsForProductAdjustment');
+
+    // client-adjustments
+    Route::resource('client-adjustments', ClientAdjustmentController::class);
 
 });

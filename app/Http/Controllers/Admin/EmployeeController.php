@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Models\Company;
-use App\Models\Employee;
 use App\Models\Storage;
+use App\Models\Employee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Yajra\DataTables\Facades\DataTables;
 
 class EmployeeController extends Controller
@@ -122,4 +123,31 @@ class EmployeeController extends Controller
                 'message' => 'تمت العملية بنجاح!',
             ]);
     } //end fun
+
+        public function getEmployee(Request $request){
+        if ($request->ajax()) {
+
+            $term = trim($request->term);
+            $employees = DB::table('employees')->select('id','name as text')
+                ->where('name', 'LIKE',  '%' . $term. '%')
+                ->orderBy('name', 'asc')->simplePaginate(5);
+
+            $morePages=true;
+            $pagination_obj= json_encode($employees);
+            if (empty($employees->nextPageUrl())){
+                $morePages=false;
+            }
+            $results = array(
+                "results" => $employees->items(),
+                "pagination" => array(
+                    "more" => $morePages
+                )
+            );
+
+            return \Response::json($results);
+
+        }
+
+    }
+
 }
