@@ -101,8 +101,12 @@
                             <th> {{ $destruction }} </th>
                         </tr>
                         <tr>
+                            <th> تسوية </th>
+                            <th> {{ $product_adjustment }} </th>
+                        </tr>
+                        <tr>
                             <th> الاجمالي </th>
-                            <th> {{ $rasied_ayni + $purchases + $hadback_sales - ($sales + $hadback_purchases + $destruction) }}
+                            <th> {{ $rasied_ayni + $purchases + $hadback_sales - ($sales + $hadback_purchases + $destruction) + $product_adjustment }}
                             </th>
                         </tr>
                     </tbody>

@@ -31,12 +31,28 @@ class ProductiveMovementController extends Controller
 
             // Create the initial query and union all other queries
             $query = $buildQuery('rasied_ayni', 'created_at', 'رصيد عيني', 1)
-                ->unionAll($buildQuery('sales_details', 'date', 'مبيعات', 2))
+            // ->unionAll($buildQuery('sales_details', 'date', 'مبيعات', 2))
+                ->unionAll(DB::table('sales_details')->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
+                        ->when($storage, fn($q) => $q->where('storage_id', $storage))
+                        ->where('is_prepared', 1)
+                        ->selectRaw('SUM(amount) as total_amount, DATE(date) as date, ? as type , ? as process', ['مبيعات', 2])
+                        ->when($startDate, fn($q) => $q->whereDate('date', '<=', $startDate))
+                        ->when($endDate, fn($q) => $q->whereDate('date', '>=', $endDate))
+                        ->groupBy(DB::raw('DATE(date)'))
+                )
                 ->unionAll($buildQuery('purchases_details', 'date', 'مشتريات', 3))
                 ->unionAll($buildQuery('head_back_sales_details', 'date', 'مرتجع مبيعات', 4))
                 ->unionAll($buildQuery('head_back_purchases_details', 'date', 'مرتجع مشتريات', 5))
-                ->unionAll($buildQuery('destruction_details', 'date', 'اهلاك', 6));
-
+                ->unionAll($buildQuery('destruction_details', 'date', 'اهلاك', 6))
+                ->unionAll(
+                    DB::table('product_adjustments')
+                        ->when($productive_id, fn($q) => $q->where('product_id', $productive_id))
+                        ->when($storage, fn($q) => $q->where('storage_id', $storage))
+                        ->selectRaw('SUM(CASE WHEN type = 2 THEN -amount ELSE amount END) as total_amount, DATE(date) as date, ? as type, ? as process', ['تسوية', 7])
+                        ->when($startDate, fn($q) => $q->whereDate('date', '<=', $startDate))
+                        ->when($endDate, fn($q) => $q->whereDate('date', '>=', $endDate))
+                        ->groupBy(DB::raw('DATE(date)'))
+                );
             // Order the final result
             $query->orderBy('date', 'ASC');
 
@@ -55,6 +71,8 @@ class ProductiveMovementController extends Controller
                         $this->total -= $row->total_amount;
                     } elseif ($row->process == 6) {
                         $this->total -= $row->total_amount;
+                    } elseif ($row->process == 7) {
+                        $this->total += $row->total_amount;
                     }
                     return $this->total;
 
@@ -74,6 +92,7 @@ class ProductiveMovementController extends Controller
             ->when($endDate, fn($q) => $q->whereDate('created_at', '>=', $endDate))
             ->sum('amount');
         $sales_details = DB::table('sales_details')
+            ->where('is_prepared', 1)
             ->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
             ->when($storage, fn($q) => $q->where('storage_id', $storage))
             ->when($startDate, fn($q) => $q->whereDate('date', '<=', $startDate))
@@ -103,6 +122,12 @@ class ProductiveMovementController extends Controller
             ->when($startDate, fn($q) => $q->whereDate('date', '<=', $startDate))
             ->when($endDate, fn($q) => $q->whereDate('date', '>=', $endDate))
             ->sum('amount');
+        $product_adjustment = DB::table('product_adjustments')
+            ->when($productive_id, fn($q) => $q->where('product_id', $productive_id))
+            ->when($storage, fn($q) => $q->where('storage_id', $storage))
+            ->when($startDate, fn($q) => $q->whereDate('date', '<=', $startDate))
+            ->when($endDate, fn($q) => $q->whereDate('date', '>=', $endDate))
+            ->sum(DB::raw('CASE WHEN type = 2 THEN -amount ELSE amount END'));
 
         return [
             'sales' => $sales_details,
@@ -111,6 +136,7 @@ class ProductiveMovementController extends Controller
             'hadback_purchases' => $head_back_purchases_details,
             'rasied_ayni' => $rasied_ayni,
             'destruction' => $destruction_details,
+            'product_adjustment' => $product_adjustment,
         ];
     }
 

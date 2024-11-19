@@ -101,7 +101,7 @@
                     </ul>
                 </li>
                 @endcanAdminAny
-                
+
 
                 {{-- @canAdminAny('عرض الفروع','عرض المخازن','عرض الاصناف') --}}
                 <li>
@@ -151,7 +151,7 @@
                         <li><a href="{{ route('admin.customerAccountStatements') }}"><i class="mdi mdi-album"></i>
                                 <span>كشف حساب عميل </span></a>
                         </li>
-                        @canAdminAny('عرض إعدادات تسديد العملاء') 
+                        @canAdminAny('عرض إعدادات تسديد العملاء')
                         <li><a href="{{ route('client-payment-settings.index') }}"><i class="mdi mdi-album"></i>
                                 <span>إعدادات تسديد العملاء </span></a>
                         </li>
@@ -195,7 +195,8 @@
                         <li><a href="{{ route('rasied_ayni.index') }}"><i class="mdi mdi-album"></i> <span> رصيد اول
                                     مدة </span></a>
                         </li>
-                        <li><a href="{{ route('productive-movement.index') }}"><i class="mdi mdi-album"></i> <span>حركة الاصناف</span></a>
+                        <li><a href="{{ route('productive-movement.index') }}"><i class="mdi mdi-album"></i>
+                                <span>حركة الاصناف</span></a>
                         </li>
 
                     </ul>
@@ -297,11 +298,18 @@
                 </li>
                 @endcanAdminAny
 
-
-
-
-
-
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="mdi mdi-buffer"></i>
+                        <span> التسوية </span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{ route('product-adjustments.index') }}"><i class="mdi mdi-album"></i>
+                                <span>تسوية المنتجات</span></a></li>
+                        <li><a href="{{ route('client-adjustments.index') }}"><i class="mdi mdi-album"></i>
+                                <span>تسوية العملاء</span></a></li>
+                    </ul>
+                </li>
 
                 <!--</div>-->
             </ul>

@@ -28,6 +28,7 @@ use App\Http\Controllers\Admin\Reports\AccountStatements\SupplierAccountStatment
 use App\Http\Controllers\Admin\Reports\Bills\PurchasesBillController;
 use App\Http\Controllers\Admin\Reports\Bills\SalesBillController;
 use App\Http\Controllers\Admin\Reports\Productive\ProductiveMovementController;
+use App\Http\Controllers\Admin\Reports\Storage\StorageCheckCOntroller;
 use App\Http\Controllers\Admin\RepresentativeClientController;
 use App\Http\Controllers\Admin\RepresentativeController;
 use App\Http\Controllers\Admin\RoleController;
@@ -165,6 +166,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
     // ProductiveMovement
     Route::resource('productive-movement', ProductiveMovementController::class);
+    
+    // storage check
+    Route::resource('storage-check', StorageCheckCOntroller::class);
 
     // product-adjustments
     Route::resource('product-adjustments', ProductAdjustmentController::class);
