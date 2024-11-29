@@ -37,8 +37,11 @@
                             <select id="payment_month" name="month" class="form-control">
                                 <option selected disabled>اختر الشهر</option>
                                 @for ($month = 1; $month <= 12; $month++)
-                                    <option value="{{ $month }}"> {{ $month }}</option>
+                                    <option value="{{ str_pad($month, 2, '0', STR_PAD_LEFT) }}">
+                                        {{ str_pad($month, 2, '0', STR_PAD_LEFT) }}
+                                    </option>
                                 @endfor
+
                             </select>
 
                         </div>
@@ -182,7 +185,7 @@
         $(document).on('change', '#payment_month', function() {
             let month = $(this).val();
             console.log(month);
-            
+
             let url = `{{ route('admin.getClientPaymentSettings') }}`;
 
             // Send the data to the server
