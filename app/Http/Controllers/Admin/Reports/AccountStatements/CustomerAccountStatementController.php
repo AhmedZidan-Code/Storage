@@ -97,12 +97,13 @@ class CustomerAccountStatementController extends Controller
 
         $esalat = DB::table('esalats')
             ->when($setting, function ($query, $setting) {
-                $month = str_pad($setting->month, 2, '0', STR_PAD_LEFT);
-                $from_day = str_pad($setting->from_day, 2, '0', STR_PAD_LEFT);
-                $to_day = str_pad($setting->to_day, 2, '0', STR_PAD_LEFT);
+                // $month = str_pad($setting->month, 2, '0', STR_PAD_LEFT);
+                // $from_day = str_pad($setting->from_day, 2, '0', STR_PAD_LEFT);
+                // $to_day = str_pad($setting->to_day, 2, '0', STR_PAD_LEFT);
 
-                return $query->whereRaw("DATE_FORMAT(date_esal, '%m-%d') >= ?", ["{$month}-{$from_day}"])
-                    ->whereRaw("DATE_FORMAT(date_esal, '%m-%d') <= ?", ["{$month}-{$to_day}"]);
+                // return $query->whereRaw("DATE_FORMAT(date_esal, '%m-%d') >= ?", ["{$month}-{$from_day}"])
+                //     ->whereRaw("DATE_FORMAT(date_esal, '%m-%d') <= ?", ["{$month}-{$to_day}"]);
+                return $query->where('client_payment_setting_id', $setting->id);
             })
             ->select(
                 'date_esal as date',

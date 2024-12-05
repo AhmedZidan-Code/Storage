@@ -198,6 +198,9 @@
                         <li><a href="{{ route('productive-movement.index') }}"><i class="mdi mdi-album"></i>
                                 <span>حركة الاصناف</span></a>
                         </li>
+                        <li><a href="{{ route('storage-check.index') }}"><i class="mdi mdi-album"></i>
+                                <span>المخزون</span></a>
+                        </li>
 
                     </ul>
                 </li>
