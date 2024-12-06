@@ -39,6 +39,7 @@ use App\Http\Controllers\Admin\StoreManagerController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Admin\SupplierVoucherController;
 use App\Http\Controllers\Admin\UnitController;
+use App\Http\Controllers\Admin\ZonesSettingController;
 use Illuminate\Support\Facades\Route;
 
 // Authentication Routes
@@ -114,6 +115,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
     Route::resource('head_back_purchases', HeadBackPurchasesController::class);
     Route::get('getHeadBackPurchasesDetails/{id}', [HeadBackPurchasesController::class, 'getHeadBackPurchasesDetails'])->name('admin.getHeadBackPurchasesDetails');
+    Route::get('/head-back-sales/invoice-details/{sale_number_id}', [HeadBackSalesController::class, 'getInvoiceDetails'])
+        ->name('admin.head-back-sales.invoice-details');
 
     Route::resource('sales', SalesController::class);
     Route::get('getSalesDetails/{id}', [SalesController::class, 'getSalesDetails'])->name('admin.getSalesDetails');
@@ -164,9 +167,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::resource('client-payment-settings', ClientPaymentSettingController::class);
     Route::post('client-payment-settings-data', [ClientPaymentSettingController::class, 'getClientPaymentSetting'])->name('admin.getClientPaymentSettings');
 
+    Route::get('sales-for-client/{client_id}', [SalesController::class, 'getSalesForClient'])->name('admin.getSalesForClient');
+
     // ProductiveMovement
     Route::resource('productive-movement', ProductiveMovementController::class);
-    
+
     // storage check
     Route::resource('storage-check', StorageCheckCOntroller::class);
 
@@ -176,5 +181,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
     // client-adjustments
     Route::resource('client-adjustments', ClientAdjustmentController::class);
+
+    Route::get('/get-child-cities', [ZonesSettingController::class, 'getChildCities'])->name('admin.getChildCities');
+
 
 });

@@ -40,9 +40,9 @@ class SalesController extends Controller
      * [Description for index]
      *
      * @param Request $request
-     * 
+     *
      * @return JsonResponse|View
-     * 
+     *
      */
     public function index(Request $request)
     {
@@ -62,9 +62,9 @@ class SalesController extends Controller
      *
      * @param mixed $query
      * @param Request $request
-     * 
+     *
      * @return void
-     * 
+     *
      */
     private function applyFilters($query, Request $request)
     {
@@ -81,9 +81,9 @@ class SalesController extends Controller
      * [Description for generateDataTable]
      *
      * @param mixed $query
-     * 
+     *
      * @return JsonResponse
-     * 
+     *
      */
     private function generateDataTable($query)
     {
@@ -108,9 +108,9 @@ class SalesController extends Controller
      * [Description for generateActionButtons]
      *
      * @param mixed $row
-     * 
+     *
      * @return string
-     * 
+     *
      */
     private function generateActionButtons($row)
     {
@@ -360,5 +360,28 @@ class SalesController extends Controller
         $sales->save();
 
         return response()->json(['success' => true]);
+    }
+
+    public function getSalesForClient(Request $request, $client_id)
+    {
+        if ($request->ajax()) {
+            $numbers = DB::table('sales')->where('client_id', $client_id)->select('id', 'fatora_number as text')
+                ->orderBy('id', 'asc')->simplePaginate(3);
+            $morePages = true;
+            $pagination_obj = json_encode($numbers);
+            if (empty($numbers->nextPageUrl())) {
+                $morePages = false;
+            }
+            $results = array(
+                "results" => $numbers->items(),
+                "pagination" => array(
+                    "more" => $morePages,
+                ),
+            );
+
+            return \Response::json($results);
+
+        }
+
     }
 }

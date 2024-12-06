@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Productive;
 use App\Models\Unite;
+use App\Models\ZonesSetting;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -69,8 +70,9 @@ class ProductiveController extends Controller
     {
         $categories = Category::get();
         $unites = Unite::get();
+        $zones = ZonesSetting::whereNull('parent_id')->get();
 
-        return view('Admin.CRUDS.productive.parts.create', compact('categories', 'unites'));
+        return view('Admin.CRUDS.productive.parts.create', compact('categories', 'unites', 'zones'));
     }
 
     public function store(Request $request)
@@ -86,6 +88,7 @@ class ProductiveController extends Controller
             'unit_id' => 'required|exists:unites,id',
             'category_id' => 'required|exists:categories,id',
             'company_id' => 'required|exists:companies,id',
+            'zones_setting_id' => 'sometimes|exists:zones_settings,id',
 
         ]);
 
@@ -105,8 +108,9 @@ class ProductiveController extends Controller
         $row = Productive::with('company')->find($id);
         $categories = Category::get();
         $unites = Unite::get();
-
-        return view('Admin.CRUDS.productive.parts.edit', compact('row', 'categories', 'unites'));
+        $zones = ZonesSetting::whereNull('parent_id')->get();
+        $city= ZonesSetting::where('id', $row->zones_setting_id)->first();
+        return view('Admin.CRUDS.productive.parts.edit', compact('row', 'categories', 'unites', 'zones', 'city'));
 
     }
 

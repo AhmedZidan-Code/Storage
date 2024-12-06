@@ -105,7 +105,7 @@
             <input id="num_pieces_in_package" required type="number" min="0"
                 class="form-control form-control-solid" name="num_pieces_in_package" value="" />
         </div>
-        <div class="d-flex flex-column mb-7 fv-row col-sm-4 " >
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4 ">
             <label for="company_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> الشركة</span>
             </label>
@@ -113,5 +113,54 @@
                 <option selected disabled>- ابحث عن الشركة -</option>
             </select>
         </div>
+
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4 ">
+            <label for="zone_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                <span class="required mr-1"> المنطقة</span>
+            </label>
+            <select id="zone_id" name="zone_id" class="form-control">
+                <option selected disabled>اختر المنطقة</option>
+                @foreach ($zones as $zone)
+                    <option value="{{ $zone->id }}"> {{ $zone->title }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4 ">
+            <label for="zone_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                <span class="required mr-1"> المدينة</span>
+            </label>
+            <select class="form-control" id="city_id" name="zones_setting_id">
+                <option value="">اختر المدينة</option>
+            </select>
+        </div>
+
     </div>
 </form>
+<script>
+$(document).on('change', '#zone_id', function () {
+    let parentId = $(this).val(); // Get the selected value from the parent select
+    if (parentId) {
+        $.ajax({
+            url: '{{ route("admin.getChildCities") }}', // Replace with your route
+            type: 'GET',
+            data: { zone_id: parentId }, // Send the parent_id as a query parameter
+            success: function (response) {
+                let $childSelect = $('#city_id'); // Target the child select element
+                $childSelect.empty(); // Clear previous options
+                $childSelect.append('<option value="">اختر المدينة</option>'); // Add a placeholder
+                
+                // Populate new options
+                $.each(response.data, function (index, item) {
+                    $childSelect.append('<option value="' + item.id + '">' + item.title + '</option>');
+                });
+            },
+            error: function (xhr) {
+                toastr.error("Error fetching data:", xhr.responseText);
+            }
+        });
+    } else {
+        $('#city_id').empty().append('<option value="">اختر المدينة</option>'); // Reset if no parent selected
+    }
+});
+
+</script>
