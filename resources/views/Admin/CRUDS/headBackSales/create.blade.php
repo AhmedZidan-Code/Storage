@@ -72,7 +72,8 @@
                 e.preventDefault();
                 let sale = $('#sale_number_id').val();
                 if (sale) {
-                    let url = '{{ route('admin.head-back-sales.invoice-details', ['sale_number_id' => ':id']) }}'.replace(':id', sale);
+                    let url = '{{ route('admin.head-back-sales.invoice-details', ['sale_number_id' => ':id']) }}'
+                        .replace(':id', sale);
                     $.ajax({
                         type: 'GET',
                         url: url,
@@ -235,18 +236,28 @@
                 var amounts = document.getElementsByName('amount[]');
                 var prices = document.getElementsByName('productive_sale_price[]');
                 var discounts = document.getElementsByName('discount_percentage[]');
+                let checkedData = Array.from(document.querySelectorAll('input[name^="check_data["]:checked'))
+                    .map(checkbox => {
+                        let match = checkbox.name.match(/\[(\d+)\]/);
+                        return match ? match[1] : null; // Return the key
+                    })
+                    .filter(key => key !== null);
+
+                console.log(checkedData);
 
                 var total = 0;
                 var subTotal = 0;
                 for (var i = 0; i < amounts.length; i++) {
-                    subTotal = 1;
-                    var amount = amounts[i];
-                    var price = prices[i];
-                    var discount = discounts[i];
-                    subTotal = amount.value * price.value - (amount.value * price.value * discount.value / 100);
-                    var rowId = amount.getAttribute('data-id');
-                    $(`#total-${rowId}`).val(subTotal);
-                    total = total + subTotal;
+                    if (checkedData.includes(String(i))) {
+                        subTotal = 1;
+                        var amount = amounts[i];
+                        var price = prices[i];
+                        var discount = discounts[i];
+                        subTotal = amount.value * price.value - (amount.value * price.value * discount.value / 100);
+                        var rowId = amount.getAttribute('data-id');
+                        $(`#total-${rowId}`).val(subTotal);
+                        total = total + subTotal;
+                    }
                 }
 
                 $('#total_productive_sale_price').text(total);
@@ -323,6 +334,21 @@
                     contentType: false,
                     processData: false
                 });
+            });
+        </script>
+        <script>
+            const form = document.getElementById('form');
+
+            form.addEventListener('input', (event) => {
+                const target = event.target; // The input that triggered the event
+                if (target.type === 'number') {
+                    const max = parseInt(target.getAttribute('max'), 10);
+                    const value = parseInt(target.value, 10);
+
+                    if (value > max) {
+                        target.value = max; // Set the value back to the maximum
+                    }
+                }
             });
         </script>
     @endsection

@@ -85,7 +85,8 @@
                     <tr>
                         <th>المنتج</th>
                         <th>كود المنتج</th>
-                        <th>الوحدة</th>
+                        {{-- <th>الوحدة</th> --}}
+                        <th>تاريخ انتهاء الصلاحية</th>
                         <th>الكمية</th>
                         <th>سعر الشراء</th>
                         <th>بونص</th>
@@ -111,9 +112,13 @@
                                 <input type="text" value="{{ $pivot->productive_code }}" disabled
                                     id="productive_code-{{ $key }}" style="width: 100px; text-align: center;">
                             </th>
-                            <th style="padding: 8px;">
+                            {{-- <th style="padding: 8px;">
                                 <input type="text" value="{{ $pivot->productive->unit->title ?? '' }}" disabled
                                     id="unit-{{ $key }}" style="width: 100px; text-align: center;">
+                            </th> --}}
+                            <th style="padding: 8px;">
+                                <input type="date" value="{{ $pivot->exp_date ?? date('Y-m-d') }}"
+                                    id="exp_date-{{ $key }}" name="exp_date[]" class="form-control" style="width: 120px; text-align: center;">
                             </th>
                             <th style="padding: 8px;">
                                 <input data-id="{{ $key }}" onchange="callTotal()" onkeyup="callTotal()"

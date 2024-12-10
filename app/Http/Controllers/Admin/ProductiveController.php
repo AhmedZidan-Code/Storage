@@ -109,7 +109,7 @@ class ProductiveController extends Controller
         $categories = Category::get();
         $unites = Unite::get();
         $zones = ZonesSetting::whereNull('parent_id')->get();
-        $city= ZonesSetting::where('id', $row->zones_setting_id)->first();
+        $city = ZonesSetting::where('id', $row->zones_setting_id)->first();
         return view('Admin.CRUDS.productive.parts.edit', compact('row', 'categories', 'unites', 'zones', 'city'));
 
     }
@@ -127,6 +127,8 @@ class ProductiveController extends Controller
             'unit_id' => 'required|exists:unites,id',
             'category_id' => 'required|exists:categories,id',
             'company_id' => 'required|exists:companies,id',
+            'zones_setting_id' => 'sometimes|exists:zones_settings,id',
+
         ]);
 
         $row = Productive::find($id);

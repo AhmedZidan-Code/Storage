@@ -234,23 +234,23 @@
                     },
                     complete: function() {},
                     success: function(data) {
-
                         window.setTimeout(function() {
                             $('#submit').html('{{ trans('admin.submit') }}').attr('disabled',
                                 false);
 
                             if (data.code == 200) {
                                 toastr.success(data.message)
-                                // $('#form')[0].reset();
-
+                            } else if (data.code == 500) {
+                                toastr.error(data.error); // Error message for code 500
                             } else {
-                                toastr.error(data.message)
+                                toastr.error(data.message); // General error message
                             }
                         }, 1000);
 
 
                     },
                     error: function(data) {
+
                         $('#submit').html('{{ trans('admin.submit') }}').attr('disabled', false);
                         if (data.status === 500) {
                             toastr.error('{{ trans('admin.error') }}')

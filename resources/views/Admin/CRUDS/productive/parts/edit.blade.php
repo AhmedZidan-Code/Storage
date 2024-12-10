@@ -126,7 +126,8 @@
             <select id="zone_id" name="zone_id" class="form-control">
                 <option selected disabled>اختر المنطقة</option>
                 @foreach ($zones as $zone)
-                    <option value="{{ $zone->id }}" {{ $zone->id == $city->parent_id ? 'selected' : '' }}>
+                    <option value="{{ $zone->id }}"
+                        @if ($city) {{ $zone->id == $city->parent_id ? 'selected' : '' }} @endif>
                         {{ $zone->title }}</option>
                 @endforeach
             </select>
@@ -137,8 +138,10 @@
             </label>
             <select class="form-control" id="city_id" name="zones_setting_id">
                 <option value="" disabled>اختر المدينة</option>
-                <option value="{{ $city->id }}" selected>
-                    {{ $city->title }}</option>
+                @if ($city)
+                    <option value="{{ $city->id }}" selected>
+                        {{ $city->title }}</option>
+                @endif
             </select>
         </div>
 

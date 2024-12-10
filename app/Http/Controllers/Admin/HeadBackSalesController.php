@@ -9,6 +9,7 @@ use App\Models\Productive;
 use App\Models\Sales;
 use App\Models\SalesDetails;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
@@ -83,7 +84,7 @@ class HeadBackSalesController extends Controller
             'client_id' => 'required|exists:clients,id',
             'sales_id' => 'required|exists:sales,id',
             'fatora_number' => 'required|unique:head_back_sales,fatora_number',
-
+            'check_data' => 'required|array',
         ]);
 
         $datails = $request->validate([
@@ -109,42 +110,49 @@ class HeadBackSalesController extends Controller
         if ($latestModel) {
             $purchases_number = $latestModel->id + 1;
         }
-
         $data['publisher'] = auth('admin')->user()->id;
         $data['sales_number'] = $purchases_number;
+        $data['products_ids'] = $request->check_data;
         $data['date'] = date('Y-m-d');
         $data['month'] = date('m');
         $data['year'] = date('Y');
 
-        $headBackSales = HeadBackSales::create($data);
+        $headBackSales = HeadBackSales::create(Arr::except($data, ['check_data']));
 
         $sql = [];
-
+        $keys = array_keys($request->check_data);
         if ($request->productive_id) {
             for ($i = 0; $i < count($request->productive_id); $i++) {
-
                 $details = [];
-                $productive = Productive::findOrFail($request->productive_id[$i]);
+                if (in_array($i, $keys ?? [])) {
+                    $productive = Productive::findOrFail($request->productive_id[$i]);
 
-                $details = [
-                    'storage_id' => $productive->storage_id,
-                    'head_back_sales_id' => $headBackSales->id,
-                    'productive_id' => $request->productive_id[$i],
-                    'productive_code' => $productive->code,
-                    'amount' => $request->amount[$i],
-                    'productive_sale_price' => $request->productive_sale_price[$i],
-                    'total' => $request->productive_sale_price[$i] * $request->amount[$i],
-                    'all_pieces' => $request->amount[$i] * $productive->num_pieces_in_package,
-                    'date' => date('Y-m-d'),
-                    'year' => date('Y'),
-                    'month' => date('m'),
-                    'publisher' => auth('admin')->user()->id,
-                    'created_at' => date('Y-m-d H:i:s'),
-                    'updated_at' => date('Y-m-d H:i:s'),
+                    $details = [
+                        'storage_id' => $headBackSales->storage_id,
+                        'head_back_sales_id' => $headBackSales->id,
+                        'sales_id' => $headBackSales->sales_id,
+                        'productive_id' => $request->productive_id[$i],
+                        'productive_code' => $productive->code,
+                        'amount' => $request->amount[$i],
+                        'productive_sale_price' => $request->productive_sale_price[$i],
+                        'bouns' => $request->bouns[$i],
+                        'discount_percentage' => $request->discount_percentage[$i],
+                        'batch_number' => $request->batch_number[$i],
+                        'total' => $request->productive_sale_price[$i] * $request->amount[$i],
+                        'all_pieces' => $request->amount[$i] * $productive->num_pieces_in_package,
+                        'date' => date('Y-m-d'),
+                        'year' => date('Y'),
+                        'month' => date('m'),
+                        'publisher' => auth('admin')->user()->id,
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s'),
 
-                ];
+                    ];
 
-                array_push($sql, $details);
+                    array_push($sql, $details);
+
+                }
+
             }
             DB::table('head_back_sales_details')->insert($sql);
 
@@ -164,7 +172,7 @@ class HeadBackSalesController extends Controller
     public function edit($id)
     {
 
-        $row = HeadBackSales::find($id);
+        $row = HeadBackSales::with('invoice_sale')->find($id);
 
         return view('Admin.CRUDS.headBackSales.edit', compact('row'));
 
@@ -178,6 +186,7 @@ class HeadBackSalesController extends Controller
             'pay_method' => 'required|in:debit,cash',
             'client_id' => 'required|exists:clients,id',
             'fatora_number' => 'required|unique:head_back_sales,fatora_number,' . $id,
+            'check_data' => 'required|array',
 
         ]);
 
@@ -188,6 +197,12 @@ class HeadBackSalesController extends Controller
             'amount.*' => 'required',
             'productive_sale_price' => 'required|array',
             'productive_sale_price.*' => 'required',
+            'bouns' => 'required|array',
+            'discount_percentage' => 'required|array',
+            'batch_number' => 'required|array',
+            'bouns.*' => 'required',
+            'discount_percentage.*' => 'required',
+            'batch_number.*' => 'required',
 
         ]);
 
@@ -200,37 +215,45 @@ class HeadBackSalesController extends Controller
         }
 
         $headBackSales = HeadBackSales::findOrFail($id);
-        $headBackSales->update($data);
+        $data['products_ids'] = $request->check_data;
+        $headBackSales->update(Arr::except($data, ['check_data']));
 
         HeadBackSalesDetails::where('head_back_sales_id', $id)->delete();
 
         $sql = [];
 
+        $keys = array_keys($request->check_data);
         if ($request->productive_id) {
             for ($i = 0; $i < count($request->productive_id); $i++) {
-
                 $details = [];
-                $productive = Productive::findOrFail($request->productive_id[$i]);
+                if (in_array($i, $keys ?? [])) {
+                    $productive = Productive::findOrFail($request->productive_id[$i]);
 
-                $details = [
-                    'storage_id' => $productive->storage_id,
-                    'head_back_sales_id' => $headBackSales->id,
-                    'productive_id' => $request->productive_id[$i],
-                    'productive_code' => $productive->code,
-                    'amount' => $request->amount[$i],
-                    'productive_sale_price' => $request->productive_sale_price[$i],
-                    'total' => $request->productive_sale_price[$i] * $request->amount[$i],
-                    'all_pieces' => $request->amount[$i] * $productive->num_pieces_in_package,
-                    'date' => $headBackSales->date,
-                    'year' => $headBackSales->year,
-                    'month' => $headBackSales->month,
-                    'publisher' => $headBackSales->publisher,
-                    'created_at' => $headBackSales->created_at,
-                    'updated_at' => date('Y-m-d H:i:s'),
+                    $details = [
+                        'storage_id' => $productive->storage_id,
+                        'head_back_sales_id' => $headBackSales->id,
+                        'sales_id' => $headBackSales->sales_id,
+                        'productive_id' => $request->productive_id[$i],
+                        'productive_code' => $productive->code,
+                        'amount' => $request->amount[$i],
+                        'productive_sale_price' => $request->productive_sale_price[$i],
+                        'bouns' => $request->bouns[$i],
+                        'discount_percentage' => $request->discount_percentage[$i],
+                        'batch_number' => $request->batch_number[$i],
+                        'total' => $request->productive_sale_price[$i] * $request->amount[$i],
+                        'all_pieces' => $request->amount[$i] * $productive->num_pieces_in_package,
+                        'date' => $headBackSales->date,
+                        'year' => $headBackSales->year,
+                        'month' => $headBackSales->month,
+                        'publisher' => $headBackSales->publisher,
+                        'created_at' => $headBackSales->created_at,
+                        'updated_at' => date('Y-m-d H:i:s'),
 
-                ];
+                    ];
 
-                array_push($sql, $details);
+                    array_push($sql, $details);
+
+                }
             }
             DB::table('head_back_sales_details')->insert($sql);
 
@@ -290,6 +313,37 @@ class HeadBackSalesController extends Controller
             }
 
             $view = view('Admin.CRUDS.headBackSales.parts.client_fatorah', compact('row', 'details'))->render();
+
+            return response()->json([
+                'status' => 'success',
+                'data' => $details,
+                'html' => $view,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'An error occurred while fetching invoice details.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function getInvoiceDetailsEdit(Request $request, $sale_number_id)
+    {
+        try {
+            $row = Sales::findOrFail($sale_number_id);
+            $details = SalesDetails::where('sales_id', $sale_number_id)->get();
+            $hadbackInvoice = HeadBackSales::where('sales_id', $row->id)->first();
+            $hadbackInvoiceDetails = HeadBackSalesDetails::where('head_back_sales_id', $hadbackInvoice->id)->get();
+
+            if ($details->isEmpty()) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'No invoice details found for the given sale number.',
+                ], 404);
+            }
+
+            $view = view('Admin.CRUDS.headBackSales.parts.client_fatorah_edit', compact('row', 'details', 'hadbackInvoice', 'hadbackInvoiceDetails'))->render();
 
             return response()->json([
                 'status' => 'success',

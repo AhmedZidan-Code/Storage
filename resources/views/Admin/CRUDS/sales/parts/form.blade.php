@@ -28,7 +28,7 @@
             <label for="pay_method" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> طريقة الشراء </span>
             </label>
-            <select id='pay_method' name="pay_method" class="form-control">
+            <select id='pay_method' name="pay_method" class="form-control " >
                 <option selected disabled>اختر طريقة الشراء</option>
                 <option value="cash">كاش</option>
                 <option value="debit">اجل</option>
@@ -41,7 +41,7 @@
             <label for="storage_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> المخزن</span>
             </label>
-            <select id='storage_id' name="storage_id" style='width: 200px;'>
+            <select id='storage_id' name="storage_id" class="form-control " style='width: 200px;'>
                 <option selected disabled>- ابحث عن المخزن</option>
             </select>
         </div>
@@ -52,7 +52,7 @@
             <label for="client_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> العميل</span>
             </label>
-            <select id='client_id' name="client_id" style='width: 200px;'>
+            <select id='client_id' class="form-control " name="client_id" style='width: 200px;'>
                 <option selected disabled>- ابحث عن عملاء</option>
             </select>
         </div>
@@ -63,7 +63,7 @@
                 <span class="required mr-1"> رقم الفاتورة</span>
             </label>
             <!--end::Label-->
-            <input id="fatora_number" required type="text" class="form-control form-control-solid"
+            <input id="fatora_number" required type="text" class="form-control form-control-solid "
                 name="fatora_number" value="" />
         </div>
 
@@ -95,7 +95,7 @@
                                     class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                                     <span class="required mr-1"> </span>
                                 </label>
-                                <select class="changeKhamId" data-id="1" name="productive_id[]" id='productive_id'
+                                <select class="changeKhamId " data-id="1" name="productive_id[]" id='productive_id'
                                     style="width: 100%;">
                                     <option selected disabled value='0'>- ابحث عن المنتج -</option>
                                 </select>
@@ -112,27 +112,27 @@
 
                         </th>
                         <th>
-                            <input data-id="1" onchange="callTotal()" onkeyup="callTotal()" type="number"
+                            <input data-id="1" onchange="callTotal()" class="form-control navigable" onkeyup="callTotal()" type="number"
                                 value="1" min="1" name="amount[]" id="amount-1" style="width: 100%;">
 
                         </th>
                         <th>
                             <input data-id="1" step=".1" onchange="callTotal()" onkeyup="callTotal()"
                                 type="number" value="1" min="1" name="productive_sale_price[]"
-                                id="productive_sale_price-1" style="width: 100%;">
+                                id="productive_sale_price-1" class="form-control navigable" style="width: 100%;">
 
                         </th>
                         <th>
-                            <input type="number" value="0" min="0" name="bouns[]" id="bouns-1"
+                            <input type="number" class="form-control navigable" value="0" min="0" name="bouns[]" id="bouns-1"
                                 style="width: 100%;"> <!-- Adjusted width -->
                         </th>
                         <th>
                             <input type="number" value="0" min="0" name="discount_percentage[]"
-                                id="discount_percentage-1" style="width: 100%;" onkeyup="callTotal()"> <!-- Adjusted width -->
+                                id="discount_percentage-1" class="form-control navigable" style="width: 100%;" onkeyup="callTotal()"> <!-- Adjusted width -->
                         </th>
                         <th>
                             <input type="number" value="0" min="0" name="batch_number[]"
-                                id="batch_number-1" style="width: 100%;"> <!-- Adjusted width -->
+                                id="batch_number-1" class="form-control navigable" style="width: 100%;"> <!-- Adjusted width -->
                         </th>
                         <th>
                             <input type="number" disabled value="1" min="1" name="total[]"
@@ -173,7 +173,7 @@
         </div>
 
         <div class="d-flex justify-content-end">
-            <button id="addNewDetails" class="btn btn-primary">اضافة منتج اخر
+            <button id="addNewDetails" class="btn btn-primary navigable">اضافة منتج اخر
 
             </button>
         </div>

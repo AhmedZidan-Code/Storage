@@ -244,8 +244,10 @@
                                 $('#form')[0].reset();
                                 setTimeout(() => location.reload(true), 500)
 
+                            } else if (data.code == 500) {
+                                toastr.error(data.error); // Error message for code 500
                             } else {
-                                toastr.error(data.message)
+                                toastr.error(data.message); // General error message
                             }
                         }, 1000);
 

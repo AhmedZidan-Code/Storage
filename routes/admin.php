@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\Reports\AccountStatements\CustomerAccountStatemen
 use App\Http\Controllers\Admin\Reports\AccountStatements\SupplierAccountStatmentController;
 use App\Http\Controllers\Admin\Reports\Bills\PurchasesBillController;
 use App\Http\Controllers\Admin\Reports\Bills\SalesBillController;
+use App\Http\Controllers\Admin\Reports\Customer\CustomerAccountController;
 use App\Http\Controllers\Admin\Reports\Productive\ProductiveMovementController;
 use App\Http\Controllers\Admin\Reports\Storage\StorageCheckCOntroller;
 use App\Http\Controllers\Admin\RepresentativeClientController;
@@ -110,13 +111,20 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     // Purchases and Sales
     Route::resource('purchases', PurchasesController::class);
     Route::get('getPurchasesDetails/{id}', [PurchasesController::class, 'getPurchasesDetails'])->name('admin.getPurchasesDetails');
+    Route::get('purchases-for-supplier/{supplier_id}', [PurchasesController::class, 'getPurchasesForSupplier'])->name('admin.getPurchasesForSupplier');
     Route::get('getStorages', [PurchasesController::class, 'getStorages'])->name('admin.getStorages');
     Route::get('makeRowDetailsForPurchasesDetails', [PurchasesController::class, 'makeRowDetailsForPurchasesDetails'])->name('admin.makeRowDetailsForPurchasesDetails');
 
     Route::resource('head_back_purchases', HeadBackPurchasesController::class);
     Route::get('getHeadBackPurchasesDetails/{id}', [HeadBackPurchasesController::class, 'getHeadBackPurchasesDetails'])->name('admin.getHeadBackPurchasesDetails');
+    Route::get('/head-back-purchases/invoice-details/{purchase_id}', [HeadBackPurchasesController::class, 'getInvoiceDetails'])
+        ->name('admin.head-back-purchases.invoice-details');
+    Route::get('/head-back-purchases/invoice-details-edit/{purchases_id}', [HeadBackPurchasesController::class, 'getInvoiceDetailsEdit'])
+        ->name('admin.head-back-purchases.invoice-details-edit');
     Route::get('/head-back-sales/invoice-details/{sale_number_id}', [HeadBackSalesController::class, 'getInvoiceDetails'])
         ->name('admin.head-back-sales.invoice-details');
+    Route::get('/head-back-sales/invoice-details-edit/{sale_number_id}', [HeadBackSalesController::class, 'getInvoiceDetailsEdit'])
+        ->name('admin.head-back-sales.invoice-details-edit');
 
     Route::resource('sales', SalesController::class);
     Route::get('getSalesDetails/{id}', [SalesController::class, 'getSalesDetails'])->name('admin.getSalesDetails');
@@ -138,6 +146,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
     // Reports
     Route::get('customerAccountStatements', [CustomerAccountStatementController::class, 'index'])->name('admin.customerAccountStatements');
+    Route::get('customer-account-state', [CustomerAccountController::class, 'index'])->name('admin.customerAccountState');
     Route::get('supplierAccountStatements', [SupplierAccountStatmentController::class, 'index'])->name('admin.supplierAccountStatements');
     Route::resource('purchasesBills', PurchasesBillController::class);
     Route::resource('salesBills', SalesBillController::class);

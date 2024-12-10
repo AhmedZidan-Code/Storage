@@ -85,7 +85,8 @@
                     <tr>
                         <th>المنتج</th>
                         <th>كود المنتج</th>
-                        <th>الوحدة</th>
+                        {{-- <th>الوحدة</th> --}}
+                        <th>تاريخ انتهاء الصلاحية</th>
                         <th>الكمية</th>
                         <th>سعر الشراء</th>
                         <th>بونص</th>
@@ -112,8 +113,12 @@
                             <input type="text" disabled id="productive_code-1" style="width: 100%;">
                             <!-- Adjusted width -->
                         </th>
-                        <th>
+                        {{-- <th>
                             <input type="text" disabled id="unit-1" style="width: 100%;"> <!-- Adjusted width -->
+                        </th> --}}
+                        <th style="padding: 8px;">
+                            <input type="date" value="{{ date('Y-m-d') }}" id="exp_date" name="exp_date[]" class="form-control"
+                                style="width: 120px; text-align: center;">
                         </th>
                         <th>
                             <input data-id="1" onchange="callTotal()" onkeyup="callTotal()" type="number"

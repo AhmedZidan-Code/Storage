@@ -117,31 +117,31 @@
                             <th>
                                 <input data-id="{{ $key }}" onchange="callTotal()" onkeyup="callTotal()"
                                     type="number" value="{{ $pivot->amount }}" min="1" name="amount[]"
-                                    id="amount-{{ $key }}" style="width: 100%;">
+                                    id="amount-{{ $key }}" class="form-control navigable" style="width: 100%;">
 
                             </th>
                             <th>
                                 <input data-id="{{ $key }}" step=".1" onchange="callTotal()"
                                     onkeyup="callTotal()" type="number" value="{{ $pivot->productive_sale_price }}"
                                     min="1" name="productive_sale_price[]"
-                                    id="productive_sale_price-{{ $key }}" style="width: 100%;">
+                                    id="productive_sale_price-{{ $key }}" class="form-control navigable" style="width: 100%;">
 
                             </th>
                             <th style="padding: 8px;">
                                 <input data-id="{{ $key }}" step=".1" type="number"
                                     value="{{ $pivot->bouns }}" min="0" name="bouns[]"
-                                    id="bouns-{{ $key }}" style="width: 100px; text-align: center;">
+                                    id="bouns-{{ $key }}" class="form-control navigable" style="width: 100px; text-align: center;">
                             </th>
                             <th style="padding: 8px;">
                                 <input data-id="{{ $key }}" step=".1" type="number"
                                     value="{{ $pivot->discount_percentage }}" min="0"
-                                    name="discount_percentage[]" id="discount_percentage-{{ $key }}"
+                                    name="discount_percentage[]" id="discount_percentage-{{ $key }}" class="form-control navigable"
                                     style="width: 100px; text-align: center;" onkeyup="callTotal()">
                             </th>
                             <th style="padding: 8px;">
                                 <input data-id="{{ $key }}" step=".1" type="number"
                                     value="{{ $pivot->batch_number }}" min="0" name="batch_number[]"
-                                    id="batch_number-{{ $key }}" style="width: 100px; text-align: center;">
+                                    id="batch_number-{{ $key }}" class="form-control navigable" style="width: 100px; text-align: center;">
                             </th>
                             <th>
                                 <input type="number" disabled value="{{ $pivot->total }}" min="1"
@@ -184,7 +184,7 @@
         </div>
 
         <div class="d-flex justify-content-end">
-            <button id="addNewDetails" class="btn btn-primary">اضافة منتج اخر
+            <button id="addNewDetails" class="btn btn-primary navigable">اضافة منتج اخر
 
             </button>
         </div>

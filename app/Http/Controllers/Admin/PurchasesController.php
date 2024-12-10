@@ -115,6 +115,7 @@ class PurchasesController extends Controller
             'bouns.*' => 'required',
             'discount_percentage.*' => 'required',
             'batch_number.*' => 'required',
+            'exp_date.*' => 'required|date',
         ]);
 
         if (count($request->amount) !== count($request->productive_id)) {
@@ -168,6 +169,7 @@ class PurchasesController extends Controller
                 'productive_code' => $productive->code,
                 'amount' => $amount,
                 'bouns' => $request->bouns[$i],
+                'exp_date' => $request->exp_date[$i],
                 'discount_percentage' => $discountPercentage,
                 'batch_number' => $request->batch_number[$i],
                 'productive_buy_price' => $buyPrice,
@@ -285,5 +287,28 @@ class PurchasesController extends Controller
         $id = rand(2, 999999999999999);
         $html = view('Admin.CRUDS.purchases.parts.details', compact('id'))->render();
         return response()->json(['status' => true, 'html' => $html, 'id' => $id]);
+    }
+
+        public function getPurchasesForSupplier(Request $request, $supplier_id)
+    {
+        if ($request->ajax()) {
+            $numbers = DB::table('purchases')->where('supplier_id', $supplier_id)->select('id', 'fatora_number as text')
+                ->orderBy('id', 'asc')->simplePaginate(3);
+            $morePages = true;
+            $pagination_obj = json_encode($numbers);
+            if (empty($numbers->nextPageUrl())) {
+                $morePages = false;
+            }
+            $results = array(
+                "results" => $numbers->items(),
+                "pagination" => array(
+                    "more" => $morePages,
+                ),
+            );
+
+            return \Response::json($results);
+
+        }
+
     }
 }

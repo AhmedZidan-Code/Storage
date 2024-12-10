@@ -21,7 +21,65 @@
     @section('js')
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const form = document.getElementById('form');
+                let navigableElements = Array.from(document.querySelectorAll('.navigable'));
 
+                function updateNavigableElements() {
+                    // Re-fetch all navigable elements
+                    navigableElements = Array.from(document.querySelectorAll('.navigable'));
+                }
+
+                form.addEventListener('keydown', function(event) {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        let currentElement = event.target;
+
+                        if (navigableElements.includes(currentElement)) {
+                            let currentIndex = navigableElements.indexOf(currentElement);
+                            let nextElement = navigableElements[currentIndex + 1];
+
+                            if (nextElement) {
+                                nextElement.focus();
+                                if (nextElement.tagName === 'SELECT') {
+                                    nextElement.click();
+                                }
+                            } else if (currentElement.tagName === 'BUTTON') {
+                                const targetIndex = Math.max(0, navigableElements.length - 6);
+                                navigableElements[targetIndex].focus();
+                                currentElement.click();
+                                updateNavigableElements();
+                            }
+                        }
+                    }
+                });
+
+                // Handle adding new rows dynamically
+                $(document).on('click', '#addNewDetails', function(e) {
+                    e.preventDefault();
+                    $.ajax({
+                        type: 'GET',
+                        url: "{{ route('admin.makeRowDetailsForSalesDetails') }}",
+                        success: function(res) {
+                            $('#details-container').append(res.html);
+                            $("html,body").animate({
+                                scrollTop: $(document).height()
+                            }, 1000);
+
+                            loadScript(res.id); // If this initializes row-specific data
+                            callTotal(); // Update totals
+
+                            // Reinitialize navigable elements to include the new row
+                            updateNavigableElements();
+                        },
+                        error: function(data) {
+                            // Handle error
+                        }
+                    });
+                });
+            });
+        </script>
         <script>
             (function() {
 
@@ -102,7 +160,7 @@
             })
         </script>
 
-
+        {{-- 
         <script>
             $(document).on('click', '#addNewDetails', function(e) {
                 e.preventDefault();
@@ -131,7 +189,7 @@
 
             })
         </script>
-
+ --}}
 
 
         <script>
@@ -237,14 +295,13 @@
                         window.setTimeout(function() {
                             $('#submit').html('{{ trans('admin.submit') }}').attr('disabled',
                                 false);
-
                             if (data.code == 200) {
-                                toastr.success(data.message)
-                                setTimeout(()=>location.reload(true),500)
-                                
-
+                                toastr.success(data.message); // Success message
+                                setTimeout(() => location.reload(), 500); // Reload after 500ms
+                            } else if (data.code == 500) {
+                                toastr.error(data.error); // Error message for code 500
                             } else {
-                                toastr.error(data.message)
+                                toastr.error(data.message); // General error message
                             }
                         }, 1000);
 

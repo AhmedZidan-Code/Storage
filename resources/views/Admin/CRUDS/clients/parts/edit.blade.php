@@ -105,7 +105,7 @@
                 <span class="required mr-1">المديونية السابقة</span>
             </label>
             <!--end::Label-->
-            <input id="previous_indebtedness" min="0" required type="number"
+            <input id="previous_indebtedness" required type="number"
                 class="form-control form-control-solid" name="previous_indebtedness"
                 value="{{ $row->previous_indebtedness }}" />
         </div>

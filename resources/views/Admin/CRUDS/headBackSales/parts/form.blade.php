@@ -62,10 +62,10 @@
         <div class="d-flex flex-column mb-7 fv-row col-sm-3">
             <!--begin::Label-->
             <label for="sale_number_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                <span class="required mr-1"> فاتورة الشراء</span>
+                <span class="required mr-1"> فاتورة البيع</span>
             </label>
             <select id='sale_number_id' name="sales_id" style='width: 200px;'>
-                <option selected disabled>ادخل فاتورة الشراء</option>
+                <option selected disabled>ادخل فاتورة البيع</option>
             </select>
         </div>
 
