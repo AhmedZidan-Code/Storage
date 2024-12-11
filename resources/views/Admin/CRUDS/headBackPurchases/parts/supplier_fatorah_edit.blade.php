@@ -48,15 +48,16 @@
                                     style="width: 120px; text-align: center;" readonly>
                             </th>
                             <th style="padding: 8px;">
-                                <input data-id="{{ $key }}" max="{{ $pivot->amount }}" onchange="callTotal()" onkeyup="callTotal()"
-                                    type="number" value="{{ $pivot->amount }}" min="1" name="amount[]"
-                                    id="amount-{{ $key }}" style="width: 100px; text-align: center;">
+                                <input data-id="{{ $key }}" max="{{ $pivot->amount }}" onchange="callTotal()"
+                                    onkeyup="callTotal()" type="number"
+                                    value="{{ $hadbackInvoiceDetails->where('productive_id', $pivot->productive_id)->first()?->amount ?? $pivot->amount }}"
+                                    min="1" name="amount[]" id="amount-{{ $key }}"
+                                    style="width: 100px; text-align: center;">
                             </th>
                             <th style="padding: 8px;">
-                                <input data-id="{{ $key }}"  onchange="callTotal()"
-                                    onkeyup="callTotal()" type="number" value="{{ $pivot->productive_buy_price }}"
-                                    min="1" name="productive_buy_price[]"
-                                    id="productive_buy_price-{{ $key }}"
+                                <input data-id="{{ $key }}" onchange="callTotal()" onkeyup="callTotal()"
+                                    type="number" value="{{ $pivot->productive_buy_price }}" min="1"
+                                    name="productive_buy_price[]" id="productive_buy_price-{{ $key }}"
                                     style="width: 100px; text-align: center;" readonly>
                             </th>
                             <th style="padding: 8px;">

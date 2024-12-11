@@ -53,8 +53,8 @@
                     </th>
                     <th>
                         <input data-id="{{ $key }}" onchange="callTotal()" onkeyup="callTotal()"
-                            type="number" value="{{ $pivot->amount }}" min="1" name="amount[]"
-                            id="amount-{{ $key }}" style="width: 100%;">
+                            type="number" value="{{ $hadbackInvoiceDetails->where('productive_id', $pivot->productive_id)->first()?->amount ?? $pivot->amount }}" min="1" name="amount[]"
+                            id="amount-{{ $key }}" style="width: 100%;"  max="{{ $pivot->amount }}">
 
                     </th>
                     <th>

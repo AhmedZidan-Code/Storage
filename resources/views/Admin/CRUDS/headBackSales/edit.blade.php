@@ -264,9 +264,9 @@
                         let match = checkbox.name.match(/\[(\d+)\]/);
                         return match ? match[1] : null; // Return the key
                     })
-                    .filter(key => key !== null); 
+                    .filter(key => key !== null);
 
-                console.log(checkedData); 
+                console.log(checkedData);
 
                 var total = 0;
                 var subTotal = 0;
@@ -367,5 +367,20 @@
 
                 loadScript({{ $key }})
             @endforeach
+        </script>
+        <script>
+            const form = document.getElementById('form');
+
+            form.addEventListener('input', (event) => {
+                const target = event.target; // The input that triggered the event
+                if (target.type === 'number') {
+                    const max = parseInt(target.getAttribute('max'), 10);
+                    const value = parseInt(target.value, 10);
+
+                    if (value > max) {
+                        target.value = max; // Set the value back to the maximum
+                    }
+                }
+            });
         </script>
     @endsection
