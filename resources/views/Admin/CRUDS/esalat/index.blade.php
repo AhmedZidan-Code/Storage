@@ -114,6 +114,8 @@
     </div>
 @endsection
 @section('js')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         var columns = [{
                 data: 'id',
@@ -145,6 +147,75 @@
     </script>
     @include('Admin.layouts.inc.ajax', ['url' => 'esalat'])
 
+    <script>
+        $('#Modal').on('shown.bs.modal', function() {
+            $(document).on('change', '#type', function() {
+                let data = `
+                        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
+            <label for="bank_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                <span class="required mr-1"> البنك</span>
+            </label>
+            <select name="bank_id"  id='bank_id' style='width: 100%;'>
+                <option selected disabled>اختر البنك</option>
+            </select>
+        </div>
+                        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
+            <!--begin::Label-->
+            <label for="cheque_number" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                <span class="required mr-1"> رقم الشيك</span>
+            </label>
+            <!--end::Label-->
+            <input id="cheque_number" min="1" required type="number" class="form-control form-control-solid"
+                name="cheque_number" value="" />
+        </div>
+                        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
+            <!--begin::Label-->
+            <label for="cheque_issue_date" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                <span class="required mr-1">تاريخ الاصدار</span>
+            </label>
+            <!--end::Label-->
+            <input id="cheque_issue_date" required type="date" class="form-control form-control-solid" name="cheque_issue_date"
+                value="{{ date('Y-m-d') }}" />
+        </div>
+        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
+            <!--begin::Label-->
+            <label for="cheque_due_date" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                <span class="required mr-1">تاريخ الاستحقاق</span>
+            </label>
+            <!--end::Label-->
+            <input id="cheque_due_date" required type="date" class="form-control form-control-solid" name="cheque_due_date"
+                value="{{ date('Y-m-d') }}" />
+        </div>`;
+                if ($(this).val() == 2) {
+                    $('#cheque_data').html(data);
+                    banks();
+                } else {
+                    $('#cheque_data').empty();
+                }
+            })
+
+            function banks() {
+                $("#bank_id").select2({
+                    placeholder: 'Channel...',
+                    // width: '350px',
+                    allowClear: true,
+                    ajax: {
+                        url: '{{ route('admin.getAllBanks') }}',
+                        dataType: 'json',
+                        delay: 250,
+                        data: function(params) {
+                            return {
+                                term: params.term || '',
+                                page: params.page || 1
+                            }
+                        },
+                        cache: true
+                    }
+                });
+            }
+
+        });
+    </script>
     <script>
         $(document).on('click', '.changeClientDiv', function(e) {
             e.preventDefault();
@@ -202,5 +273,4 @@
 
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
 @endsection

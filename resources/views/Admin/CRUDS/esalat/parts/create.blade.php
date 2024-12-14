@@ -5,7 +5,7 @@
     <div class="row g-4">
 
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
             <!--begin::Label-->
             <label for="date_esal" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1">تاريخ الايصال</span>
@@ -14,26 +14,33 @@
             <input id="date_esal" required type="date" class="form-control form-control-solid" name="date_esal"
                 value="{{ date('Y-m-d') }}" />
         </div>
-
-
-
-        <div class="d-flex flex-column mb-7 fv-row col-sm-4 ">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
             <label for="channel_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> العميل</span>
             </label>
-            <select name="client_id" id='channel_id' style='width: 200px;'>
+            <select name="client_id" id='channel_id' style='width: 100%;'>
                 <option value='0'>- Search Channel -</option>
             </select>
         </div>
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
             <!--begin::Label-->
             <label for="paid" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                <span class="required mr-1"> المبلغ المدفوع</span>
+                <span class="required mr-1"> المبلغ</span>
             </label>
             <!--end::Label-->
             <input id="paid" min="1" required type="number" class="form-control form-control-solid"
                 name="paid" value="" />
+        </div>
+        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
+            <label for="type" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                <span class="required mr-1"> النوع</span>
+            </label>
+            <select name="type" class="form-control " id='type' style='width: 100%;'>
+                <option selected disabled>اختر النوع</option>
+                <option value="1">إيصال</option>
+                <option value="2">شيك</option>
+            </select>
         </div>
         <div class="d-flex flex-column mb-7 fv-row col-sm-4 " id="payment_category">
 
@@ -44,6 +51,9 @@
         </div>
 
         <div class="d-flex flex-column mb-7 fv-row col-sm-4 " id="client_payment_setting">
+
+        </div>
+        <div class="row" id="cheque_data">
 
         </div>
 

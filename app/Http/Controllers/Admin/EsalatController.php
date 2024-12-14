@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enum\ChequeStatus;
+use App\Enum\EsaleType;
 use App\Enum\PaymentCategory;
 use App\Http\Controllers\Controller;
+use App\Models\Bank;
 use App\Models\Client;
 use App\Models\Esalat;
 use App\Models\User;
@@ -52,8 +55,8 @@ class EsalatController extends Controller
 
     public function create()
     {
-
-        return view('Admin.CRUDS.esalat.parts.create');
+        $banks = Bank::all();
+        return view('Admin.CRUDS.esalat.parts.create', compact('banks'));
     }
 
     public function store(Request $request)
@@ -65,6 +68,11 @@ class EsalatController extends Controller
             'payment_category' => 'required',
             'client_payment_setting_id' => [Rule::requiredIf($request->payment_category != PaymentCategory::ON_DELIVERED->value)],
             'notes' => 'nullable',
+            'type' => 'required|in:1,2',
+            'bank_id' => 'required_if:type,2|exists:banks,id',
+            'cheque_number' => 'required_if:type,2|numeric',
+            'cheque_issue_date' => 'required_if:type,2|date',
+            'cheque_due_date' => 'required_if:type,2|date',
         ]);
 
         $client = Client::findOrFail($request->client_id);
@@ -80,7 +88,9 @@ class EsalatController extends Controller
         $data['year'] = date('Y');
         $data['month'] = date('m');
         $data['date'] = date('Y-m-d');
-
+        if ($data['type'] == EsaleType::ESALE->value) {
+            $data['cheque_status'] = ChequeStatus::ACCEPTED->value;
+        }
         Esalat::create($data);
 
         $dept = $client->previous_indebtedness;

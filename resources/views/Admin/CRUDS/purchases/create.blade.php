@@ -159,7 +159,7 @@
 
         <script>
             $(document).on('change', '.changeKhamId', function() {
-
+                
                 var rowId = $(this).attr('data-id');
                 var id = $(this).val();
                 var route = "{{ route('admin.getProductiveDetails', ':id') }}";
@@ -171,10 +171,9 @@
 
                     success: function(res) {
 
-
-                        $(`#unit-${rowId}`).val(res.unit);
                         $(`#productive_code-${rowId}`).val(res.code);
                         $(`#productive_buy_price-${rowId}`).val(res.productive_buy_price);
+                        $(`#batch_number-${rowId}`).val(res.batch_number);
                         callTotal();
 
                     },

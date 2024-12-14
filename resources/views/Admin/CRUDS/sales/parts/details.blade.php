@@ -17,32 +17,34 @@
             id="company_id-{{ $id }}">
     </th>
     <th>
-        <input type="text" disabled id="unit-{{ $id }}" style="width: 100%;">
+        <select class="form-control select2" data-id="{{ $id }}" name="batch_number[]"
+            id="batch_number-{{ $id }}" style="width: 100%;" onchange="getPrice({{ $id }})">
+
+        </select>
+    </th>
+    <th>
+        <input data-id="{{ $id }}" class="form-control navigable" onchange="callTotal()" type="number"
+            value="1" min="1" name="amount[]" id="amount-{{ $id }}" style="width: 100%;">
 
     </th>
     <th>
-        <input data-id="{{ $id }}" class="form-control navigable" onchange="callTotal()" type="number" value="1" min="1"
-            name="amount[]" id="amount-{{ $id }}" style="width: 100%;">
+        <input data-id="{{ $id }}" step=".1" type="number" value="1" min="1" name="productive_buy_price[]"
+            id="productive_buy_price-{{ $id }}" class="form-control" style="width: 100%;">
 
     </th>
     <th>
-        <input step=".1" data-id="{{ $id }}" class="form-control navigable" onchange="callTotal()" type="number" value="1"
-            min="1" name="productive_sale_price[]" id="productive_sale_price-{{ $id }}"
-            style="width: 100%;">
+        <input step=".1" data-id="{{ $id }}" class="form-control navigable" onchange="callTotal()"
+            type="number" value="1" min="1" name="productive_sale_price[]"
+            id="productive_sale_price-{{ $id }}" style="width: 100%;">
 
     </th>
     <th>
-        <input type="number" class="form-control navigable" value="0" min="0" name="bouns[]" id="bouns-{{ $id }}"
-            style="width: 100%;">
+        <input type="number" class="form-control navigable" value="0" min="0" name="bouns[]"
+            id="bouns-{{ $id }}" style="width: 100%;">
     </th>
     <th>
         <input type="number" class="form-control navigable" value="0" min="0" name="discount_percentage[]"
             id="discount_percentage-{{ $id }}" style="width: 100%;" onkeyup="callTotal()">
-    </th>
-    <th>
-        <input type="number" class="form-control navigable" value="0" min="0" name="batch_number[]" id="batch_number-{{ $id }}"
-            style="width: 100%;">
-
     </th>
     <th>
         <input type="number" disabled value="1" min="1" name="total[]" id="total-{{ $id }}">

@@ -77,7 +77,7 @@
                 value="" />
         </div>
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-12">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-6">
             <!--begin::Label-->
             <label class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> العنوان</span>
@@ -86,7 +86,19 @@
             <input type="text" class="form-control form-control-solid" placeholder=" العنوان" name="address"
                 value="" />
         </div>
+        <div class="d-flex flex-column mb-7 fv-row col-sm-6">
+            <!--begin::Label-->
+            <label for="type" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                <span class="required mr-1"> النوع</span>
+            </label>
 
+            <select id="type" name="type" class="form-control">
+                <option selected disabled>اختر النوع</option>
+                    <option value="1"> مندوب</option>
+                    <option value="2"> موزع</option>
+            </select>
+
+        </div>
     </div>
 </form>
 <script></script>

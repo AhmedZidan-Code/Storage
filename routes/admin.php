@@ -4,8 +4,10 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\Area\CountryController;
 use App\Http\Controllers\Admin\Area\ProvinceController;
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\BankController;
 use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ChequeController;
 use App\Http\Controllers\Admin\ClientAdjustmentController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\ClientPaymentSettingController;
@@ -95,6 +97,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('getProductiveTypeTam', [ItemInstallationController::class, 'getProductiveTypeTam'])->name('admin.getProductiveTypeTam');
     Route::get('getProductiveTamDetails/{id}', [ItemInstallationController::class, 'getProductiveTamDetails'])->name('admin.getProductiveTamDetails');
     Route::get('getAllProductive', [ItemInstallationController::class, 'getAllProductive'])->name('admin.getAllProductive');
+    Route::get('getAllBanks', [BankController::class, 'getAllBanks'])->name('admin.getAllBanks');
 
     // Esalat and Supplier Vouchers
     Route::resource('esalat', EsalatController::class);
@@ -138,7 +141,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::resource('productions', ProductionController::class);
     Route::get('getProductionDetails/{id}', [ProductionController::class, 'getProductionDetails'])->name('admin.getProductionDetails');
     Route::get('makeRowDetailsForProductionDetails', [ProductionController::class, 'makeRowDetailsForProductionDetails'])->name('admin.makeRowDetailsForProductionDetails');
-
+    Route::get('product-price/{id}', [ProductiveController::class, 'getPrice'])->name('admin.getProductPrice');
     Route::resource('destruction', DestructionController::class);
     Route::get('getDestructionDetails/{id}', [DestructionController::class, 'getDestructionDetails'])->name('admin.getDestructionDetails');
     Route::get('makeRowDetailsForDestructionDetails', [DestructionController::class, 'makeRowDetailsForDestructionDetails'])->name('admin.makeRowDetailsForDestructionDetails');
@@ -193,5 +196,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
     Route::get('/get-child-cities', [ZonesSettingController::class, 'getChildCities'])->name('admin.getChildCities');
 
+    //cheques
+    Route::resource('/cheques', ChequeController::class)->only('index');
+    Route::post('/update-cheque-status', [ChequeController::class, 'changeStatusChequeStatus'])->name('admin.changeStatusChequeStatus');
 
 });

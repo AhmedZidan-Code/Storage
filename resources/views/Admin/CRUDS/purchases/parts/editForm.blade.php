@@ -81,17 +81,17 @@
         <div class="col-md-10">
             <table id="table-details" class="table table-bordered dt-responsive nowrap table-striped align-middle"
                 style="width:70% !important; border: 1px solid #dee2e6; text-align: center;">
-                <thead >
+                <thead>
                     <tr>
                         <th>المنتج</th>
                         <th>كود المنتج</th>
+                        <th>رقم التشغيلة</th>
                         {{-- <th>الوحدة</th> --}}
                         <th>تاريخ انتهاء الصلاحية</th>
                         <th>الكمية</th>
                         <th>سعر الشراء</th>
                         <th>بونص</th>
                         <th>نسبة الخصم</th>
-                        <th>رقم التشغيلة</th>
                         <th>القيمة الاجمالية</th>
                         <th>العمليات</th>
                     </tr>
@@ -112,13 +112,19 @@
                                 <input type="text" value="{{ $pivot->productive_code }}" disabled
                                     id="productive_code-{{ $key }}" style="width: 100px; text-align: center;">
                             </th>
+                            <th style="padding: 8px;">
+                                <input data-id="{{ $key }}" type="number" value="{{ $pivot->batch_number }}"
+                                    name="batch_number[]" id="batch_number-{{ $key }}"
+                                    style="width: 100px; text-align: center;">
+                            </th>
                             {{-- <th style="padding: 8px;">
                                 <input type="text" value="{{ $pivot->productive->unit->title ?? '' }}" disabled
                                     id="unit-{{ $key }}" style="width: 100px; text-align: center;">
                             </th> --}}
                             <th style="padding: 8px;">
                                 <input type="date" value="{{ $pivot->exp_date ?? date('Y-m-d') }}"
-                                    id="exp_date-{{ $key }}" name="exp_date[]" class="form-control" style="width: 120px; text-align: center;">
+                                    id="exp_date-{{ $key }}" name="exp_date[]" class="form-control"
+                                    style="width: 120px; text-align: center;">
                             </th>
                             <th style="padding: 8px;">
                                 <input data-id="{{ $key }}" onchange="callTotal()" onkeyup="callTotal()"
@@ -133,25 +139,19 @@
                                     style="width: 100px; text-align: center;">
                             </th>
                             <th style="padding: 8px;">
-                                <input data-id="{{ $key }}"  type="number"
-                                    value="{{ $pivot->bouns }}"  name="bouns[]"
-                                    id="bouns-{{ $key }}" style="width: 100px; text-align: center;">
-                            </th>
-                            <th style="padding: 8px;">
-                                <input data-id="{{ $key }}"  type="number"
-                                    value="{{ $pivot->discount_percentage }}"
-                                    name="discount_percentage[]" id="discount_percentage-{{ $key }}"
-                                    style="width: 100px; text-align: center;" onkeyup="callTotal()">
+                                <input data-id="{{ $key }}" type="number" value="{{ $pivot->bouns }}"
+                                    name="bouns[]" id="bouns-{{ $key }}"
+                                    style="width: 100px; text-align: center;">
                             </th>
                             <th style="padding: 8px;">
                                 <input data-id="{{ $key }}" type="number"
-                                    value="{{ $pivot->batch_number }}"  name="batch_number[]"
-                                    id="batch_number-{{ $key }}" style="width: 100px; text-align: center;">
+                                    value="{{ $pivot->discount_percentage }}" name="discount_percentage[]"
+                                    id="discount_percentage-{{ $key }}"
+                                    style="width: 100px; text-align: center;" onkeyup="callTotal()">
                             </th>
                             <th style="padding: 8px;">
-                                <input type="number" disabled value="{{ $pivot->total }}" 
-                                    name="total[]" id="total-{{ $key }}"
-                                    style="width: 100px; text-align: center;">
+                                <input type="number" disabled value="{{ $pivot->total }}" name="total[]"
+                                    id="total-{{ $key }}" style="width: 100px; text-align: center;">
                             </th>
                             <th style="padding: 8px;">
                                 <button class="btn rounded-pill btn-danger waves-effect waves-light delete-sup"
@@ -166,19 +166,20 @@
                     <tr>
                         <th colspan="1" style="text-align: center; background-color: yellow">الاجمالي</th>
                         <th colspan="2" id="total_productive_buy_price"
-                            style="text-align: center; background-color: #6c757d;color: white">{{$row->total}}
+                            style="text-align: center; background-color: #6c757d;color: white">{{ $row->total }}
                         </th>
                         <th colspan="1" style="text-align: center; background-color: aqua">نسبة الخصم الكلية</th>
                         <th colspan="2" style="text-align: center; background-color: gray">
-                            <input type="number" id="total_discount" value="{{$row->total_discount}}" min="0" max="99"
-                                name="total_discount" style="width: 100%;" onkeyup="totalAfterDiscount()">
+                            <input type="number" id="total_discount" value="{{ $row->total_discount }}"
+                                min="0" max="99" name="total_discount" style="width: 100%;"
+                                onkeyup="totalAfterDiscount()">
                             <!-- Adjusted width -->
                         </th>
                         <th colspan="2" style="text-align: center; background-color: rgb(196, 251, 30)"> الاجمالي
                             بعد الخصم الكلي</th>
                         <th colspan="2" style="text-align: center; background-color: rgb(173, 222, 185)">
-                            <input type="text" id="total_after_discount" value="{{$row->total_after_discount}}" name="total_discount"
-                                style="width: 100%;" disabled> <!-- Adjusted width -->
+                            <input type="text" id="total_after_discount" value="{{ $row->total_after_discount }}"
+                                name="total_discount" style="width: 100%;" disabled> <!-- Adjusted width -->
                         </th>
                     </tr>
                 </tfoot>

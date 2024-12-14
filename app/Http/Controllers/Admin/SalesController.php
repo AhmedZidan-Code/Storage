@@ -194,6 +194,8 @@ class SalesController extends Controller
             'amount.*' => 'required',
             'productive_sale_price' => 'required|array',
             'productive_sale_price.*' => 'required',
+            'productive_buy_price' => 'required|array',
+            'productive_buy_price.*' => 'required',
             'bouns' => 'required|array',
             'discount_percentage' => 'required|array',
             'batch_number' => 'required|array',
@@ -257,6 +259,7 @@ class SalesController extends Controller
                 'discount_percentage' => $discountPercentage,
                 'batch_number' => $request->batch_number[$i],
                 'productive_sale_price' => $salePrice,
+                'productive_buy_price' => $request->productive_buy_price[$i],
                 'total' => $this->calculateTotal($salePrice, $amount, $discountPercentage),
                 'all_pieces' => $amount * $productive->num_pieces_in_package,
                 'date' => $sales->date,
@@ -309,7 +312,8 @@ class SalesController extends Controller
     public function edit($id)
     {
         $row = Sales::findOrFail($id);
-        return view('Admin.CRUDS.sales.edit', compact('row'));
+        $details = SalesDetails::with('product.batches')->where('sales_id', $row->id)->get();
+        return view('Admin.CRUDS.sales.edit', compact('row', 'details'));
     }
 
     public function update(Request $request, $id)

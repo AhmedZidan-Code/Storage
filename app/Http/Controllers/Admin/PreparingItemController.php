@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Productive;
+use App\Models\PurchasesDetails;
 use App\Models\Sales;
 use App\Models\SalesDetails;
 use Carbon\Carbon;
@@ -93,10 +95,15 @@ class PreparingItemController extends Controller
     public function updateIsPrepared(Request $request)
     {
         $row = SalesDetails::findOrFail($request->id);
+      
         if ($request->is_prepared == 1) {
+            $prices = $this->getPrice($row->productive_id, $request->batch_number);
             $row->amount = $request->amount;
             $row->notes = $request->notes;
             $row->batch_number = $request->batch_number;
+            $row->productive_sale_price = $prices['sell_price'];
+            $row->productive_buy_price = $prices['buy_price'];
+            $row->total = $prices['sell_price'] * $request->amount;
         }
         $row->is_prepared = $request->is_prepared;
         $row->save();
@@ -128,6 +135,38 @@ class PreparingItemController extends Controller
             return \Response::json($results);
 
         }
+    }
+
+    public function getPrice($id, $batchNumber)
+    {
+
+        $productFromPurchase = PurchasesDetails::where('productive_id', $id)
+            ->when($batchNumber, fn($q) => $q->where('batch_number', $batchNumber))
+            ->latest()
+            ->first();
+        $productFromSales = SalesDetails::where('productive_id', $id)
+            ->when($batchNumber, fn($q) => $q->where('batch_number', $batchNumber))
+            ->latest()
+            ->first();
+
+        $buyPrice = 0;
+        if ($productFromPurchase) {
+            $buyPrice = $productFromPurchase->total / $productFromPurchase->amount;
+        } else {
+            $buyPrice = Productive::where('id', $id)->first()->one_buy_price;
+        }
+
+        $salePrice = 0;
+        if ($productFromSales) {
+            $salePrice = $productFromSales->total / $productFromSales->amount;
+        } else {
+            $salePrice = Productive::where('id', $id)->first()->one_sell_price;
+        }
+
+        return [
+            'buy_price' => $buyPrice,
+            'sell_price' => $salePrice,
+        ];
     }
 
 }

@@ -28,7 +28,7 @@
             <label for="pay_method" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> طريقة الشراء </span>
             </label>
-            <select id='pay_method' name="pay_method" class="form-control " >
+            <select id='pay_method' name="pay_method" class="form-control ">
                 <option selected disabled>اختر طريقة الشراء</option>
                 <option value="cash">كاش</option>
                 <option value="debit">اجل</option>
@@ -74,14 +74,14 @@
                 style="width: 100%;">
                 <thead>
                     <tr>
-                        <th> المنتج</th>
+                        <th style="width: 150px;"> المنتج</th>
                         <th> كود المنتج</th>
-                        <th>الوحدة</th>
+                        <th style="width:200px;">رقم التشغيلة</th>
                         <th> الكمية</th>
+                        <th>سعر الشراء</th>
                         <th>سعر البيع</th>
                         <th>بونص</th>
                         <th>نسبة الخصم</th>
-                        <th>رقم التشغيلة</th>
                         <th> القيمة الاجمالية</th>
                         <th>العمليات</th>
                     </tr>
@@ -95,7 +95,7 @@
                                     class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                                     <span class="required mr-1"> </span>
                                 </label>
-                                <select class="changeKhamId " data-id="1" name="productive_id[]" id='productive_id'
+                                <select class="changeKhamId " data-id="1" name="productive_id[]" id='productive_id-1'
                                     style="width: 100%;">
                                     <option selected disabled value='0'>- ابحث عن المنتج -</option>
                                 </select>
@@ -103,17 +103,25 @@
                         </th>
                         <th>
                             <input type="text" disabled id="productive_code-1" style="width: 100%;">
-                            <input name="company_id[]" data-id="1" type="hidden"
-                                value="" id="company_id-1">
+                            <input name="company_id[]" data-id="1" type="hidden" value="" id="company_id-1">
 
                         </th>
                         <th>
-                            <input type="text" disabled id="unit-1" style="width: 100%;">
+                            <select class="form-control selectClass" name="batch_number[]" id="batch_number-1"
+                                style="width: 100%;" onchange="getPrice(1)">
+
+                            </select>
+                        </th>
+                        <th>
+                            <input data-id="1" onchange="callTotal()" class="form-control navigable"
+                                onkeyup="callTotal()" type="number" value="1" min="1" name="amount[]"
+                                id="amount-1" style="width: 100%;">
 
                         </th>
                         <th>
-                            <input data-id="1" onchange="callTotal()" class="form-control navigable" onkeyup="callTotal()" type="number"
-                                value="1" min="1" name="amount[]" id="amount-1" style="width: 100%;">
+                            <input data-id="1" step=".1" 
+                                type="number" value="1" min="1" name="productive_buy_price[]"
+                                id="productive_buy_price-1" class="form-control" style="width: 100%;">
 
                         </th>
                         <th>
@@ -123,16 +131,13 @@
 
                         </th>
                         <th>
-                            <input type="number" class="form-control navigable" value="0" min="0" name="bouns[]" id="bouns-1"
-                                style="width: 100%;"> <!-- Adjusted width -->
+                            <input type="number" class="form-control navigable" value="0" min="0"
+                                name="bouns[]" id="bouns-1" style="width: 100%;"> <!-- Adjusted width -->
                         </th>
                         <th>
                             <input type="number" value="0" min="0" name="discount_percentage[]"
-                                id="discount_percentage-1" class="form-control navigable" style="width: 100%;" onkeyup="callTotal()"> <!-- Adjusted width -->
-                        </th>
-                        <th>
-                            <input type="number" value="0" min="0" name="batch_number[]"
-                                id="batch_number-1" class="form-control navigable" style="width: 100%;"> <!-- Adjusted width -->
+                                id="discount_percentage-1" class="form-control navigable" style="width: 100%;"
+                                onkeyup="callTotal()"> <!-- Adjusted width -->
                         </th>
                         <th>
                             <input type="number" disabled value="1" min="1" name="total[]"
@@ -153,19 +158,21 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="2" style="text-align: center; background-color: yellow">الاجمالي</th>
+                        <th colspan="1" style="text-align: center; background-color: yellow">الاجمالي</th>
                         <th colspan="2" id="total_productive_sale_price"
                             style="text-align: center; background-color: #6c757d;color: white">1
                         </th>
                         <th colspan="1" style="text-align: center; background-color: aqua">نسبة الخصم الكلية</th>
                         <th colspan="2" style="text-align: center; background-color: gray">
-                            <input type="number"  id="total_discount" value="0" min="0" max="99"
-                                name="total_discount" style="width: 100%;" onkeyup="totalAfterDiscount()"> <!-- Adjusted width -->
+                            <input type="number" id="total_discount" value="0" min="0" max="99"
+                                name="total_discount" style="width: 100%;" onkeyup="totalAfterDiscount()">
+                            <!-- Adjusted width -->
                         </th>
-                        <th colspan="2" style="text-align: center; background-color: rgb(196, 251, 30)"> الاجمالي بعد الخصم الكلي</th>
+                        <th colspan="2" style="text-align: center; background-color: rgb(196, 251, 30)"> الاجمالي
+                            بعد الخصم الكلي</th>
                         <th colspan="1" style="text-align: center; background-color: rgb(173, 222, 185)">
-                            <input type="text" id="total_after_discount" value="" 
-                                name="total_discount" style="width: 100%;" disabled> <!-- Adjusted width -->
+                            <input type="text" id="total_after_discount" value="" name="total_discount"
+                                style="width: 100%;" disabled> <!-- Adjusted width -->
                         </th>
                     </tr>
                 </tfoot>

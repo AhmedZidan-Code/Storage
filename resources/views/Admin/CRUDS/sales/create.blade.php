@@ -46,7 +46,7 @@
                                     nextElement.click();
                                 }
                             } else if (currentElement.tagName === 'BUTTON') {
-                                const targetIndex = Math.max(0, navigableElements.length - 6);
+                                const targetIndex = Math.max(0, navigableElements.length - 2);
                                 navigableElements[targetIndex].focus();
                                 currentElement.click();
                                 updateNavigableElements();
@@ -131,7 +131,7 @@
         <script>
             (function() {
 
-                $("#productive_id").select2({
+                $("#productive_id-1").select2({
                     placeholder: 'Channel...',
                     // width: '350px',
                     allowClear: true,
@@ -216,12 +216,39 @@
         </script>
 
         <script>
+            function getPrice(id) {
+
+                let PRODUCT_ID = $(`#productive_id-${id}`).val();
+                let BATCH_NUMBER = $(`#batch_number-${id}`).val();
+
+                var route = "{{ route('admin.getProductPrice', ':id') }}";
+                route = route.replace(':id', PRODUCT_ID);
+                $.ajax({
+                    type: 'GET',
+                    url: route,
+                    data: {
+                        id: PRODUCT_ID,
+                        batch_number: BATCH_NUMBER,
+                    },
+                    success: function(res) {
+                        console.log(res);
+                        $(`#productive_sale_price-${id}`).val(res.sell_price);
+                        $(`#productive_buy_price-${id}`).val(res.buy_price);
+                        callTotal();
+
+                    },
+                    error: function(data) {
+                        toastr.error('هناك خطأ ما!');
+                    }
+                });
+            }
             $(document).on('change', '.changeKhamId', function() {
 
                 var rowId = $(this).attr('data-id');
                 var id = $(this).val();
                 var route = "{{ route('admin.getProductiveDetails', ':id') }}";
                 route = route.replace(':id', id);
+                const selectElement = document.getElementById('batch_number-' + rowId);
 
                 $.ajax({
                     type: 'GET',
@@ -229,10 +256,26 @@
 
                     success: function(res) {
 
-                        $(`#unit-${rowId}`).val(res.unit);
                         $(`#productive_code-${rowId}`).val(res.code);
-                        $(`#productive_sale_price-${rowId}`).val(res.productive_sale_price);
+                        // $(`#productive_sale_price-${rowId}`).val(res.productive_sale_price);
                         $(`#company_id-${rowId}`).val(res.productive.company_id);
+                        let options = res.productive.batches;
+                        selectElement.innerHTML = '';
+                        if (options && options.length > 0) {
+                            options.forEach(option => {
+                                const opt = document.createElement('option');
+                                opt.value = option.batch_number;
+                                opt.textContent = option.batch_number;
+                                selectElement.appendChild(opt);
+                            });
+                        } else {
+                            const opt = document.createElement('option');
+                            opt.textContent = 'لايوجد رقم تشغيلة';
+                            opt.value = null;
+                            selectElement.appendChild(opt);
+                        }
+                        getPrice(rowId);
+
                         callTotal();
 
                     },
@@ -296,12 +339,12 @@
                             $('#submit').html('{{ trans('admin.submit') }}').attr('disabled',
                                 false);
                             if (data.code == 200) {
-                                toastr.success(data.message); // Success message
-                                setTimeout(() => location.reload(), 500); // Reload after 500ms
+                                toastr.success(data.message);
+                                setTimeout(() => location.reload(), 500);
                             } else if (data.code == 500) {
-                                toastr.error(data.error); // Error message for code 500
+                                toastr.error(data.error);
                             } else {
-                                toastr.error(data.message); // General error message
+                                toastr.error(data.message);
                             }
                         }, 1000);
 
@@ -337,5 +380,7 @@
                     processData: false
                 });
             });
+
+            $('.selectClass').select2();
         </script>
     @endsection

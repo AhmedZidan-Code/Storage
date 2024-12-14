@@ -76,18 +76,18 @@
                     <tr>
                         <th> المنتج</th>
                         <th> كود المنتج</th>
-                        <th>الوحدة</th>
+                        <th style="width:200px;">رقم التشغيلة</th>
                         <th> الكمية</th>
+                        <th>سعر الشراء</th>
                         <th>سعر البيع</th>
                         <th>بونص</th>
                         <th>نسبة الخصم</th>
-                        <th>رقم التشغيلة</th>
                         <th> القيمة الاجمالية</th>
                         <th>العمليات</th>
                     </tr>
                 </thead>
                 <tbody id="details-container">
-                    @foreach (\App\Models\SalesDetails::where('sales_id', $row->id)->get() as $key => $pivot)
+                    @foreach ($details as $key => $pivot)
                         <tr id="tr-{{ $key }}">
                             {{--                <th>1</th> --}}
                             <th>
@@ -97,7 +97,8 @@
                                         <span class="required mr-1"> </span>
                                     </label>
                                     <select class="changeKhamId" data-id="{{ $key }}" name="productive_id[]"
-                                        id='productive_id-{{ $key }}' style="width: 100%;" readonly style="pointer-events: none;">
+                                        id='productive_id-{{ $key }}' style="width: 100%;" readonly
+                                        style="pointer-events: none;">
                                         <option selected value="{{ $pivot->productive_id }}">
                                             {{ $pivot->productive->name ?? '' }}</option>
                                     </select>
@@ -107,41 +108,58 @@
                                 <input type="text" value="{{ $pivot->productive_code }}" disabled
                                     id="productive_code-{{ $key }}" style="width: 100%;">
 
-                                <input name="company_id[]" data-id="{{ $key }}" type="hidden" value="{{$pivot->company_id}}" id="company_id-{{ $key }}">
+                                <input name="company_id[]" data-id="{{ $key }}" type="hidden"
+                                    value="{{ $pivot->company_id }}" id="company_id-{{ $key }}">
                             </th>
                             <th>
-                                <input type="text" value="{{ $pivot->productive->unit->title ?? '' }}" disabled
-                                    id="unit-{{ $key }}" style="width: 100%;">
-
+                                <select class="form-control selectClass" data-id="{{ $key }}"
+                                    name="batch_number[]" id="batch_number-{{ $key }}" style="width: 100%;"
+                                    onchange="getPrice({{ $key }})">
+                                    @forelse ($pivot->product->batches ?? [] as $batch)
+                                        <option value="{{ $batch->batch_number }}"
+                                            {{ $batch->batch_number == $pivot->batch_number ? 'selected' : '' }}>
+                                            {{ $batch->batch_number }}
+                                        </option>
+                                    @empty
+                                        <option>لايوجد رقم تشغيلة</option>
+                                    @endforelse
+                                </select>
                             </th>
                             <th>
                                 <input data-id="{{ $key }}" onchange="callTotal()" onkeyup="callTotal()"
                                     type="number" value="{{ $pivot->amount }}" min="1" name="amount[]"
-                                    id="amount-{{ $key }}" class="form-control navigable" style="width: 100%;">
+                                    id="amount-{{ $key }}" class="form-control navigable"
+                                    style="width: 100%;">
+
+                            </th>
+                            <th>
+                                <input data-id="{{ $key }}" step=".1" type="number" 
+                                    min="1" name="productive_buy_price[]"
+                                    value="{{ $pivot->productive_buy_price }}"
+                                    id="productive_buy_price-{{ $key }}" class="form-control"
+                                    style="width: 100%;">
 
                             </th>
                             <th>
                                 <input data-id="{{ $key }}" step=".1" onchange="callTotal()"
                                     onkeyup="callTotal()" type="number" value="{{ $pivot->productive_sale_price }}"
                                     min="1" name="productive_sale_price[]"
-                                    id="productive_sale_price-{{ $key }}" class="form-control navigable" style="width: 100%;">
+                                    id="productive_sale_price-{{ $key }}" class="form-control navigable"
+                                    style="width: 100%;">
 
                             </th>
                             <th style="padding: 8px;">
                                 <input data-id="{{ $key }}" step=".1" type="number"
                                     value="{{ $pivot->bouns }}" min="0" name="bouns[]"
-                                    id="bouns-{{ $key }}" class="form-control navigable" style="width: 100px; text-align: center;">
+                                    id="bouns-{{ $key }}" class="form-control navigable"
+                                    style="width: 100px; text-align: center;">
                             </th>
                             <th style="padding: 8px;">
                                 <input data-id="{{ $key }}" step=".1" type="number"
                                     value="{{ $pivot->discount_percentage }}" min="0"
-                                    name="discount_percentage[]" id="discount_percentage-{{ $key }}" class="form-control navigable"
-                                    style="width: 100px; text-align: center;" onkeyup="callTotal()">
-                            </th>
-                            <th style="padding: 8px;">
-                                <input data-id="{{ $key }}" step=".1" type="number"
-                                    value="{{ $pivot->batch_number }}" min="0" name="batch_number[]"
-                                    id="batch_number-{{ $key }}" class="form-control navigable" style="width: 100px; text-align: center;">
+                                    name="discount_percentage[]" id="discount_percentage-{{ $key }}"
+                                    class="form-control navigable" style="width: 100px; text-align: center;"
+                                    onkeyup="callTotal()">
                             </th>
                             <th>
                                 <input type="number" disabled value="{{ $pivot->total }}" min="1"
@@ -163,18 +181,21 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="2" style="text-align: center; background-color: yellow">الاجمالي قبل الخصم الكلي</th>
+                        <th colspan="2" style="text-align: center; background-color: yellow">الاجمالي قبل الخصم
+                            الكلي</th>
                         <th colspan="2" id="total_productive_sale_price"
                             style="text-align: center; background-color: #6c757d;color: white">{{ $row->total }}
                         </th>
                         <th colspan="1" style="text-align: center; background-color: aqua">نسبة الخصم الكلية</th>
                         <th colspan="2" style="text-align: center; background-color: gray">
-                            <input type="number" id="total_discount" value="{{ $row->total_discount }}" min="0" max="99"
-                                name="total_discount" style="width: 100%;" onkeyup="totalAfterDiscount()"> <!-- Adjusted width -->
+                            <input type="number" id="total_discount" value="{{ $row->total_discount }}"
+                                min="0" max="99" name="total_discount" style="width: 100%;"
+                                onkeyup="totalAfterDiscount()"> <!-- Adjusted width -->
                         </th>
-                        <th colspan="2" style="text-align: center; background-color: rgb(196, 251, 30)"> الاجمالي بعد الخصم الكلي</th>
+                        <th colspan="2" style="text-align: center; background-color: rgb(196, 251, 30)"> الاجمالي
+                            بعد الخصم الكلي</th>
                         <th colspan="1" style="text-align: center; background-color: rgb(173, 222, 185)">
-                            <input type="text" id="total_after_discount" value="{{ $row->total_after_discount }}" 
+                            <input type="text" id="total_after_discount" value="{{ $row->total_after_discount }}"
                                 name="total_discount" style="width: 100%;" disabled> <!-- Adjusted width -->
                         </th>
 

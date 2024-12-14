@@ -4,10 +4,10 @@
             <th>#</th>
             <th>الصنف</th>
             <th>كود الصنف</th>
+            <th>رقم التشغيلة</th>
             <th>سعر شراء الصنف</th>
             <th>البونص</th>
             <th>نسبة الخصم</th>
-            <th>رقم التشغيل</th>
             <th>الكمية</th>
             <th>الاجمالي</th>
 
@@ -19,10 +19,10 @@
                 <th>{{ $row->id }}</th>
                 <th>{{ $row->productive->name ?? '' }}</th>
                 <th>{{ $row->productive->code ?? '' }}</th>
+                <th>{{ $row->batch_number }}</th>
                 <th>{{ $row->productive_buy_price }}</th>
                 <th>{{ $row->bouns }}</th>
                 <th>{{ $row->discount_percentage }}</th>
-                <th>{{ $row->batch_number }}</th>
                 <th>{{ $row->amount }}</th>
                 <th>{{ $row->total }}</th>
 

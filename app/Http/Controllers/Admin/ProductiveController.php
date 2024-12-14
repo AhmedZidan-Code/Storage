@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Productive;
+use App\Models\PurchasesDetails;
+use App\Models\SalesDetails;
 use App\Models\Unite;
 use App\Models\ZonesSetting;
 use Illuminate\Http\Request;
@@ -154,5 +156,40 @@ class ProductiveController extends Controller
                 'message' => 'تمت العملية بنجاح!',
             ]);
     } //end fun
+
+    public function getPrice(Request $request)
+    {
+
+        $productFromPurchase = PurchasesDetails::where('productive_id', $request->id)
+            ->when($request->batch_number, fn($q) => $q->where('batch_number', $request->batch_number))
+            ->latest()
+            ->first();
+
+        $productFromSales = SalesDetails::where('productive_id', $request->id)
+            ->when($request->batch_number, fn($q) => $q->where('batch_number', $request->batch_number))
+            ->latest()
+            ->first();
+
+        $buyPrice = 0;
+        if ($productFromPurchase && $productFromPurchase->amount != 0) {
+            $buyPrice = $productFromPurchase->total / $productFromPurchase->amount;
+        } else {
+            $buyPrice = Productive::where('id', $request->id)->first()->one_buy_price;
+        }
+
+        $salePrice = 0;
+        if ($productFromSales && $productFromSales->amount != 0) {
+            $salePrice = $productFromSales->total / $productFromSales->amount;
+        } else {
+            $salePrice = Productive::where('id', $request->id)->first()->one_sell_price;
+        }
+
+        return response()->json(
+            [
+                'code' => 200,
+                'buy_price' => $buyPrice,
+                'sell_price' => $salePrice,
+            ]);
+    }
 
 }

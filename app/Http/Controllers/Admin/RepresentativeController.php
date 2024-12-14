@@ -98,6 +98,7 @@ class RepresentativeController extends Controller
             'password' => 'required',
             'branch_id' => 'required|exists:branches,id',
             'storage_id' => 'required|exists:storages,id',
+            'type' => 'required|in:1,2',
         ]);
 
         $data['password'] = Hash::make($request->password);
@@ -156,6 +157,7 @@ class RepresentativeController extends Controller
             'password' => 'sometimes',
             'branch_id' => 'required|exists:branches,id',
             'storage_id' => 'required|exists:storages,id',
+            'type' => 'required|in:1,2',
         ]);
         if (!$request->password) {
             unset($data['password']);
