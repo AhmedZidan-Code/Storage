@@ -20,14 +20,4 @@ class PurchasesDetails extends Model
     {
         return $this->belongsTo(Productive::class, 'productive_id');
     }
-    /**
-     * Scope to get distinct batch numbers.
-     *
-     * @param Builder $query
-     * @return Builder
-     */
-    public function scopeDistinctBatchNumbers(Builder $query)
-    {
-        return $query->select('batch_number')->distinct();
-    }
 }

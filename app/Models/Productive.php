@@ -29,9 +29,8 @@ class Productive extends Model
     }
     public function batches()
     {
-    return $this->hasMany(PurchasesDetails::class, 'productive_id')
-        ->selectRaw('MIN(id) as id, productive_id, batch_number')
-        ->groupBy('batch_number', 'productive_id');
+        return $this->hasMany(PurchasesDetails::class, 'productive_id')
+            ->select(['id', 'productive_id', 'batch_number']);
     }
 
 }
