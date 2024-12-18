@@ -129,7 +129,7 @@ class StorageCheckCOntroller extends Controller
                     return $this->product?->name;
                 })
                 ->addColumn('code', function ($row) {
-                    return $this->product->code;
+                    return $this->product?->code;
                 })
                 ->escapeColumns([])
                 ->make(true);
