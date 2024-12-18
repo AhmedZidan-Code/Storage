@@ -126,7 +126,7 @@ class StorageCheckCOntroller extends Controller
                 })
                 ->addColumn('product', function ($row) {
                     $this->product = Productive::find($row->productive_id);
-                    return $this->product->name;
+                    return $this->product?->name;
                 })
                 ->addColumn('code', function ($row) {
                     return $this->product->code;
