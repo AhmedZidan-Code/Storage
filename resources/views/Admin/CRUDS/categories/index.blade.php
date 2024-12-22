@@ -1,16 +1,16 @@
 @extends('Admin.layouts.inc.app')
 @section('title')
-    الاقسام
+    التصنيفات
 @endsection
 @section('css')
 @endsection
 @section('content')
     <div class="card">
         <div class="card-header d-flex align-items-center">
-            <h5 class="card-title mb-0 flex-grow-1">الاقسام</h5>
+            <h5 class="card-title mb-0 flex-grow-1">التصنيفات</h5>
 
                 <div>
-                    <button id="addBtn" class="btn btn-primary">اضافة قسم</button>
+                    <button id="addBtn" class="btn btn-primary">اضافة تصنيف</button>
                 </div>
 
         </div>
@@ -21,7 +21,7 @@
                 <tr>
                     <th>#</th>
                     <th>الاسم</th>
-                    <th>القسم الرئيسي</th>
+                    <th>التصنيف الرئيسي</th>
                     <th> تاريخ الانشاء</th>
                     <th>العمليات</th>
                 </tr>
@@ -38,7 +38,7 @@
                 <!--begin::Modal header-->
                 <div class="modal-header">
                     <!--begin::Modal title-->
-                    <h2><span id="operationType"></span> قسم </h2>
+                    <h2><span id="operationType"></span> تصنيف </h2>
                     <!--end::Modal title-->
                     <!--begin::Close-->
                     <button class="btn btn-sm btn-icon btn-active-color-primary" type="button" data-bs-dismiss="modal" aria-label="Close">

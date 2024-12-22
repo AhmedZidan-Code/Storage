@@ -69,7 +69,7 @@
                             <th>#</th>
                             <th> التاريخ </th>
                             <th> نوع الحركة </th>
-                            <th> الكمية </th>
+                            <th> الكمية (بونص)</th>
                             <th> الرصيد </th>
                         </tr>
                     </thead>
@@ -82,19 +82,43 @@
                         </tr>
                         <tr>
                             <th> مبيعات </th>
-                            <th> {{ $sales }} </th>
+                            <th> 
+                                @if($sales->total_bouns)
+                                {{ $sales->total_amount + $sales->total_bouns . "($sales->total_bouns)"}}                                 
+                                @else
+                                {{ $sales->total_amount ?? 0 }}                                 
+                                @endif
+                            </th>
                         </tr>
                         <tr>
                             <th> مشتريات </th>
-                            <th> {{ $purchases }} </th>
+                            <th>
+                                @if($purchases->total_bouns)
+                                {{ $purchases->total_amount + $purchases->total_bouns . "($purchases->total_bouns)"}}                                 
+                                @else
+                                {{ $purchases->total_amount ?? 0 }}                                 
+                                @endif
+                            </th>
                         </tr>
                         <tr>
                             <th> مرتجع مبيعات </th>
-                            <th> {{ $hadback_sales }} </th>
+                            <th> 
+                                @if($hadback_sales->total_bouns)
+                                {{ $hadback_sales->total_amount + $hadback_sales->total_bouns . "($hadback_sales->total_bouns)"}}                                 
+                                @else
+                                {{ $hadback_sales->total_amount ?? 0 }}                                 
+                                @endif
+                             </th>
                         </tr>
                         <tr>
                             <th> مرتجع مشتريات</th>
-                            <th> {{ $hadback_purchases }} </th>
+                            <th>
+                                @if($hadback_purchases->total_bouns)
+                                {{ $hadback_purchases->total_amount + $hadback_purchases->total_bouns . "($hadback_purchases->total_bouns)"}}                                 
+                                @else
+                                {{ $hadback_purchases->total_amount ?? 0 }}                                 
+                                @endif
+                              </th>
                         </tr>
                         <tr>
                             <th> اهلاك </th>
@@ -106,7 +130,7 @@
                         </tr>
                         <tr>
                             <th> الاجمالي </th>
-                            <th> {{ $rasied_ayni + $purchases + $hadback_sales - ($sales + $hadback_purchases + $destruction) + $product_adjustment }}
+                            <th> {{ $rasied_ayni + ($purchases->total_amount + $purchases->total_bouns) + ($hadback_sales->total_amount + $hadback_sales->total_bouns) - (($sales->total_amount + $sales->total_bouns ) + ($hadback_purchases->total_amount + $hadback_purchases->total_bouns) + $destruction) + $product_adjustment }}
                             </th>
                         </tr>
                     </tbody>
@@ -128,8 +152,8 @@
                 searchable: false
             },
             {
-                data: 'date',
-                name: 'date'
+                data: 'created_at',
+                name: 'created_at'
             },
             {
                 data: 'type',
@@ -150,7 +174,7 @@
             $("#table").DataTable({
                 processing: true,
                 // pageLength: 50,
-                paging: true,
+                paging: false,
                 dom: 'Bfrltip',
 
                 bLengthChange: true,

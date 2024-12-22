@@ -63,7 +63,7 @@
                         <li><a href="{{ route('provinces.index') }}"><i class="mdi mdi-album"></i> <span>المدن
                                 </span></a>
                         </li>
-                        <li><a href="{{ route('categories.index') }}"><i class="mdi mdi-album"></i> <span>الاقسام
+                        <li><a href="{{ route('categories.index') }}"><i class="mdi mdi-album"></i> <span>التصنيفات
                                 </span></a>
                         </li>
                         <li><a href="{{ route('unites.index') }}"><i class="mdi mdi-album"></i> <span>الوحدات
@@ -227,7 +227,7 @@
 
 
 
-                @canAdminAny('عرض الاصناف')
+                {{-- @canAdminAny('عرض الاصناف')
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="fa fa-download"></i>
@@ -243,7 +243,7 @@
 
                     </ul>
                 </li>
-                @endcanAdminAny
+                @endcanAdminAny --}}
 
 
 

@@ -30,11 +30,11 @@
         <div class="d-flex flex-column mb-7 fv-row col-sm-4">
             <!--begin::Label-->
             <label for="category_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                <span class="required mr-1">القسم </span>
+                <span class="required mr-1">التصنيف </span>
             </label>
 
             <select id="category_id" name="category_id" class="form-control">
-                <option selected disabled>اختر القسم</option>
+                <option selected disabled>اختر التصنيف</option>
                 @foreach ($categories as $category)
                     <option @if ($row->category_id == $category->id) selected @endif value="{{ $category->id }}">
                         {{ $category->title }}</option>
@@ -62,14 +62,14 @@
         <div class="d-flex flex-column mb-7 fv-row col-sm-4">
             <!--begin::Label-->
             <label for="one_buy_price" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                <span class="required mr-1">سعر شراء القطعة</span>
+                <span class="required mr-1">سعر الشراء </span>
             </label>
             <!--end::Label-->
             <input id="one_buy_price" required type="text" min="0" class="form-control form-control-solid"
                 name="one_buy_price" value="{{ $row->one_buy_price }}" />
         </div>
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
+        {{-- <div class="d-flex flex-column mb-7 fv-row col-sm-4">
             <!--begin::Label-->
             <label for="packet_buy_price" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1">سعر شراء المجموعة</span>
@@ -77,18 +77,18 @@
             <!--end::Label-->
             <input id="packet_buy_price" required type="text" min="0" class="form-control form-control-solid"
                 name="packet_buy_price" value="{{ $row->packet_buy_price }}" />
-        </div>
+        </div> --}}
 
         <div class="d-flex flex-column mb-7 fv-row col-sm-4">
             <!--begin::Label-->
             <label for="one_sell_price" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                <span class="required mr-1">سعر بيع القطعة</span>
+                <span class="required mr-1">سعر  البيع</span>
             </label>
             <!--end::Label-->
             <input id="one_sell_price" required type="text" min="0" class="form-control form-control-solid"
                 name="one_sell_price" value="{{ $row->one_sell_price }}" />
         </div>
-
+{{-- 
         <div class="d-flex flex-column mb-7 fv-row col-sm-4">
             <!--begin::Label-->
             <label for="packet_sell_price" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
@@ -97,9 +97,9 @@
             <!--end::Label-->
             <input id="packet_sell_price" required type="text" min="0" class="form-control form-control-solid"
                 name="packet_sell_price" value="{{ $row->packet_sell_price }}" />
-        </div>
+        </div> --}}
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
+        {{-- <div class="d-flex flex-column mb-7 fv-row col-sm-4">
             <!--begin::Label-->
             <label for="num_pieces_in_package" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1">عدد الوحدات داخل القطعة</span>
@@ -108,7 +108,7 @@
             <input id="num_pieces_in_package" required type="number" min="0"
                 class="form-control form-control-solid" name="num_pieces_in_package"
                 value="{{ $row->num_pieces_in_package }}" />
-        </div>
+        </div> --}}
         <div class="d-flex flex-column mb-7 fv-row col-sm-4 ">
             <label for="company_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> الشركة</span>

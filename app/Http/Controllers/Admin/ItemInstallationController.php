@@ -218,7 +218,9 @@ class ItemInstallationController extends Controller
 
     public function getProductiveDetails($id)
     {
-        $productive = Productive::with('batches')->findOrFail($id);
+        $productive = Productive::with(['batches' => function ($query) {
+            $query->orderBy('created_at', 'desc');
+        }])->findOrFail($id);
         $productive_buy_price = $productive->one_buy_price;
         $latestPurchaseForProductive = DB::table('purchases_details')->where('productive_id', $id)->orderBy('id', 'desc')->first();
         $batch = 0;

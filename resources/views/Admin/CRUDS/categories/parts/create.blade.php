@@ -18,11 +18,11 @@
         <div class="d-flex flex-column mb-7 fv-row col-sm-6">
             <!--begin::Label-->
             <label for="from_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                <span class="required mr-1">القسم الرئيسي</span>
+                <span class="required mr-1">التصنيف الرئيسي</span>
             </label>
 
             <select id="from_id" name="from_id" class="form-control">
-                <option selected disabled>اختر القسم</option>
+                <option selected disabled>اختر</option>
                 @foreach($categories as $category)
                     <option value="{{$category->id}}"> {{$category->title}}</option>
                 @endforeach

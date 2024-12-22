@@ -23,13 +23,13 @@
                         <th>الاسم</th>
                         <th> الكود</th>
                         <th> الوحدة</th>
-                        <th> القسم</th>
+                        <th> التصنيف</th>
                         <th> الشركة</th>
-                        <th> سعر شراء القطعة</th>
-                        <th> سعر شراء المجموعة</th>
-                        <th> سعر بيع القطعة</th>
-                        <th> سعر بيع المجموعة</th>
-                        <th> عدد الوحدات داخل القطعة</th>
+                        <th> سعر الشراء</th>
+                        {{-- <th> سعر شراء المجموعة</th> --}}
+                        <th> سعر البيع </th>
+                        {{-- <th> سعر بيع المجموعة</th> --}}
+                        {{-- <th> عدد الوحدات داخل القطعة</th> --}}
                         <th> تاريخ الانشاء</th>
                         <th>العمليات</th>
                     </tr>
@@ -107,22 +107,22 @@
                 data: 'one_buy_price',
                 name: 'one_buy_price'
             },
-            {
-                data: 'packet_buy_price',
-                name: 'packet_buy_price'
-            },
+            // {
+            //     data: 'packet_buy_price',
+            //     name: 'packet_buy_price'
+            // },
             {
                 data: 'one_sell_price',
                 name: 'one_sell_price'
             },
-            {
-                data: 'packet_sell_price',
-                name: 'packet_sell_price'
-            },
-            {
-                data: 'num_pieces_in_package',
-                name: 'num_pieces_in_package'
-            },
+            // {
+            //     data: 'packet_sell_price',
+            //     name: 'packet_sell_price'
+            // },
+            // {
+            //     data: 'num_pieces_in_package',
+            //     name: 'num_pieces_in_package'
+            // },
             {
                 data: 'created_at',
                 name: 'created_at'

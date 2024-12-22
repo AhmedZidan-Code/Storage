@@ -83,10 +83,10 @@ class ProductiveController extends Controller
             'code' => 'required',
             'name' => 'required|unique:productive,name',
             'one_buy_price' => 'required',
-            'packet_buy_price' => 'required',
+            // 'packet_buy_price' => 'required',
             'one_sell_price' => 'required',
-            'packet_sell_price' => 'required',
-            'num_pieces_in_package' => 'required',
+            // 'packet_sell_price' => 'required',
+            // 'num_pieces_in_package' => 'required',
             'unit_id' => 'required|exists:unites,id',
             'category_id' => 'required|exists:categories,id',
             'company_id' => 'required|exists:companies,id',
@@ -95,6 +95,9 @@ class ProductiveController extends Controller
         ]);
 
         $data['publisher'] = auth('admin')->user()->id;
+        $data['packet_buy_price'] = $request->one_buy_price;
+        $data['packet_sell_price'] = $request->one_sell_price;
+        $data['packet_buy_price'] = 1;
 
         Productive::create($data);
 
@@ -122,10 +125,10 @@ class ProductiveController extends Controller
             'code' => 'required',
             'name' => 'required|unique:productive,name,' . $id,
             'one_buy_price' => 'required',
-            'packet_buy_price' => 'required',
+            // 'packet_buy_price' => 'required',
             'one_sell_price' => 'required',
-            'packet_sell_price' => 'required',
-            'num_pieces_in_package' => 'required',
+            // 'packet_sell_price' => 'required',
+            // 'num_pieces_in_package' => 'required',
             'unit_id' => 'required|exists:unites,id',
             'category_id' => 'required|exists:categories,id',
             'company_id' => 'required|exists:companies,id',
@@ -134,6 +137,10 @@ class ProductiveController extends Controller
         ]);
 
         $row = Productive::find($id);
+        $data['packet_buy_price'] = $request->one_buy_price;
+        $data['packet_sell_price'] = $request->one_sell_price;
+        $data['packet_buy_price'] = 1;
+
         $row->update($data);
 
         return response()->json(

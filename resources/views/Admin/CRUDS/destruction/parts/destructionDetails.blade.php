@@ -7,7 +7,7 @@
         <th>كود الصنف</th>
         <th>  الوحدة</th>
         <th>الكمية</th>
-        <th>السعر</th>
+        <th>سعر الشراء</th>
 
     </tr>
     </thead>
@@ -20,7 +20,7 @@
             <th>{{$row->productive_code}}</th>
             <th>{{$row->productive->unit->title??''}}</th>
             <th>{{$row->amount}}</th>
-            <th>{{$row->price}}</th>
+            <th>{{$row->productive_buy_price}}</th>
 
         </tr>
     @endforeach
