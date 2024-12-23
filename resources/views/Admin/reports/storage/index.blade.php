@@ -75,7 +75,8 @@
                             <th> مرتجع مبيعات (بونص)</th>
                             <th> مرتجع مشتريات (بونص)</th>
                             <th>  اهلاك </th>
-                            <th>  تسوية </th>
+                            <th>  تسوية بالزيادة </th>
+                            <th>  تسوية بالعجز </th>
                             <th>  المتبقي </th>
                         </tr>
                     </thead>
@@ -166,8 +167,12 @@
                 name: 'destruction_details'
             },
             {
-                data: 'product_adjustments',
-                name: 'product_adjustments'
+                data: 'increment_adjustments',
+                name: 'increment_adjustments'
+            },
+            {
+                data: 'deficit_adjustments',
+                name: 'deficit_adjustments'
             },
             {
                 data: 'total',

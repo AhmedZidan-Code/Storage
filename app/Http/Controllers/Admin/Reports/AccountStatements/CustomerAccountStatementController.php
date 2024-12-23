@@ -25,6 +25,7 @@ class CustomerAccountStatementController extends Controller
                 $setting = null;
             }
             $query = $this->getUnionQuery($data['client_id'] ?? null, $data['payment_month'] ?? null, $data['client_payment_setting_id'] ?? null, $setting);
+      
 
             return DataTables::of($query)
                 ->addColumn('type_label', function ($row) {

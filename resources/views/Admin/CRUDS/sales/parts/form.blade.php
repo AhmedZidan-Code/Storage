@@ -77,7 +77,7 @@
                         <th style="width: 150px;"> المنتج</th>
                         <th> كود المنتج</th>
                         <th style="width:200px;">رقم التشغيلة</th>
-                        <th> الكمية</th>
+                        <th style="width:50px;"> الكمية</th>
                         <th>سعر الشراء</th>
                         <th>سعر البيع</th>
                         <th>بونص</th>
@@ -158,19 +158,23 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th colspan="1" style="text-align: center; background-color: yellow">الاجمالي</th>
-                        <th colspan="2" id="total_productive_sale_price"
-                            style="text-align: center; background-color: #6c757d;color: white">1
+                        <th style=" background-color: #6c757d;color: white">المديونية السابقة</th>
+                        <th style=" background-color: #6c757d;"> <input type="number" readonly id="initial_balance"></th>
+                        <th style=" background-color: #6c757d;color: white">المديونية بعد الفاتورة</th>
+                        <th style=" background-color: #6c757d;"><input type="number" readonly id="balance_after_sale"></th>
+                        <th  style=" background-color: #6c757d;color: white">الاجمالي</th>
+                        <th  id="total_productive_sale_price"
+                            style=" background-color: #6c757d;color: white">1
                         </th>
-                        <th colspan="1" style="text-align: center; background-color: aqua">نسبة الخصم الكلية</th>
-                        <th colspan="2" style="text-align: center; background-color: gray">
+                        <th  style=" background-color: #6c757d;color: white">نسبة الخصم الكلية</th>
+                        <th  style=" background-color: #6c757d;color: white">
                             <input type="number" id="total_discount" value="0" min="0" max="99"
                                 name="total_discount" style="width: 100%;" onkeyup="totalAfterDiscount()">
                             <!-- Adjusted width -->
                         </th>
-                        <th colspan="2" style="text-align: center; background-color: rgb(196, 251, 30)"> الاجمالي
+                        <th  style=" background-color: #6c757d;color: white"> الاجمالي
                             بعد الخصم الكلي</th>
-                        <th colspan="1" style="text-align: center; background-color: rgb(173, 222, 185)">
+                        <th  style=" background-color: #6c757d;color: white">
                             <input type="text" id="total_after_discount" value="" name="total_discount"
                                 style="width: 100%;" disabled> <!-- Adjusted width -->
                         </th>

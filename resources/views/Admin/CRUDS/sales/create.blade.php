@@ -311,7 +311,10 @@
 
             function totalAfterDiscount() {
                 let total = parseFloat($('#total_productive_sale_price').text());
-                $('#total_after_discount').val(total - (total * $('#total_discount').val() / 100))
+                let after_disc = total - (total * $('#total_discount').val() / 100);
+                $('#total_after_discount').val(after_disc)
+                let balance = parseFloat(after_disc) + parseFloat($('#initial_balance').val());
+                $('#balance_after_sale').val(balance);
             }
         </script>
         <script>
@@ -378,6 +381,44 @@
                     cache: false,
                     contentType: false,
                     processData: false
+                });
+            });
+
+            $(document).on('change', '#client_id', function() {
+                let CLIENT_ID = $(this).val();
+
+                if (!CLIENT_ID) {
+                    toastr.warning('من فضلك اختر عميل');
+                    return;
+                }
+
+                $.ajax({
+                    url: '{{ route('admin.customerBalance') }}',
+                    type: 'GET',
+                    data: {
+                        'client_id': CLIENT_ID,
+                    },
+                    beforeSend: function() {},
+                    complete: function() {
+
+                    },
+                    success: function(data) {
+                        $('#initial_balance').empty();
+                        $('#balance_after_sale').empty();
+                        $('#initial_balance').val(data.balance);
+                        let total = parseFloat($('#total_after_discount').val());
+                        if (total) {
+                            let balance = parseFloat(total) + parseFloat(data.balance);
+                            $('#balance_after_sale').val(balance);
+                        } else {
+                            $('#balance_after_sale').val(data.balance);
+                        }
+
+                    },
+                    error: function(xhr, status, error) {
+                        toastr.error(xhr.responseJSON.message);
+                    },
+                    cache: false
                 });
             });
 

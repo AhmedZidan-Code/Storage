@@ -125,12 +125,16 @@
                             <th> {{ $destruction }} </th>
                         </tr>
                         <tr>
-                            <th> تسوية </th>
-                            <th> {{ $product_adjustment }} </th>
+                            <th> تسوية بالزيادة </th>
+                            <th> {{ $incremental_adjustment }} </th>
+                        </tr>
+                        <tr>
+                            <th> تسوية بالعجز </th>
+                            <th> {{ $deficit_adjustment }} </th>
                         </tr>
                         <tr>
                             <th> الاجمالي </th>
-                            <th> {{ $rasied_ayni + ($purchases->total_amount + $purchases->total_bouns) + ($hadback_sales->total_amount + $hadback_sales->total_bouns) - (($sales->total_amount + $sales->total_bouns ) + ($hadback_purchases->total_amount + $hadback_purchases->total_bouns) + $destruction) + $product_adjustment }}
+                            <th> {{ $rasied_ayni + ($purchases->total_amount + $purchases->total_bouns) + ($hadback_sales->total_amount + $hadback_sales->total_bouns) - (($sales->total_amount + $sales->total_bouns ) + ($hadback_purchases->total_amount + $hadback_purchases->total_bouns) + $destruction) + $incremental_adjustment - $deficit_adjustment }}
                             </th>
                         </tr>
                     </tbody>

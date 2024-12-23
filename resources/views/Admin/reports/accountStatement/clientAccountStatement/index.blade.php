@@ -55,7 +55,6 @@
                                 <span class="indicator-label">بحث</span>
                             </button>
                         </div>
-
                         <table class="table table-bordered" id="accountStatementTable">
                             <thead>
                                 <tr>
@@ -68,6 +67,7 @@
                                 </tr>
                             </thead>
                         </table>
+
                     </div>
                 </div>
 
@@ -131,8 +131,18 @@
     </script>
 
     <script>
-        $(function() {
-            var table = $('#accountStatementTable').DataTable({
+        function dataTable() {
+            if (!$('#client_id').val()) {
+                return alert('من فضلك اختر عميل');
+            }
+
+            // Check if the DataTable is already initialized
+            if ($.fn.DataTable.isDataTable('#accountStatementTable')) {
+                $('#accountStatementTable').DataTable().destroy(); // Destroy the existing instance
+            }
+
+            // Initialize the DataTable
+            $('#accountStatementTable').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
@@ -150,7 +160,7 @@
                         orderable: false,
                         render: function(data, type, row, meta) {
                             return meta.row + meta.settings._iDisplayStart +
-                                1; // Generate sequential number
+                            1; // Generate sequential number
                         }
                     },
                     {
@@ -175,10 +185,11 @@
                     },
                 ]
             });
+        }
 
-            $('#filter').click(function() {
-                table.draw();
-            });
+        // Trigger dataTable function on filter button click
+        $('#filter').click(function() {
+            dataTable();
         });
     </script>
     <script>

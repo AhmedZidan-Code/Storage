@@ -98,11 +98,26 @@ class StorageCheckController extends Controller
                 )
                 ->unionAll(
                     DB::table('product_adjustments')
+                         ->where('type', 1)
                         ->select(
                             'product_id as productive_id',
-                            DB::raw('SUM(CASE WHEN type = 1 THEN amount WHEN type = 2 THEN -amount ELSE 0 END) as total_amount'),
-                            DB::raw("'تسوية' as type"),
+                            DB::raw('SUM(amount) as total_amount'),
+                            DB::raw("'تسوية بالزيادة' as type"),
                             DB::raw('7 as process'),
+                            DB::raw('0 as bouns'),
+                        )
+                        ->when($productive_id, fn($q) => $q->where('product_id', $productive_id))
+                        ->when($storage, fn($q) => $q->where('storage_id', $storage))
+                        ->groupBy('productive_id')
+                )
+                ->unionAll(
+                    DB::table('product_adjustments')
+                        ->where('type', 2)
+                        ->select(
+                            'product_id as productive_id',
+                            DB::raw('SUM(amount) as total_amount'),
+                            DB::raw("'تسوية بالعجز' as type"),
+                            DB::raw('8 as process'),
                             DB::raw('0 as bouns'),
                         )
                         ->when($productive_id, fn($q) => $q->where('product_id', $productive_id))
@@ -120,7 +135,8 @@ class StorageCheckController extends Controller
                     DB::raw('SUM(CASE WHEN type = "مرتجع مبيعات" THEN total_amount ELSE 0 END) as head_back_sales_details, SUM(CASE WHEN type = "مرتجع مبيعات" THEN bouns ELSE 0 END) as head_back_sales_details_bouns'),
                     DB::raw('SUM(CASE WHEN type = "مرتجع مشتريات" THEN total_amount ELSE 0 END) as head_back_purchases_details, SUM(CASE WHEN type = "مرتجع مشتريات" THEN bouns ELSE 0 END) as head_back_purchases_details_bouns'),
                     DB::raw('SUM(CASE WHEN type = "اهلاك" THEN total_amount ELSE 0 END) as destruction_details, SUM(CASE WHEN type = "اهلاك" THEN bouns ELSE 0 END) as destruction_details_bouns'),
-                    DB::raw('SUM(CASE WHEN type = "تسوية" THEN total_amount ELSE 0 END) as product_adjustments, SUM(CASE WHEN type = "تسوية" THEN bouns ELSE 0 END) as product_adjustments_bouns')
+                    DB::raw('SUM(CASE WHEN type = "تسوية بالزيادة" THEN total_amount ELSE 0 END) as increment_adjustments, SUM(CASE WHEN type = "تسوية بالزيادة" THEN bouns ELSE 0 END) as increment_adjustments_bouns'),
+                    DB::raw('SUM(CASE WHEN type = "تسوية بالعجز" THEN total_amount ELSE 0 END) as deficit_adjustments, SUM(CASE WHEN type = "تسوية بالعجز" THEN bouns ELSE 0 END) as deficit_adjustments_bouns')
                 )
                 ->groupBy('productive_id');
 
@@ -131,7 +147,8 @@ class StorageCheckController extends Controller
                     return $row->rasied_ayni +
                     ($row->purchases_details + $row->purchases_details_bouns) +
                     ($row->head_back_sales_details + $row->head_back_sales_details_bouns) +
-                    $row->product_adjustments -
+                    $row->increment_adjustments -
+                    $row->deficit_adjustments -
                     ($row->sales_details + $row->sales_details_bouns) -
                     ($row->head_back_purchases_details + $row->head_back_purchases_details_bouns) -
                     $row->destruction_details;

@@ -199,5 +199,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     //cheques
     Route::resource('/cheques', ChequeController::class)->only('index');
     Route::post('/update-cheque-status', [ChequeController::class, 'changeStatusChequeStatus'])->name('admin.changeStatusChequeStatus');
+    Route::get('/customer-balance', [SalesController::class, 'customerBalance'])->name('admin.customerBalance');
 
 });

@@ -64,7 +64,7 @@
                                     <th>مدين</th>
                                     <th>الرصيد</th>
                                 </tr>
-                                <tr style="background-color: white; color: black;">
+                                <tr style="display: none; background-color: white; color: black;" id="initial_balance">
                                     <td>-----</td>
                                     <td>-----</td>
                                     <td>مديونية سابقة</td>
@@ -116,7 +116,14 @@
 
 
     <script>
-        $(function() {
+        function dataTable() {
+            if (!$('#client_id').val()) {
+                alert('من فضلك اختر عميل');
+            }
+            if ($.fn.DataTable.isDataTable('#accountStatementTable')) {
+                $('#accountStatementTable').DataTable().destroy(); // Destroy the existing instance
+            }
+
             var table = $('#accountStatementTable').DataTable({
                 processing: true,
                 serverSide: true,
@@ -160,6 +167,7 @@
                     },
                 ],
                 "drawCallback": function(response) {
+                    $('#initial_balance').show();
                     $('#prvious_credit').empty();
                     $('#prvious_debit').empty();
                     $('#previous_total').empty();
@@ -177,9 +185,9 @@
                 }
             });
 
-            $('#filter').click(function() {
-                table.draw();
-            });
+        }
+        $('#filter').click(function() {
+            dataTable();
         });
     </script>
 @endsection

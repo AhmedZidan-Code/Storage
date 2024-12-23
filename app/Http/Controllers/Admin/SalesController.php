@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Productive;
 use App\Models\Sales;
 use App\Models\SalesDetails;
+use App\Services\CustomerAccount;
 use Carbon\Carbon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use League\CommonMark\Extension\CommonMark\Node\Inline\Code;
 use Yajra\DataTables\DataTables;
 
 class SalesController extends Controller
@@ -387,5 +389,14 @@ class SalesController extends Controller
 
         }
 
+    }
+
+    public function customerBalance(Request $request)
+    {
+        return response()->json([
+            'message' => 'success',
+            'balance' => CustomerAccount::CustomerBalance($request->client_id),
+             'code'=>200
+        ]);
     }
 }
