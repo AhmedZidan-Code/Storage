@@ -125,21 +125,21 @@
                                 class="form-control" style="width: 120px; text-align: center;">
                         </th>
                         <th>
-                            <input data-id="1" onchange="callTotal()" onkeyup="callTotal()" type="number"
+                            <input data-id="1" onchange="callTotal()" class="form-control navigable" onkeyup="callTotal()" type="number"
                                 value="1" min="1" name="amount[]" id="amount-1" style="width: 100%;">
                             <!-- Adjusted width -->
                         </th>
                         <th>
                             <input data-id="1" step=".1" onchange="callTotal()" onkeyup="callTotal()"
-                                type="number" value="1" min="1" name="productive_buy_price[]"
+                                type="number" value="1" class="form-control navigable" min="1" name="productive_buy_price[]"
                                 id="productive_buy_price-1" style="width: 100%;"> <!-- Adjusted width -->
                         </th>
                         <th>
-                            <input type="number" value="0" min="0" name="bouns[]" id="bouns-1"
+                            <input type="number" class="form-control navigable" value="0" min="0" name="bouns[]" id="bouns-1"
                                 style="width: 100%;"> <!-- Adjusted width -->
                         </th>
                         <th>
-                            <input type="number" value="0" min="0" name="discount_percentage[]"
+                            <input type="number" class="form-control navigable"  value="0" min="0" name="discount_percentage[]"
                                 id="discount_percentage-1" style="width: 100%;" onkeyup="callTotal()">
                             <!-- Adjusted width -->
                         </th>
@@ -184,7 +184,7 @@
 
 
         <div class="d-flex justify-content-end">
-            <button id="addNewDetails" class="btn btn-primary">اضافة منتج اخر
+            <button id="addNewDetails" class="btn btn-primary navigable" >اضافة منتج اخر
 
             </button>
         </div>

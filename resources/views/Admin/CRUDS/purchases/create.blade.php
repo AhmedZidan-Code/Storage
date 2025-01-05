@@ -104,32 +104,66 @@
 
 
         <script>
-            $(document).on('click', '#addNewDetails', function(e) {
-                e.preventDefault();
-                $.ajax({
-                    type: 'GET',
-                    url: "{{ route('admin.makeRowDetailsForPurchasesDetails') }}",
+            document.addEventListener('DOMContentLoaded', function() {
+                const form = document.getElementById('form');
+                let navigableElements = Array.from(document.querySelectorAll('.navigable'));
 
-                    success: function(res) {
+                function updateNavigableElements() {
+                    // Re-fetch all navigable elements
+                    navigableElements = Array.from(document.querySelectorAll('.navigable'));
+                }
 
-                        $('#details-container').append(res.html);
-                        $("html,body").animate({
-                            scrollTop: $(document).height()
-                        }, 1000);
+                form.addEventListener('keydown', function(event) {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        let currentElement = event.target;
 
+                        if (navigableElements.includes(currentElement)) {
+                            let currentIndex = navigableElements.indexOf(currentElement);
+                            let nextElement = navigableElements[currentIndex + 1];
 
-                        loadScript(res.id);
-                        callTotal();
-
-
-                    },
-                    error: function(data) {
-                        // location.reload();
+                            if (nextElement) {
+                                nextElement.focus();
+                                if (nextElement.tagName === 'SELECT') {
+                                    nextElement.click();
+                                }
+                            } else if (currentElement.tagName === 'BUTTON') {
+                                const targetIndex = Math.max(0, navigableElements.length - 2);
+                                navigableElements[targetIndex].focus();
+                                currentElement.click();
+                                updateNavigableElements();
+                            }
+                        }
                     }
                 });
 
+                $(document).on('click', '#addNewDetails', function(e) {
+                    e.preventDefault();
+                    $.ajax({
+                        type: 'GET',
+                        url: "{{ route('admin.makeRowDetailsForPurchasesDetails') }}",
 
-            })
+                        success: function(res) {
+
+                            $('#details-container').append(res.html);
+                            $("html,body").animate({
+                                scrollTop: $(document).height()
+                            }, 1000);
+
+
+                            loadScript(res.id);
+                            callTotal();
+
+                            updateNavigableElements();
+                        },
+                        error: function(data) {
+                            // location.reload();
+                        }
+                    });
+
+
+                });
+            });
         </script>
 
 
@@ -159,7 +193,7 @@
 
         <script>
             $(document).on('change', '.changeKhamId', function() {
-                
+
                 var rowId = $(this).attr('data-id');
                 var id = $(this).val();
                 var route = "{{ route('admin.getProductiveDetails', ':id') }}";

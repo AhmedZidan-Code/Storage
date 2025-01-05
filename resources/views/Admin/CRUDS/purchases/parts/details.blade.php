@@ -28,22 +28,22 @@
             class="form-control" style="width: 120px; text-align: center;">
     </th>
     <th>
-        <input data-id="{{ $id }}" onchange="callTotal()" type="number" value="1" min="1"
+        <input data-id="{{ $id }}" class="form-control navigable" onchange="callTotal()" type="number" value="1" min="1"
             name="amount[]" id="amount-{{ $id }}" style="width: 100%;">
 
     </th>
     <th>
-        <input step=".1" data-id="{{ $id }}" onchange="callTotal()" type="number" value="1"
+        <input step=".1" class="form-control navigable" data-id="{{ $id }}" onchange="callTotal()" type="number" value="1"
             min="1" name="productive_buy_price[]" id="productive_buy_price-{{ $id }}"
             style="width: 100%;">
 
     </th>
     <th>
-        <input type="number" value="0" min="0" name="bouns[]" id="bouns-{{ $id }}"
+        <input type="number" class="form-control navigable" value="0" min="0" name="bouns[]" id="bouns-{{ $id }}"
             style="width: 100%;">
     </th>
     <th>
-        <input type="number" value="0" min="0" name="discount_percentage[]"
+        <input type="number" class="form-control navigable" value="0" min="0" name="discount_percentage[]"
             id="discount_percentage-{{ $id }}" style="width: 100%;" onkeyup="callTotal()">
     </th>
     <th>
