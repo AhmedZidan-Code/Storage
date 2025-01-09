@@ -14,7 +14,7 @@
     <tr>
         <th>1</th>
         <th></th>
-        <th></th>
+        <th> المديونية السابقة</th>
         <th>0</th>
         <th>{{$supplier->previous_indebtedness}}</th>
         <th>{{$total_price=$supplier->previous_indebtedness}}</th>
