@@ -23,6 +23,16 @@
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
         <script>
+            function maxConstraint(inputElement, maxValue) {
+                // Parse the current value as a number
+                const currentValue = parseFloat(inputElement.value);
+
+                // If the current value exceeds the maximum value, reset it to the max value
+                if (currentValue > maxValue) {
+                    inputElement.value = maxValue;
+                }
+            }
+
             (function() {
 
                 $("#storage_id").select2({
@@ -93,7 +103,7 @@
 
             (function() {
                 let purchase_id = document.getElementById('purchase_id')
-                .value; // Assuming a select or input element with id "purchase_id"
+                    .value; // Assuming a select or input element with id "purchase_id"
 
                 if (purchase_id) {
 

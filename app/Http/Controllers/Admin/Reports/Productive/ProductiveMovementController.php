@@ -22,25 +22,26 @@ class ProductiveMovementController extends Controller
             $buildQuery = function ($tableName, $dateColumn, $type, $process) use ($startDate, $endDate, $storage, $productive_id) {
                 return DB::table($tableName)->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
                     ->when($storage, fn($q) => $q->where('storage_id', $storage))
-                    ->selectRaw('SUM(amount) as total_amount,'. $dateColumn .'  as created_at, SUM(bouns) as bouns, ? as type , ? as process', [$type, $process])
-                    ->when($startDate, fn($q) => $q->whereDate($dateColumn, '<=', $startDate))
-                    ->when($endDate, fn($q) => $q->whereDate($dateColumn, '>=', $endDate))
+                    ->selectRaw('SUM(amount) as total_amount,' . $dateColumn . '  as created_at, SUM(bouns) as bouns, ? as type , ? as process', [$type, $process])
+                    ->when($startDate, fn($q) => $q->whereDate($dateColumn, '>=', $startDate))
+                    ->when($endDate, fn($q) => $q->whereDate($dateColumn, '<=', $endDate))
                     ->groupBy('created_at');
-
             };
 
-            $query = DB::table('rasied_ayni')->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
-                        ->when($storage, fn($q) => $q->where('storage_id', $storage))
-                        ->selectRaw('SUM(amount) as total_amount, created_at as created_at, 0 as bouns, ? as type , ? as process', ['رصيد عيني', 1])
-                        ->when($startDate, fn($q) => $q->where('created_at', '<=', $startDate))
-                        ->when($endDate, fn($q) => $q->where('created_at', '>=', $endDate))
-                        ->groupBy(DB::raw('created_at'))
-                ->unionAll(DB::table('sales_details')->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
+            $query = DB::table('rasied_ayni')
+                ->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
+                ->when($storage, fn($q) => $q->where('storage_id', $storage))
+                ->selectRaw('SUM(amount) as total_amount, DATE(created_at) as created_at, 0 as bouns, ? as type , ? as process', ['رصيد عيني', 1])
+                ->when($startDate, fn($q) => $q->whereDate('created_at', '>=', $startDate))
+                ->when($endDate, fn($q) => $q->whereDate('created_at', '<=', $endDate))
+                ->groupBy(DB::raw('DATE(created_at)'))
+                ->unionAll(
+                    DB::table('sales_details')->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
                         ->when($storage, fn($q) => $q->where('storage_id', $storage))
                         ->where('is_prepared', 1)
                         ->selectRaw('SUM(amount) as total_amount, created_at as created_at, SUM(bouns) as bouns, ? as type , ? as process', ['مبيعات', 2])
-                        ->when($startDate, fn($q) => $q->where('created_at', '<=', $startDate))
-                        ->when($endDate, fn($q) => $q->where('created_at', '>=', $endDate))
+                        ->when($startDate, fn($q) => $q->where('created_at', '>=', $startDate))
+                        ->when($endDate, fn($q) => $q->where('created_at', '<=', $endDate))
                         ->groupBy(DB::raw('created_at'))
                 )
                 ->unionAll($buildQuery('purchases_details', 'created_at', 'مشتريات', 3))
@@ -51,8 +52,8 @@ class ProductiveMovementController extends Controller
                         ->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
                         ->when($storage, fn($q) => $q->where('storage_id', $storage))
                         ->selectRaw('SUM(amount) as total_amount, created_at as created_at, 0 as bouns, ? as type, ? as process', ['اهلاك', 6])
-                        ->when($startDate, fn($q) => $q->where('created_at', '<=', $startDate))
-                        ->when($endDate, fn($q) => $q->where('created_at', '>=', $endDate))
+                        ->when($startDate, fn($q) => $q->where('created_at', '>=', $startDate))
+                        ->when($endDate, fn($q) => $q->where('created_at', '<=', $endDate))
                         ->groupBy(DB::raw('created_at'))
                 )
                 ->unionAll(
@@ -61,8 +62,8 @@ class ProductiveMovementController extends Controller
                         ->when($storage, fn($q) => $q->where('storage_id', $storage))
                         ->where('type', 1)
                         ->selectRaw('SUM(amount) as total_amount, created_at as created_at, 0 as bouns, ? as type, ? as process', ['تسوية بالزيادة', 7])
-                        ->when($startDate, fn($q) => $q->where('created_at', '<=', $startDate))
-                        ->when($endDate, fn($q) => $q->where('created_at', '>=', $endDate))
+                        ->when($startDate, fn($q) => $q->where('created_at', '>=', $startDate))
+                        ->when($endDate, fn($q) => $q->where('created_at', '<=', $endDate))
                         ->groupBy(DB::raw('created_at'))
                 )
                 ->unionAll(
@@ -71,8 +72,8 @@ class ProductiveMovementController extends Controller
                         ->when($storage, fn($q) => $q->where('storage_id', $storage))
                         ->where('type', 2)
                         ->selectRaw('SUM(amount) as total_amount, created_at as created_at, 0 as bouns, ? as type, ? as process', ['تسوية بالعجز', 8])
-                        ->when($startDate, fn($q) => $q->where('created_at', '<=', $startDate))
-                        ->when($endDate, fn($q) => $q->where('created_at', '>=', $endDate))
+                        ->when($startDate, fn($q) => $q->where('created_at', '>=', $startDate))
+                        ->when($endDate, fn($q) => $q->where('created_at', '<=', $endDate))
                         ->groupBy(DB::raw('created_at'))
                 );
             // Order the final result
@@ -93,18 +94,17 @@ class ProductiveMovementController extends Controller
                         $this->total -= ($row->total_amount + $row->bouns);
                     } elseif ($row->process == 6) {
                         $this->total -= ($row->total_amount + $row->bouns);
-                    } elseif ($row->process == 7 ) {
+                    } elseif ($row->process == 7) {
                         $this->total += ($row->total_amount);
-                    } elseif ($row->process == 8 ) {
+                    } elseif ($row->process == 8) {
                         $this->total -= ($row->total_amount);
                     }
                     return $this->total;
-
                 })
 
                 ->editColumn('total_amount', function ($row) {
-                    if($row->bouns){
-                         return $row->total_amount + (int)$row->bouns . "($row->bouns)";
+                    if ($row->bouns) {
+                        return $row->total_amount + (int)$row->bouns . "($row->bouns)";
                     }
 
                     return  $row->total_amount;
@@ -123,8 +123,8 @@ class ProductiveMovementController extends Controller
         $rasied_ayni = DB::table('rasied_ayni')
             ->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
             ->when($storage, fn($q) => $q->where('storage_id', $storage))
-            ->when($startDate, fn($q) => $q->where('created_at', '<=', $startDate))
-            ->when($endDate, fn($q) => $q->where('created_at', '>=', $endDate))
+            ->when($startDate, fn($q) => $q->where('created_at', '>=', $startDate))
+            ->when($endDate, fn($q) => $q->where('created_at', '<=', $endDate))
             ->sum('amount');
         $sales_details = DB::table('sales_details')
             ->selectRaw('SUM(amount) as total_amount, SUM(bouns) as total_bouns')
@@ -139,42 +139,42 @@ class ProductiveMovementController extends Controller
             ->selectRaw('SUM(amount) as total_amount, SUM(bouns) as total_bouns')
             ->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
             ->when($storage, fn($q) => $q->where('storage_id', $storage))
-            ->when($startDate, fn($q) => $q->where('created_at', '<=', $startDate))
-            ->when($endDate, fn($q) => $q->where('created_at', '>=', $endDate))
+            ->when($startDate, fn($q) => $q->where('created_at', '>=', $startDate))
+            ->when($endDate, fn($q) => $q->where('created_at', '<=', $endDate))
             ->first();
 
         $head_back_sales_details = DB::table('head_back_sales_details')
             ->selectRaw('SUM(amount) as total_amount, SUM(bouns) as total_bouns')
             ->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
             ->when($storage, fn($q) => $q->where('storage_id', $storage))
-            ->when($startDate, fn($q) => $q->where('created_at', '<=', $startDate))
-            ->when($endDate, fn($q) => $q->where('created_at', '>=', $endDate))
+            ->when($startDate, fn($q) => $q->where('created_at', '>=', $startDate))
+            ->when($endDate, fn($q) => $q->where('created_at', '<=', $endDate))
             ->first();
         $head_back_purchases_details = DB::table('head_back_purchases_details')
             ->selectRaw('SUM(amount) as total_amount, SUM(bouns) as total_bouns')
             ->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
             ->when($storage, fn($q) => $q->where('storage_id', $storage))
-            ->when($startDate, fn($q) => $q->where('created_at', '<=', $startDate))
-            ->when($endDate, fn($q) => $q->where('created_at', '>=', $endDate))
+            ->when($startDate, fn($q) => $q->where('created_at', '>=', $startDate))
+            ->when($endDate, fn($q) => $q->where('created_at', '<=', $endDate))
             ->first();
         $destruction_details = DB::table('destruction_details')
             ->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
             ->when($storage, fn($q) => $q->where('storage_id', $storage))
-            ->when($startDate, fn($q) => $q->where('created_at', '<=', $startDate))
-            ->when($endDate, fn($q) => $q->where('created_at', '>=', $endDate))
+            ->when($startDate, fn($q) => $q->where('created_at', '>=', $startDate))
+            ->when($endDate, fn($q) => $q->where('created_at', '<=', $endDate))
             ->sum('amount');
         $incremental_adjustment = DB::table('product_adjustments')
             ->when($productive_id, fn($q) => $q->where('product_id', $productive_id))
             ->when($storage, fn($q) => $q->where('storage_id', $storage))
-            ->when($startDate, fn($q) => $q->where('created_at', '<=', $startDate))
-            ->when($endDate, fn($q) => $q->where('created_at', '>=', $endDate))
+            ->when($startDate, fn($q) => $q->where('created_at', '>=', $startDate))
+            ->when($endDate, fn($q) => $q->where('created_at', '<=', $endDate))
             ->where('type', 1)
             ->sum(DB::raw('amount'));
         $deficit_adjustment = DB::table('product_adjustments')
             ->when($productive_id, fn($q) => $q->where('product_id', $productive_id))
             ->when($storage, fn($q) => $q->where('storage_id', $storage))
-            ->when($startDate, fn($q) => $q->where('created_at', '<=', $startDate))
-            ->when($endDate, fn($q) => $q->where('created_at', '>=', $endDate))
+            ->when($startDate, fn($q) => $q->where('created_at', '>=', $startDate))
+            ->when($endDate, fn($q) => $q->where('created_at', '<=', $endDate))
             ->where('type', 2)
             ->sum(DB::raw('amount'));
 
@@ -189,5 +189,4 @@ class ProductiveMovementController extends Controller
             'deficit_adjustment' => $deficit_adjustment,
         ];
     }
-
 }

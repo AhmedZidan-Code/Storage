@@ -56,7 +56,7 @@
     </form>
     <div class="card">
         <div class="card-header d-flex align-items-center">
-            <h5 class="card-title mb-0 flex-grow-1">فواتير المشتريات</h5>
+            {{-- <h5 class="card-title mb-0 flex-grow-1">فواتير المشتريات</h5> --}}
 
 
         </div>

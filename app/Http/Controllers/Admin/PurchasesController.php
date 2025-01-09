@@ -77,11 +77,13 @@ class PurchasesController extends Controller
 
     public function store(Request $request)
     {
+
         try {
             return DB::transaction(function () use ($request) {
                 [$data, $details] = $this->validateData($request);
+                $data['total_discount'] ??= 0;
                 $purchases = $this->createPurchaseRecord($data);
-                $this->processDetailsAndUpdateTotals($request, $purchases, $data['total_discount'] ?? 0);
+                $this->processDetailsAndUpdateTotals($request, $purchases, $data['total_discount'] ??= 0);
 
                 return $this->successResponse('تمت العملية بنجاح!');
             });
@@ -289,7 +291,7 @@ class PurchasesController extends Controller
         return response()->json(['status' => true, 'html' => $html, 'id' => $id]);
     }
 
-        public function getPurchasesForSupplier(Request $request, $supplier_id)
+    public function getPurchasesForSupplier(Request $request, $supplier_id)
     {
         if ($request->ajax()) {
             $numbers = DB::table('purchases')->where('supplier_id', $supplier_id)->select('id', 'fatora_number as text')
@@ -307,8 +309,6 @@ class PurchasesController extends Controller
             );
 
             return \Response::json($results);
-
         }
-
     }
 }

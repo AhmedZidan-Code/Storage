@@ -23,6 +23,20 @@
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
         <script>
+            function maxConstraint(inputElement, maxValue) {
+                const currentValue = parseFloat(inputElement.value);
+
+                // Prevent negative values
+                if (currentValue < 0) {
+                    inputElement.value = 0;
+                }
+
+                // Enforce maximum value
+                if (currentValue > maxValue) {
+                    inputElement.value = maxValue;
+                }
+            }
+
             (function() {
 
                 $("#storage_id").select2({

@@ -1,31 +1,28 @@
-
 <?php
-$locale=app()->getLocale();
-
-
+$locale = app()->getLocale();
 
 ?>
 
-  <header id="page-topbar">
+<header id="page-topbar">
     <div class="navbar-header">
         <div class="d-flex">
             <!-- LOGO -->
             <div class="navbar-brand-box">
                 <a href="{{ url('/' . ($page = 'home')) }}" class="logo logo-dark">
                     <span class="logo-sm">
-                        <img src="{{URL::asset('assets_new/images/logo-sm.png')}}" alt="" height="22">
+                        <img src="{{ URL::asset('assets_new/images/logo-sm.png') }}" alt="" height="22">
                     </span>
                     <span class="logo-lg">
-                        <img src="{{URL::asset('assets_new/images/logo-dark.png')}}" alt="" height="17">
+                        <img src="{{ URL::asset('assets_new/images/logo-dark.png') }}" alt="" height="17">
                     </span>
                 </a>
 
                 <a href="{{ url('/' . ($page = 'home')) }}" class="logo logo-light">
                     <span class="logo-sm">
-                        <img src="{{URL::asset('assets_new/images/favicon.png')}}" alt="" height="30">
+                        <img src="{{ URL::asset('assets_new/images/favicon.png') }}" alt="" height="30">
                     </span>
                     <span class="logo-lg">
-                        <img src="{{URL::asset('assets_new/images/logo1.png')}}" alt="" height="50px">
+                        <img src="{{ URL::asset('assets_new/images/logo1.png') }}" alt="" height="50px">
                     </span>
                 </a>
             </div>
@@ -34,32 +31,32 @@ $locale=app()->getLocale();
                 <i class="mdi mdi-menu"></i>
             </button>
 
-{{--            <div class=" d-sm-block">--}}
-{{--                <div class="dropdown dropdown-topbar pt-3 mt-1 d-inline-block">--}}
-{{--                    <a class="btn btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
-{{--                            Create <i class="mdi mdi-chevron-down"></i>--}}
-{{--                        </a>--}}
+            {{--            <div class=" d-sm-block"> --}}
+            {{--                <div class="dropdown dropdown-topbar pt-3 mt-1 d-inline-block"> --}}
+            {{--                    <a class="btn btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> --}}
+            {{--                            Create <i class="mdi mdi-chevron-down"></i> --}}
+            {{--                        </a> --}}
 
-{{--                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">--}}
-{{--                        <a class="dropdown-item" href="#">Action</a>--}}
-{{--                        <a class="dropdown-item" href="#">Another action</a>--}}
-{{--                        <a class="dropdown-item" href="#">Something else here</a>--}}
-{{--                        <div class="dropdown-divider"></div>--}}
-{{--                        <a class="dropdown-item" href="#">Separated link</a>--}}
-{{--                    </div>--}}
-{{--                </div>--}}
-{{--            </div>--}}
+            {{--                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink"> --}}
+            {{--                        <a class="dropdown-item" href="#">Action</a> --}}
+            {{--                        <a class="dropdown-item" href="#">Another action</a> --}}
+            {{--                        <a class="dropdown-item" href="#">Something else here</a> --}}
+            {{--                        <div class="dropdown-divider"></div> --}}
+            {{--                        <a class="dropdown-item" href="#">Separated link</a> --}}
+            {{--                    </div> --}}
+            {{--                </div> --}}
+            {{--            </div> --}}
         </div>
 
         <div class="d-flex">
 
             <!-- App Search-->
-{{--            <form class="app-search d-none d-lg-block">--}}
-{{--                <div class="position-relative">--}}
-{{--                    <input type="text" class="form-control" placeholder="ابحث هنا....">--}}
-{{--                    <span class="fa fa-search"></span>--}}
-{{--                </div>--}}
-{{--            </form>--}}
+            {{--            <form class="app-search d-none d-lg-block"> --}}
+            {{--                <div class="position-relative"> --}}
+            {{--                    <input type="text" class="form-control" placeholder="ابحث هنا...."> --}}
+            {{--                    <span class="fa fa-search"></span> --}}
+            {{--                </div> --}}
+            {{--            </form> --}}
 
             <div class="dropdown d-none d-lg-none ms-2">
                 <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-search-dropdown"
@@ -72,9 +69,11 @@ $locale=app()->getLocale();
                     <form class="p-3">
                         <div class="form-group m-0">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Search ..." aria-label="Recipient's username">
+                                <input type="text" class="form-control" placeholder="Search ..."
+                                    aria-label="Recipient's username">
                                 <div class="input-group-append">
-                                    <button class="btn btn-primary" type="submit"><i class="mdi mdi-magnify"></i></button>
+                                    <button class="btn btn-primary" type="submit"><i
+                                            class="mdi mdi-magnify"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -84,19 +83,19 @@ $locale=app()->getLocale();
 
 
 
-{{--            <div class="dropdown   d-md-block ms-2">--}}
-{{--                <button type="button" class="btn header-item waves-effect" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
-{{--				{{  LaravelLocalization::getSupportedLocales()[$locale]['native'] }} <span class="mdi mdi-chevron-down"></span>--}}
-{{--                </button>--}}
-{{--                <div class="dropdown-menu dropdown-menu-end">--}}
+            {{--            <div class="dropdown   d-md-block ms-2"> --}}
+            {{--                <button type="button" class="btn header-item waves-effect" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> --}}
+            {{--				{{  LaravelLocalization::getSupportedLocales()[$locale]['native'] }} <span class="mdi mdi-chevron-down"></span> --}}
+            {{--                </button> --}}
+            {{--                <div class="dropdown-menu dropdown-menu-end"> --}}
 
-{{--                  @foreach(LaravelLocalization::getSupportedLocales() as $localeCode => $properties)--}}
-{{--                    <a href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}"  hreflang="{{ $localeCode }}" class="dropdown-item notify-item">--}}
-{{--                     {{ $properties['native'] }}</a>--}}
+            {{--                  @foreach (LaravelLocalization::getSupportedLocales() as $localeCode => $properties) --}}
+            {{--                    <a href="{{ LaravelLocalization::getLocalizedURL($localeCode, null, [], true) }}"  hreflang="{{ $localeCode }}" class="dropdown-item notify-item"> --}}
+            {{--                     {{ $properties['native'] }}</a> --}}
 
-{{--                   @endforeach--}}
-{{--                </div>--}}
-{{--            </div>--}}
+            {{--                   @endforeach --}}
+            {{--                </div> --}}
+            {{--            </div> --}}
 
             <div class="dropdown d-none d-lg-inline-block">
                 <button type="button" class="btn header-item noti-icon waves-effect" data-toggle="fullscreen">
@@ -105,8 +104,9 @@ $locale=app()->getLocale();
             </div>
 
             <div class="dropdown d-inline-block ms-1">
-                <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown"
-                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button type="button" class="btn header-item noti-icon waves-effect"
+                    id="page-header-notifications-dropdown" data-bs-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
                     <i class="ti-bell"></i>
                     <span class="badge bg-danger rounded-pill">3</span>
                 </button>
@@ -124,10 +124,10 @@ $locale=app()->getLocale();
                             <div class="d-flex">
                                 <div class="flex-shrink-0 me-3">
                                     <div class="avatar-xs">
-                                    <span class="avatar-title border-success rounded-circle ">
-                                        <i class="mdi mdi-cart-outline"></i>
-                                    </span>
-                                </div>
+                                        <span class="avatar-title border-success rounded-circle ">
+                                            <i class="mdi mdi-cart-outline"></i>
+                                        </span>
+                                    </div>
                                 </div>
                                 <div class="flex-grow-1">
                                     <h6 class="mb-1">Your order is placed</h6>
@@ -142,10 +142,10 @@ $locale=app()->getLocale();
                             <div class="d-flex">
                                 <div class="flex-shrink-0 me-3">
                                     <div class="avatar-xs">
-                                    <span class="avatar-title border-warning rounded-circle ">
-                                        <i class="mdi mdi-message"></i>
-                                    </span>
-                                </div>
+                                        <span class="avatar-title border-warning rounded-circle ">
+                                            <i class="mdi mdi-message"></i>
+                                        </span>
+                                    </div>
                                 </div>
                                 <div class="flex-grow-1">
                                     <h6 class="mb-1">New Message received</h6>
@@ -160,10 +160,10 @@ $locale=app()->getLocale();
                             <div class="d-flex">
                                 <div class="flex-shrink-0 me-3">
                                     <div class="avatar-xs">
-                                    <span class="avatar-title border-info rounded-circle ">
-                                        <i class="mdi mdi-glass-cocktail"></i>
-                                    </span>
-                                </div>
+                                        <span class="avatar-title border-info rounded-circle ">
+                                            <i class="mdi mdi-glass-cocktail"></i>
+                                        </span>
+                                    </div>
                                 </div>
                                 <div class="flex-grow-1">
                                     <h6 class="mb-1">Your item is shipped</h6>
@@ -178,10 +178,10 @@ $locale=app()->getLocale();
                             <div class="d-flex">
                                 <div class="flex-shrink-0 me-3">
                                     <div class="avatar-xs">
-                                    <span class="avatar-title border-primary rounded-circle ">
-                                        <i class="mdi mdi-cart-outline"></i>
-                                    </span>
-                                </div>
+                                        <span class="avatar-title border-primary rounded-circle ">
+                                            <i class="mdi mdi-cart-outline"></i>
+                                        </span>
+                                    </div>
                                 </div>
                                 <div class="flex-grow-1">
                                     <h6 class="mb-1">Your order is placed</h6>
@@ -196,10 +196,10 @@ $locale=app()->getLocale();
                             <div class="d-flex">
                                 <div class="flex-shrink-0 me-3">
                                     <div class="avatar-xs">
-                                    <span class="avatar-title border-warning rounded-circle ">
-                                        <i class="mdi mdi-message"></i>
-                                    </span>
-                                </div>
+                                        <span class="avatar-title border-warning rounded-circle ">
+                                            <i class="mdi mdi-message"></i>
+                                        </span>
+                                    </div>
                                 </div>
                                 <div class="flex-grow-1">
                                     <h6 class="mb-1">New Message received</h6>
@@ -220,24 +220,23 @@ $locale=app()->getLocale();
 
 
             <div class="dropdown d-inline-block" id="page-header-user-dropdown">
-                <button type="button" class="btn header-item waves-effect"
-                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <img class="rounded-circle header-profile-user" src="{{get_file(admin()->user()->image)}}"
+                <button type="button" class="btn header-item waves-effect" data-bs-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    <img class="rounded-circle header-profile-user" src="{{ get_file(admin()->user()->image) }}"
                         alt="Header Avatar">
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                     <!-- item-->
-                    <a class="dropdown-item editProfile" href=""><i class="mdi mdi-account-circle font-size-17 text-muted align-middle me-1"></i> {{ admin()->user()->name??'' }}</a>
-                    <a class="dropdown-item d-flex align-items-center" href="#"><i class="mdi mdi-cog font-size-17 text-muted align-middle me-1"></i> Settings<span class="badge bg-success ms-auto">11</span></a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{{route('admin.logout')}}"
-                                     ><i
-                                     class="bx bx-log-out"></i>تسجيل خروج</a>
+                    <a class="dropdown-item editProfile" href=""><i
+                            class="mdi mdi-account-circle font-size-17 text-muted align-middle me-1"></i>
+                        {{ admin()->user()->name ?? '' }}</a>
+                    <a class="dropdown-item" href="{{ route('admin.logout') }}"><i class="bx bx-log-out"></i>تسجيل
+                        خروج</a>
 
                 </div>
             </div>
 
-           <!-- <div class="dropdown d-inline-block">
+            <!-- <div class="dropdown d-inline-block">
                 <button type="button" class="btn header-item noti-icon right-bar-toggle waves-effect">
                     <i class="mdi mdi-spin mdi-cog"></i>
                 </button>

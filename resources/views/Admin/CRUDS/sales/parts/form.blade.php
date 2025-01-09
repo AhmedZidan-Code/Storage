@@ -96,7 +96,7 @@
                                     <span class="required mr-1"> </span>
                                 </label>
                                 <select class="changeKhamId " data-id="1" name="productive_id[]" id='productive_id-1'
-                                    style="width: 100%;">
+                                     style='width: 200px;'>
                                     <option selected disabled value='0'>- ابحث عن المنتج -</option>
                                 </select>
                             </div>

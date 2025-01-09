@@ -6,7 +6,7 @@
                 <span class="required mr-1"> </span>
             </label>
             <select class="changeKhamId" data-id="{{ $id }}" name="productive_id[]"
-                id='productive_id-{{ $id }}' style="width: 100%;">
+                id='productive_id-{{ $id }}'  style='width: 200px;'>
                 <option selected disabled value='0'>- ابحث عن المنتج -</option>
             </select>
         </div>

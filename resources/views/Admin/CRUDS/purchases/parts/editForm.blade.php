@@ -113,7 +113,7 @@
                                     id="productive_code-{{ $key }}" style="width: 100px; text-align: center;">
                             </th>
                             <th style="padding: 8px;">
-                                <input data-id="{{ $key }}" type="number" value="{{ $pivot->batch_number }}"
+                                <input data-id="{{ $key }}" type="text" value="{{ $pivot->batch_number }}"
                                     name="batch_number[]" id="batch_number-{{ $key }}"
                                     style="width: 100px; text-align: center;">
                             </th>

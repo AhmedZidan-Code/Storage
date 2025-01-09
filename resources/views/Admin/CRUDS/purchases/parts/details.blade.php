@@ -15,7 +15,7 @@
         <input type="text" disabled id="productive_code-{{ $id }}" style="width: 100%;">
     </th>
     <th>
-        <input type="number" value="0" min="0" name="batch_number[]" id="batch_number-{{ $id }}"
+        <input type="text" value="0" name="batch_number[]" id="batch_number-{{ $id }}"
             style="width: 100%;">
 
     </th>

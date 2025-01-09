@@ -63,7 +63,7 @@
                             <th style="padding: 8px;">
                                 <input data-id="{{ $key }}" type="number" value="{{ $pivot->bouns }}"
                                     name="bouns[]" id="bouns-{{ $key }}"
-                                    style="width: 100px; text-align: center;" readonly>
+                                    style="width: 100px; text-align: center;" onkeyup="maxConstraint(this, {{ $pivot->bouns }})">
                             </th>
                             <th style="padding: 8px;">
                                 <input data-id="{{ $key }}" type="number"

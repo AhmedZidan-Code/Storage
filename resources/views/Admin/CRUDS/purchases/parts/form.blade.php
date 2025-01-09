@@ -104,7 +104,7 @@
                                     class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                                 </label>
                                 <select class="changeKhamId" data-id="1" name="productive_id[]" id='productive_id'
-                                    style="width: 100%;"> <!-- Adjusted width -->
+                                   style='width: 200px;'> <!-- Adjusted width -->
                                     <option selected disabled value='0'>- ابحث عن المنتج -</option>
                                 </select>
                             </div>
@@ -114,7 +114,7 @@
                             <!-- Adjusted width -->
                         </th>
                         <th>
-                            <input type="number" value="0" min="0" name="batch_number[]"
+                            <input type="text" value="0" name="batch_number[]"
                                 id="batch_number-1" style="width: 100%;"> <!-- Adjusted width -->
                         </th>
                         {{-- <th>

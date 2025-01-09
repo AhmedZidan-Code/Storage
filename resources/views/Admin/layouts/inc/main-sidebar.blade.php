@@ -47,95 +47,6 @@
                     </ul>
                 </li>
                 @endcanAdminAny
-
-                @canAdminAny('عرض الاعدادات')
-                <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="fa fa-cog"></i>
-                        <span> الاعدادات </span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{ route('settings.index') }}"><i class="mdi mdi-album"></i>
-                                <span> اعدادات البرنامج</span></a></li>
-                        <li><a href="{{ route('countries.index') }}"><i class="mdi mdi-album"></i> <span>المحافظات
-                                </span></a>
-                        </li>
-                        <li><a href="{{ route('provinces.index') }}"><i class="mdi mdi-album"></i> <span>المدن
-                                </span></a>
-                        </li>
-                        <li><a href="{{ route('categories.index') }}"><i class="mdi mdi-album"></i> <span>التصنيفات
-                                </span></a>
-                        </li>
-                        <li><a href="{{ route('unites.index') }}"><i class="mdi mdi-album"></i> <span>الوحدات
-                                </span></a>
-                        </li>
-                    </ul>
-                </li>
-                @endcanAdminAny
-
-                @canAdminAny('عرض الفروع','عرض المخازن','عرض الاصناف')
-                <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="fa fa-code-branch"></i>
-                        <span> الفروع والمخازن </span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        @canAdminAny('عرض الفروع')
-
-                        <li><a href="{{ route('branches.index') }}"><i class="mdi mdi-album"></i>
-                                <span> الفروع</span></a></li>
-                        @endcanAdminAny
-                        @canAdminAny('عرض المخازن')
-
-                        <li><a href="{{ route('storages.index') }}"><i class="mdi mdi-album"></i> <span>المخازن
-                                </span></a>
-                        </li>
-                        @endcanAdminAny
-                        @canAdminAny('تحضير الاصناف')
-
-                        <li><a href="{{ route('prepare-items.index') }}"><i class="mdi mdi-album"></i> <span>تحضير
-                                    الاصناف </span></a>
-                        </li>
-                        @endcanAdminAny
-
-                    </ul>
-                </li>
-                @endcanAdminAny
-
-
-                {{-- @canAdminAny('عرض الفروع','عرض المخازن','عرض الاصناف') --}}
-                <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="fa fa-users-cog"></i>
-                        <span> المناديب</span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        {{-- @canAdminAny('عرض الفروع') --}}
-
-                        <li><a href="{{ route('representatives.index') }}"><i class="mdi mdi-album"></i>
-                                <span> المناديب</span></a></li>
-                        {{-- @endcanAdminAny --}}
-                    </ul>
-                </li>
-                {{-- @endcanAdminAny --}}
-
-                @canAdminAny('عرض المسئولون عن المخازن')
-
-                <li>
-                    <a href="javascript: void(0);" class="has-arrow waves-effect">
-                        <i class="fa fa-users-cog"></i>
-                        <span> المسئولون عن المخازن </span>
-                    </a>
-                    <ul class="sub-menu" aria-expanded="false">
-                        <li><a href="{{ route('store-managers.index') }}"><i class="fa fa-route"></i> <span>متابعة
-                                    تحضير الصناف </span></a>
-                        </li>
-
-                    </ul>
-                </li>
-                @endcanAdminAny
-
-
                 @canAdminAny('عرض العملاء')
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
@@ -163,7 +74,6 @@
                     </ul>
                 </li>
                 @endcanAdminAny
-
                 @canAdminAny('عرض الموردين')
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
@@ -183,10 +93,62 @@
                     </ul>
                 </li>
                 @endcanAdminAny
+                @canAdminAny('عرض المناديب')
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="fa fa-users-cog"></i>
+                        <span> المناديب</span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        @canAdminAny('عرض المناديب')
 
-
+                        <li><a href="{{ route('representatives.index') }}"><i class="mdi mdi-album"></i>
+                                <span> المناديب</span></a></li>
+                        @endcanAdminAny
+                    </ul>
+                </li>
+                @endcanAdminAny
 
                 @canAdminAny('عرض المسئولون عن المخازن')
+
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="fa fa-users-cog"></i>
+                        <span> المسئولون عن المخازن </span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{ route('store-managers.index') }}"><i class="fa fa-route"></i> <span>متابعة
+                                    تحضير الصناف </span></a>
+                        </li>
+
+                    </ul>
+                </li>
+                @endcanAdminAny
+
+                @canAdminAny('عرض الفروع','عرض المخازن','عرض الاصناف')
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="fa fa-code-branch"></i>
+                        <span> الفروع والمخازن </span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        @canAdminAny('عرض الفروع')
+
+                        <li><a href="{{ route('branches.index') }}"><i class="mdi mdi-album"></i>
+                                <span> الفروع</span></a></li>
+                        @endcanAdminAny
+                        @canAdminAny('عرض المخازن')
+
+                        <li><a href="{{ route('storages.index') }}"><i class="mdi mdi-album"></i> <span>المخازن
+                                </span></a>
+                        </li>
+                        @endcanAdminAny
+
+                    </ul>
+                </li>
+                @endcanAdminAny
+
+                @canAdminAny('عرض المسئولون عن المخازن', 'تحضير الاصناف')
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="fa fa-list"></i>
@@ -204,7 +166,12 @@
                         <li><a href="{{ route('storage-check.index') }}"><i class="mdi mdi-album"></i>
                                 <span>المخزون</span></a>
                         </li>
+                        @canAdminAny('تحضير الاصناف')
 
+                        <li><a href="{{ route('prepare-items.index') }}"><i class="mdi mdi-album"></i> <span>تحضير
+                                    الاصناف </span></a>
+                        </li>
+                        @endcanAdminAny
                     </ul>
                 </li>
                 @endcanAdminAny
@@ -304,6 +271,7 @@
                 </li>
                 @endcanAdminAny
 
+                @canAdminAny('عرض التسوية')
                 <li>
                     <a href="javascript: void(0);" class="has-arrow waves-effect">
                         <i class="mdi mdi-buffer"></i>
@@ -316,6 +284,31 @@
                                 <span>تسوية العملاء</span></a></li>
                     </ul>
                 </li>
+                @endcanAdminAny
+                @canAdminAny('عرض الاعدادات')
+                <li>
+                    <a href="javascript: void(0);" class="has-arrow waves-effect">
+                        <i class="fa fa-cog"></i>
+                        <span> الاعدادات </span>
+                    </a>
+                    <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{ route('settings.index') }}"><i class="mdi mdi-album"></i>
+                                <span> اعدادات البرنامج</span></a></li>
+                        <li><a href="{{ route('countries.index') }}"><i class="mdi mdi-album"></i> <span>المحافظات
+                                </span></a>
+                        </li>
+                        <li><a href="{{ route('provinces.index') }}"><i class="mdi mdi-album"></i> <span>المدن
+                                </span></a>
+                        </li>
+                        <li><a href="{{ route('categories.index') }}"><i class="mdi mdi-album"></i> <span>التصنيفات
+                                </span></a>
+                        </li>
+                        <li><a href="{{ route('unites.index') }}"><i class="mdi mdi-album"></i> <span>الوحدات
+                                </span></a>
+                        </li>
+                    </ul>
+                </li>
+                @endcanAdminAny
 
                 <!--</div>-->
             </ul>

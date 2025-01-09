@@ -34,6 +34,8 @@ class RolesAndPermissionsSeeder extends Seeder
             'الادوار',
             'الاهلاك',
             'المرتجعات',
+            'المناديب',
+            'التسوية',
         ];
 
         $actions = ['عرض', 'إنشاء', 'تعديل', 'حذف', 'تفاصيل'];

@@ -116,10 +116,10 @@
 
         <div class="d-flex flex-column mb-7 fv-row col-sm-4 ">
             <label for="zone_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                <span class="required mr-1"> المنطقة</span>
+                <span class="required mr-1"> Zone</span>
             </label>
             <select id="zone_id" name="zone_id" class="form-control">
-                <option selected disabled>اختر المنطقة</option>
+                <option selected disabled>Zone</option>
                 @foreach ($zones as $zone)
                     <option value="{{ $zone->id }}"> {{ $zone->title }}</option>
                 @endforeach
@@ -127,10 +127,10 @@
         </div>
         <div class="d-flex flex-column mb-7 fv-row col-sm-4 ">
             <label for="zone_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                <span class="required mr-1"> المدينة</span>
+                <span class="required mr-1"> الرف</span>
             </label>
             <select class="form-control" id="city_id" name="zones_setting_id">
-                <option value="">اختر المدينة</option>
+                <option value="">اختر الرف</option>
             </select>
         </div>
 

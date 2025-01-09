@@ -16,26 +16,43 @@ class SupplierAccountStatmentController extends Controller
                 'supplier_id' => 'required|exists:suppliers,id',
             ]);
 
-            $purchases = DB::table('purchases')
-                ->select('purchases_date', 'total', 'paid')
-                ->where('supplier_id', $request->supplier_id)
-                ->orderBy('id', 'DESC');
+            $rows = DB::query()
+                ->fromSub(function ($query) use ($request) {
+                    // Purchases Query
+                    $query->from('purchases')
+                        ->where('supplier_id', $request->supplier_id)
+                        ->select(
+                            DB::raw('purchases_date as date'),
+                            DB::raw('total as total_price'),
+                            'paid',
+                            DB::raw("'purchases' as type")
+                        )
 
-            $headBackPurchases = DB::table('head_back_purchases')
-                ->select('purchases_date', 'total', 'paid')
-                ->where('supplier_id', $request->supplier_id)
-                ->orderBy('id', 'DESC');
+                        // Head Back Purchases Query
+                        ->unionAll(
+                            DB::table('head_back_purchases')
+                                ->where('supplier_id', $request->supplier_id)
+                                ->select(
+                                    DB::raw('purchases_date as date'),
+                                    DB::raw('total as total_price'),
+                                    'paid',
+                                    DB::raw("'headBackPurchases' as type")
+                                )
+                        )
 
-            $vouchers = DB::table('supplier_vouchers')
-                ->select('voucher_date', 'paid')
-                ->where('supplier_id', $request->supplier_id)
-                ->orderBy('id', 'DESC');
-
-            $rows = $purchases
-                ->select('purchases_date as date', 'total as total_price', 'paid as paid')
-                ->selectRaw("'purchases' as type")
-                ->union($headBackPurchases->select('purchases_date as date', 'total as total_price', 'paid as paid')->selectRaw("'headBackPurchases' as type")
-                        ->union($vouchers->select('voucher_date as date', 'paid as total_price')->selectRaw("0 as paid")->selectRaw("'voucher' as type")))
+                        // Vouchers Query
+                        ->unionAll(
+                            DB::table('supplier_vouchers')
+                                ->where('supplier_id', $request->supplier_id)
+                                ->select(
+                                    DB::raw('voucher_date as date'),
+                                    DB::raw('paid as total_price'),
+                                    DB::raw('0 as paid'),
+                                    DB::raw("'voucher' as type")
+                                )
+                        );
+                }, 'combined_data')
+                ->orderBy('date', 'DESC')
                 ->get();
 
             $supplier = Supplier::findOrFail($request->supplier_id);
