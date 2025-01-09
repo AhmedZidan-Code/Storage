@@ -14,12 +14,12 @@ use Yajra\DataTables\Facades\DataTables;
 
 class PreparingItemController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('permission:عرض الاصناف,admin')->only('index');
-        $this->middleware('permission:تعديل الاصناف,admin')->only(['edit', 'update', 'updateIsPrepared']);
+    // public function __construct()
+    // {
+    //     $this->middleware('permission:عرض الاصناف,admin')->only('index');
+    //     $this->middleware('permission:تعديل الاصناف,admin')->only(['edit', 'update', 'updateIsPrepared']);
 
-    }
+    // }
     public function index(Request $request)
     {
         $user = auth('admin')->user();

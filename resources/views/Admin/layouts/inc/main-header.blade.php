@@ -227,8 +227,8 @@ $locale = app()->getLocale();
                 </button>
                 <div class="dropdown-menu dropdown-menu-end">
                     <!-- item-->
-                    <a class="dropdown-item editProfile" href=""><i
-                            class="mdi mdi-account-circle font-size-17 text-muted align-middle me-1"></i>
+                    <a class="dropdown-item editProfile" href="">
+                        <i class="mdi mdi-account-circle font-size-17 text-muted align-middle me-1"></i>
                         {{ admin()->user()->name ?? '' }}</a>
                     <a class="dropdown-item" href="{{ route('admin.logout') }}"><i class="bx bx-log-out"></i>تسجيل
                         خروج</a>
