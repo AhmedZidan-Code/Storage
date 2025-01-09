@@ -155,6 +155,8 @@
                         <span> الاصناف </span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
+                        @canAdminAny('عرض المسئولون عن المخازن')
+
                         <li><a href="{{ route('productive.index') }}"><i class="mdi mdi-album"></i>
                                 <span> الاصناف</span></a></li>
                         <li><a href="{{ route('rasied_ayni.index') }}"><i class="mdi mdi-album"></i> <span> رصيد اول
@@ -166,6 +168,8 @@
                         <li><a href="{{ route('storage-check.index') }}"><i class="mdi mdi-album"></i>
                                 <span>المخزون</span></a>
                         </li>
+                        @endcanAdminAny
+
                         @canAdminAny('تحضير الاصناف')
 
                         <li><a href="{{ route('prepare-items.index') }}"><i class="mdi mdi-album"></i> <span>تحضير
