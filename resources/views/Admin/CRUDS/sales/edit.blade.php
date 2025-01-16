@@ -292,6 +292,7 @@
                 var amounts = document.getElementsByName('amount[]');
                 var prices = document.getElementsByName('productive_sale_price[]');
                 var discounts = document.getElementsByName('discount_percentage[]');
+                var likely_discount = document.getElementsByName('likely_discount[]');
 
                 var total = 0;
                 var subTotal = 0;
@@ -299,8 +300,8 @@
                     subTotal = 1;
                     var amount = amounts[i];
                     var price = prices[i];
-                    var discount = discounts[i];
-                    subTotal = amount.value * price.value - (amount.value * price.value * discount.value / 100);
+                    var discount = parseFloat(likely_discount[i].value) - parseFloat(discounts[i].value);
+                    subTotal = amount.value * price.value - (amount.value * price.value * discount / 100);
                     var rowId = amount.getAttribute('data-id');
                     $(`#total-${rowId}`).val(subTotal);
                     total = total + subTotal;
@@ -309,7 +310,6 @@
                 $('#total_productive_sale_price').text(total);
                 totalAfterDiscount();
             }
-
             function totalAfterDiscount() {
                 let total = parseFloat($('#total_productive_sale_price').text());
                 $('#total_after_discount').val(total - (total * $('#total_discount').val() / 100))

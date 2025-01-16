@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Area;
 
+use App\Enum\AreaType;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\LogActivityTrait;
 use App\Models\Area;
@@ -17,17 +18,17 @@ class CountryController extends Controller
     {
 
         if ($request->ajax()) {
-            $rows = Area::query()->latest()->where('from_id',null);
+            $rows = Area::query()->where('type', AreaType::PROVINCE)->latest()->where('from_id', null);
             return DataTables::of($rows)
                 ->addColumn('action', function ($row) {
 
-                    $edit='';
-                    $delete='';
+                    $edit = '';
+                    $delete = '';
 
 
 
                     return '
-                            <button '.$edit.'  class="editBtn btn rounded-pill btn-primary waves-effect waves-light"
+                            <button ' . $edit . '  class="editBtn btn rounded-pill btn-primary waves-effect waves-light"
                                     data-id="' . $row->id . '"
                             <span class="svg-icon svg-icon-3">
                                 <span class="svg-icon svg-icon-3">
@@ -35,7 +36,7 @@ class CountryController extends Controller
                                 </span>
                             </span>
                             </button>
-                            <button '.$delete.'  class="btn rounded-pill btn-danger waves-effect waves-light delete"
+                            <button ' . $delete . '  class="btn rounded-pill btn-danger waves-effect waves-light delete"
                                     data-id="' . $row->id . '">
                             <span class="svg-icon svg-icon-3">
                                 <span class="svg-icon svg-icon-3">
@@ -44,9 +45,6 @@ class CountryController extends Controller
                             </span>
                             </button>
                        ';
-
-
-
                 })
 
 
@@ -59,11 +57,7 @@ class CountryController extends Controller
                 })
                 ->escapeColumns([])
                 ->make(true);
-
-
-        }
-        else{
-
+        } else {
         }
         return view('Admin.CRUDS.areas.countries.index');
     }
@@ -83,7 +77,7 @@ class CountryController extends Controller
         ]);
 
 
-     $country=   Area::create($data);
+        $country =   Area::create($data);
 
 
 
@@ -91,7 +85,8 @@ class CountryController extends Controller
             [
                 'code' => 200,
                 'message' => 'تمت العملية بنجاح!'
-            ]);
+            ]
+        );
     }
 
 
@@ -101,10 +96,9 @@ class CountryController extends Controller
 
 
 
-        $row=Area::findOrFail($id);
+        $row = Area::findOrFail($id);
 
         return view('Admin.CRUDS.areas.countries.parts.edit', compact('row'));
-
     }
 
     public function update(Request $request, $id)
@@ -114,7 +108,7 @@ class CountryController extends Controller
 
         ]);
 
-        $row=Area::findOrFail($id);
+        $row = Area::findOrFail($id);
 
 
         $row->update($data);
@@ -125,13 +119,14 @@ class CountryController extends Controller
             [
                 'code' => 200,
                 'message' => 'تمت العملية بنجاح!',
-            ]);
+            ]
+        );
     }
 
 
-    public function destroy( $id)
+    public function destroy($id)
     {
-        $row=Area::findOrFail($id);
+        $row = Area::findOrFail($id);
 
 
         $row->delete();
@@ -140,7 +135,8 @@ class CountryController extends Controller
             [
                 'code' => 200,
                 'message' => 'تمت العملية بنجاح!'
-            ]);
-    }//end fun
+            ]
+        );
+    } //end fun
 
 }

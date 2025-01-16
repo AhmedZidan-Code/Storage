@@ -57,7 +57,7 @@
             </select>
         </div>
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
+        {{-- <div class="d-flex flex-column mb-7 fv-row col-sm-3">
             <!--begin::Label-->
             <label for="fatora_number" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> رقم الفاتورة</span>
@@ -65,7 +65,7 @@
             <!--end::Label-->
             <input id="fatora_number" required type="text" class="form-control form-control-solid"
                 name="fatora_number" value="" />
-        </div>
+        </div> --}}
 
         <div class="d-flex flex-column mb-7 fv-row col-sm-3">
             <!--begin::Label-->
@@ -77,10 +77,10 @@
                 name="supplier_fatora_number" value="" />
         </div>
 
-        <div class="col-md-12"> <!-- Changed from col-md-10 to col-md-12 to take full width of the container -->
+        <div class="table-responsive">
             <table id="table-details"
                 class="table table-bordered dt-responsive nowrap table-striped align-middle display"
-                style="width: 100%;"> <!-- Removed !important; it's better to avoid using it unless necessary -->
+                style="width: 100%; table-layout: auto;">
                 <thead>
                     <tr>
                         <th>المنتج</th>
@@ -89,9 +89,13 @@
                         <th>رقم التشغيلة</th>
                         <th>تاريخ انتهاء الصلاحية</th>
                         <th>الكمية</th>
-                        <th>سعر الشراء</th>
+                        <th>سعر الجمهور</th>
                         <th>بونص</th>
                         <th>نسبة الخصم</th>
+                        <th>خصم 1</th>
+                        <th>خصم 2</th>
+                        <th> الخصم المرجح</th>
+                        <th>الضريبة</th>
                         <th>القيمة الاجمالية</th>
                         <th>العمليات</th>
                     </tr>
@@ -103,19 +107,19 @@
                                 <label for="productive_id"
                                     class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                                 </label>
-                                <select class="changeKhamId" data-id="1" name="productive_id[]" id='productive_id'
-                                   style='width: 200px;'> <!-- Adjusted width -->
+                                <select class="changeKhamId" data-id="1" name="productive_id[]" id='productive_id-1'
+                                    style='width: 200px;'> <!-- Adjusted width -->
                                     <option selected disabled value='0'>- ابحث عن المنتج -</option>
                                 </select>
                             </div>
                         </th>
                         <th>
-                            <input type="text" disabled id="productive_code-1" style="width: 100%;">
+                            <input type="text" disabled id="productive_code-1" style="width: 100px; text-align: center;">
                             <!-- Adjusted width -->
                         </th>
                         <th>
-                            <input type="text" value="0" name="batch_number[]"
-                                id="batch_number-1" style="width: 100%;"> <!-- Adjusted width -->
+                            <input type="text" value="0" name="batch_number[]" id="batch_number-1"
+                                style="width: 100px; text-align: center;"> <!-- Adjusted width -->
                         </th>
                         {{-- <th>
                             <input type="text" disabled id="unit-1" style="width: 100%;"> <!-- Adjusted width -->
@@ -125,27 +129,54 @@
                                 class="form-control" style="width: 120px; text-align: center;">
                         </th>
                         <th>
-                            <input data-id="1" onchange="callTotal()" class="form-control navigable" onkeyup="callTotal()" type="number"
-                                value="1" min="1" name="amount[]" id="amount-1" style="width: 100%;">
+                            <input data-id="1" onchange="callTotal()" class="form-control navigable"
+                                onkeyup="callTotal()" type="number" value="1" min="1" name="amount[]"
+                                id="amount-1" style="width: 100px; text-align: center;">
                             <!-- Adjusted width -->
                         </th>
                         <th>
                             <input data-id="1" step=".1" onchange="callTotal()" onkeyup="callTotal()"
-                                type="number" value="1" class="form-control navigable" min="1" name="productive_buy_price[]"
-                                id="productive_buy_price-1" style="width: 100%;"> <!-- Adjusted width -->
+                                type="number" value="1" class="form-control navigable" min="1"
+                                name="productive_buy_price[]" id="productive_buy_price-1" style="width: 100px; text-align: center;">
+                            <!-- Adjusted width -->
                         </th>
                         <th>
-                            <input type="number" class="form-control navigable" value="0" min="0" name="bouns[]" id="bouns-1"
-                                style="width: 100%;"> <!-- Adjusted width -->
+                            <input type="number" class="form-control navigable" value="0" min="0"
+                                name="bouns[]" id="bouns-1" style="width: 100px; text-align: center;"> <!-- Adjusted width -->
                         </th>
                         <th>
-                            <input type="number" class="form-control navigable"  value="0" min="0" name="discount_percentage[]"
-                                id="discount_percentage-1" style="width: 100%;" onkeyup="callTotal()">
+                            <input type="number" class="form-control navigable" value="0" min="0"
+                                name="discount_percentage[]" id="discount_percentage-1" style="width: 100px; text-align: center;"
+                                onkeyup="callTotal()">
+                            <!-- Adjusted width -->
+                        </th>
+                        <th>
+                            <input type="number" class="form-control navigable" value="0" min="0"
+                                name="first_discount[]" id="first_discount-1" style="width: 100px; text-align: center;"
+                                onkeyup="callTotal()">
+                            <!-- Adjusted width -->
+                        </th>
+                        <th>
+                            <input type="number" class="form-control navigable" value="0" min="0"
+                                name="second_discount[]" id="second_discount-1" style="width: 100px; text-align: center;"
+                                onkeyup="callTotal()">
+                            <!-- Adjusted width -->
+                        </th>
+                        <th>
+                            <input type="number" class="form-control" value="0" min="0" readonly
+                                name="likely_discount[]" id="likely_discount-1" style="width: 100px; text-align: center;"
+                                {{-- onkeyup="callTotal()" --}}>
+                            <!-- Adjusted width -->
+                        </th>
+                        <th>
+                            <input type="number" class="form-control navigable" value="0" min="0"
+                                name="tax[]" id="tax-1" style="width: 100px; text-align: center;"
+                                onkeyup="callTotal()">
                             <!-- Adjusted width -->
                         </th>
                         <th>
                             <input type="number" disabled value="1" min="1" name="total[]"
-                                id="total-1" style="width: 100%;"> <!-- Adjusted width -->
+                                id="total-1" style="width: 100px; text-align: center;"> <!-- Adjusted width -->
                         </th>
                         <th>
                             <button class="btn rounded-pill btn-danger waves-effect waves-light delete-sup"
@@ -165,7 +196,7 @@
                         <th colspan="2" id="total_productive_buy_price"
                             style="text-align: center; background-color: #6c757d;color: white">1
                         </th>
-                        <th colspan="1" style="text-align: center; background-color: aqua">نسبة الخصم الكلية</th>
+                        <th colspan="2" style="text-align: center; background-color: aqua">نسبة الخصم الكلية</th>
                         <th colspan="2" style="text-align: center; background-color: gray">
                             <input type="number" id="total_discount" value="0" min="0" max="99"
                                 name="total_discount" style="width: 100%;" onkeyup="totalAfterDiscount()">
@@ -173,7 +204,7 @@
                         </th>
                         <th colspan="2" style="text-align: center; background-color: rgb(196, 251, 30)"> الاجمالي
                             بعد الخصم الكلي</th>
-                        <th colspan="1" style="text-align: center; background-color: rgb(173, 222, 185)">
+                        <th colspan="3" style="text-align: center; background-color: rgb(173, 222, 185)">
                             <input type="text" id="total_after_discount" value="" name="total_discount"
                                 style="width: 100%;" disabled> <!-- Adjusted width -->
                         </th>
@@ -184,7 +215,7 @@
 
 
         <div class="d-flex justify-content-end">
-            <button id="addNewDetails" class="btn btn-primary navigable" >اضافة منتج اخر
+            <button id="addNewDetails" class="btn btn-primary navigable">اضافة منتج اخر
 
             </button>
         </div>

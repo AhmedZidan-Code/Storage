@@ -60,7 +60,6 @@
                     <th>#</th>
                     <th> تاريخ الطلب</th>
                     <th>المورد</th>
-                    <th>رقم الفاتورة</th>
                     <th>الاجمالي</th>
                     <th>المدفوع</th>
                     <th>المتبقي</th>
@@ -120,7 +119,6 @@
             // {data: 'purchases_number', name: 'purchases_number'},
             {data: 'purchases_date', name: 'purchases_date'},
             {data: 'supplier.name', name: 'supplier.name'},
-            {data: 'fatora_number', name: 'fatora_number'},
             {data: 'total', name: 'total'},
             {data: 'paid', name: 'paid'},
             {data: 'remain', name: 'remain'},

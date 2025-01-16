@@ -1,4 +1,5 @@
-<form id="form" enctype="multipart/form-data" method="POST" action="{{ route('purchases.update', $row->id) }}">
+<form id="form" enctype="multipart/form-data" method="POST"
+    action="{{ route('purchases.update', $row->id) }}">
     @csrf
     @method('PUT')
     <div class="row my-4 g-4">
@@ -58,7 +59,7 @@
             </select>
         </div>
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
+        {{-- <div class="d-flex flex-column mb-7 fv-row col-sm-3">
             <!--begin::Label-->
             <label for="fatora_number" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> رقم الفاتورة</span>
@@ -66,7 +67,7 @@
             <!--end::Label-->
             <input id="fatora_number" required type="text" class="form-control form-control-solid"
                 name="fatora_number" value="{{ $row->fatora_number }}" />
-        </div>
+        </div> --}}
 
         <div class="d-flex flex-column mb-7 fv-row col-sm-3">
             <!--begin::Label-->
@@ -78,9 +79,9 @@
                 name="supplier_fatora_number" value="{{ $row->supplier_fatora_number }}" />
         </div>
 
-        <div class="col-md-10">
-            <table id="table-details" class="table table-bordered dt-responsive nowrap table-striped align-middle"
-                style="width:70% !important; border: 1px solid #dee2e6; text-align: center;">
+        <div class="table-responsive">
+            <table id="table-details"  class="table table-bordered dt-responsive nowrap table-striped align-middle display"
+                style="width: 100%;">
                 <thead>
                     <tr>
                         <th>المنتج</th>
@@ -89,9 +90,13 @@
                         {{-- <th>الوحدة</th> --}}
                         <th>تاريخ انتهاء الصلاحية</th>
                         <th>الكمية</th>
-                        <th>سعر الشراء</th>
+                        <th>سعر الجمهور</th>
                         <th>بونص</th>
                         <th>نسبة الخصم</th>
+                        <th>خصم 1</th>
+                        <th>خصم 2</th>
+                        <th> الخصم المرجح</th>
+                        <th>الضريبة</th>
                         <th>القيمة الاجمالية</th>
                         <th>العمليات</th>
                     </tr>
@@ -149,6 +154,30 @@
                                     id="discount_percentage-{{ $key }}"
                                     style="width: 100px; text-align: center;" onkeyup="callTotal()">
                             </th>
+                            <th>
+                                <input type="number" class="form-control navigable" value="{{ $pivot->first_discount }}" min="0"
+                                    name="first_discount[]" id="first_discount-{{ $key }}"
+                                    style="width: 100px; text-align: center;" onkeyup="callTotal()">
+                                <!-- Adjusted width -->
+                            </th>
+                            <th>
+                                <input type="number" class="form-control navigable" value="{{ $pivot->second_discount }}" min="0"
+                                    name="second_discount[]" id="second_discount-{{ $key }}"
+                                    style="width: 100px; text-align: center;" onkeyup="callTotal()">
+                                <!-- Adjusted width -->
+                            </th>
+                            <th>
+                                <input type="number" class="form-control" value="{{ $pivot->likely_discount }}" min="0"
+                                    name="likely_discount[]" id="likely_discount-{{ $key }}" readonly
+                                    style="width: 100px; text-align: center;" {{-- onkeyup="callTotal()" --}}>
+                                <!-- Adjusted width -->
+                            </th>
+                            <th>
+                                <input type="number" class="form-control navigable" value="{{ $pivot->tax }}"
+                                    min="0" name="tax[]" id="tax-{{ $key }}" style="width: 100px; text-align: center;"
+                                    onkeyup="callTotal()">
+                                <!-- Adjusted width -->
+                            </th>
                             <th style="padding: 8px;">
                                 <input type="number" disabled value="{{ $pivot->total }}" name="total[]"
                                     id="total-{{ $key }}" style="width: 100px; text-align: center;">
@@ -171,7 +200,7 @@
                         <th colspan="1" style="text-align: center; background-color: aqua">نسبة الخصم الكلية</th>
                         <th colspan="2" style="text-align: center; background-color: gray">
                             <input type="number" id="total_discount" value="{{ $row->total_discount }}"
-                                min="0" max="99" name="total_discount" style="width: 100%;"
+                                min="0" max="99" name="total_discount" style="width: 100px; text-align: center;"
                                 onkeyup="totalAfterDiscount()">
                             <!-- Adjusted width -->
                         </th>
@@ -179,8 +208,9 @@
                             بعد الخصم الكلي</th>
                         <th colspan="2" style="text-align: center; background-color: rgb(173, 222, 185)">
                             <input type="text" id="total_after_discount" value="{{ $row->total_after_discount }}"
-                                name="total_discount" style="width: 100%;" disabled> <!-- Adjusted width -->
+                                name="total_discount" style="width: 100px; text-align: center;" disabled> <!-- Adjusted width -->
                         </th>
+                        <th colspan="4" style="text-align: center; background-color: rgb(173, 222, 185)"></th>
                     </tr>
                 </tfoot>
             </table>

@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers\Admin\Reports\Productive;
 
-use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Services\ProductBalance;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Yajra\DataTables\Facades\DataTables;
+use DateTime;
 
 class ProductiveMovementController extends Controller
 {
+
     protected $total = 0;
     public function index(Request $request)
     {
@@ -19,7 +22,55 @@ class ProductiveMovementController extends Controller
         $productive_id = $request->input('product_id');
 
         if ($request->ajax()) {
+
+            $previousBalance = 0;
+            if ($startDate != null) {
+                $previousBalance = DB::table('purchases_details')
+                    ->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
+                    ->when($storage, fn($q) => $q->where('storage_id', $storage))
+                    ->when($startDate, fn($q) => $q->where('created_at', '<', $startDate))
+                    ->selectRaw('COALESCE(SUM(amount + COALESCE(bouns, 0)), 0) as total')
+                    ->first()->total
+                    + DB::table('head_back_sales_details')
+                    ->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
+                    ->when($storage, fn($q) => $q->where('storage_id', $storage))
+                    ->when($startDate, fn($q) => $q->where('created_at', '<', $startDate))
+                    ->selectRaw('COALESCE(SUM(amount + COALESCE(bouns, 0)), 0) as total')
+                    ->first()->total
+                    - DB::table('sales_details')
+                    ->where('is_prepared', 1)
+                    ->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
+                    ->when($storage, fn($q) => $q->where('storage_id', $storage))
+                    ->when($startDate, fn($q) => $q->where('created_at', '<', $startDate))
+                    ->selectRaw('COALESCE(SUM(amount + COALESCE(bouns, 0)), 0) as total')
+                    ->first()->total
+                    - DB::table('head_back_purchases_details')
+                    ->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
+                    ->when($storage, fn($q) => $q->where('storage_id', $storage))
+                    ->when($startDate, fn($q) => $q->where('created_at', '<', $startDate))
+                    ->selectRaw('COALESCE(SUM(amount + COALESCE(bouns, 0)), 0) as total')
+                    ->first()->total
+                    - DB::table('destruction_details')
+                    ->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
+                    ->when($storage, fn($q) => $q->where('storage_id', $storage))
+                    ->when($startDate, fn($q) => $q->where('created_at', '<', $startDate))
+                    ->sum('amount')
+                    + DB::table('product_adjustments')
+                    ->when($productive_id, fn($q) => $q->where('product_id', $productive_id))
+                    ->when($storage, fn($q) => $q->where('storage_id', $storage))
+                    ->when($startDate, fn($q) => $q->where('created_at', '<', $startDate))
+                    ->where('type', 1)
+                    ->sum('amount')
+                    - DB::table('product_adjustments')
+                    ->when($productive_id, fn($q) => $q->where('product_id', $productive_id))
+                    ->when($storage, fn($q) => $q->where('storage_id', $storage))
+                    ->when($startDate, fn($q) => $q->where('created_at', '<', $startDate))
+                    ->where('type', 2)
+                    ->sum('amount');
+            }
+
             $buildQuery = function ($tableName, $dateColumn, $type, $process) use ($startDate, $endDate, $storage, $productive_id) {
+
                 return DB::table($tableName)->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
                     ->when($storage, fn($q) => $q->where('storage_id', $storage))
                     ->selectRaw('SUM(amount) as total_amount,' . $dateColumn . '  as created_at, SUM(bouns) as bouns, ? as type , ? as process', [$type, $process])
@@ -28,14 +79,16 @@ class ProductiveMovementController extends Controller
                     ->groupBy('created_at');
             };
 
-            $query = DB::table('rasied_ayni')
+            $rasiedAyniSum = DB::table('rasied_ayni')
                 ->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
                 ->when($storage, fn($q) => $q->where('storage_id', $storage))
-                ->selectRaw('SUM(amount) as total_amount, DATE(created_at) as created_at, 0 as bouns, ? as type , ? as process', ['رصيد عيني', 1])
-                ->when($startDate, fn($q) => $q->whereDate('created_at', '>=', $startDate))
-                ->when($endDate, fn($q) => $q->whereDate('created_at', '<=', $endDate))
-                ->groupBy(DB::raw('DATE(created_at)'))
-                ->unionAll(
+                ->sum('amount');
+
+            $query = DB::table(DB::raw('(SELECT 1) as dummy'))
+                ->selectRaw(
+                    '? as total_amount, 0 as created_at, 0 as bouns, ? as type , ? as process',
+                    [$rasiedAyniSum + $previousBalance, 'رصيد أول المدة', 1]
+                )->unionAll(
                     DB::table('sales_details')->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
                         ->when($storage, fn($q) => $q->where('storage_id', $storage))
                         ->where('is_prepared', 1)
@@ -123,8 +176,6 @@ class ProductiveMovementController extends Controller
         $rasied_ayni = DB::table('rasied_ayni')
             ->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
             ->when($storage, fn($q) => $q->where('storage_id', $storage))
-            ->when($startDate, fn($q) => $q->where('created_at', '>=', $startDate))
-            ->when($endDate, fn($q) => $q->where('created_at', '<=', $endDate))
             ->sum('amount');
         $sales_details = DB::table('sales_details')
             ->selectRaw('SUM(amount) as total_amount, SUM(bouns) as total_bouns')
@@ -183,10 +234,63 @@ class ProductiveMovementController extends Controller
             'purchases' => $purchases_details,
             'hadback_sales' => $head_back_sales_details,
             'hadback_purchases' => $head_back_purchases_details,
-            'rasied_ayni' => $rasied_ayni,
+            'rasied_ayni' => $rasied_ayni + $this->previousBalance($productive_id, $storage, $startDate),
             'destruction' => $destruction_details,
             'incremental_adjustment' => $incremental_adjustment,
             'deficit_adjustment' => $deficit_adjustment,
         ];
+    }
+    public function previousBalance($productive_id = null, $storage = null, $startDate = null)
+    {
+        if ($startDate) {
+
+            $sales_details = DB::table('sales_details')
+                ->selectRaw('SUM(amount) as total_amount, SUM(bouns) as total_bouns')
+                ->where('is_prepared', 1)
+                ->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
+                ->when($storage, fn($q) => $q->where('storage_id', $storage))
+                ->when($startDate, fn($q) => $q->where('created_at', '<=', $startDate))
+                ->first();
+
+            $purchases_details = DB::table('purchases_details')
+                ->selectRaw('SUM(amount) as total_amount, SUM(bouns) as total_bouns')
+                ->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
+                ->when($storage, fn($q) => $q->where('storage_id', $storage))
+                ->when($startDate, fn($q) => $q->where('created_at', '<=', $startDate))
+                ->first();
+
+            $head_back_sales_details = DB::table('head_back_sales_details')
+                ->selectRaw('SUM(amount) as total_amount, SUM(bouns) as total_bouns')
+                ->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
+                ->when($storage, fn($q) => $q->where('storage_id', $storage))
+                ->when($startDate, fn($q) => $q->where('created_at', '<=', $startDate))
+                ->first();
+            $head_back_purchases_details = DB::table('head_back_purchases_details')
+                ->selectRaw('SUM(amount) as total_amount, SUM(bouns) as total_bouns')
+                ->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
+                ->when($storage, fn($q) => $q->where('storage_id', $storage))
+                ->when($startDate, fn($q) => $q->where('created_at', '<=', $startDate))
+                ->first();
+            $destruction_details = DB::table('destruction_details')
+                ->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
+                ->when($storage, fn($q) => $q->where('storage_id', $storage))
+                ->when($startDate, fn($q) => $q->where('created_at', '<=', $startDate))
+                ->sum('amount');
+            $incremental_adjustment = DB::table('product_adjustments')
+                ->when($productive_id, fn($q) => $q->where('product_id', $productive_id))
+                ->when($storage, fn($q) => $q->where('storage_id', $storage))
+                ->when($startDate, fn($q) => $q->where('created_at', '<=', $startDate))
+                ->where('type', 1)
+                ->sum(DB::raw('amount'));
+            $deficit_adjustment = DB::table('product_adjustments')
+                ->when($productive_id, fn($q) => $q->where('product_id', $productive_id))
+                ->when($storage, fn($q) => $q->where('storage_id', $storage))
+                ->when($startDate, fn($q) => $q->where('created_at', '<=', $startDate))
+                ->where('type', 2)
+                ->sum(DB::raw('amount'));
+
+            return ($purchases_details->total_amount + $purchases_details->total_bouns) + ($head_back_sales_details->total_amount + $head_back_sales_details->total_bouns) - (($sales_details->total_amount + $sales_details->total_bouns) + ($head_back_purchases_details->total_amount + $head_back_purchases_details->total_bouns) + $destruction_details) + $incremental_adjustment - $deficit_adjustment;
+        }
+        return 0;
     }
 }

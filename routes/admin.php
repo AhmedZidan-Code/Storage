@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\Area\RegionController;
 use App\Http\Controllers\Admin\Area\CountryController;
 use App\Http\Controllers\Admin\Area\ProvinceController;
 use App\Http\Controllers\Admin\AuthController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\Admin\ChequeController;
 use App\Http\Controllers\Admin\ClientAdjustmentController;
 use App\Http\Controllers\Admin\ClientController;
 use App\Http\Controllers\Admin\ClientPaymentSettingController;
+use App\Http\Controllers\Admin\ClientSubscriptionController;
 use App\Http\Controllers\Admin\CompanyController;
 use App\Http\Controllers\Admin\DestructionController;
 use App\Http\Controllers\Admin\EmployeeController;
@@ -24,6 +26,7 @@ use App\Http\Controllers\Admin\ProductAdjustmentController;
 use App\Http\Controllers\Admin\ProductionController;
 use App\Http\Controllers\Admin\ProductiveController;
 use App\Http\Controllers\Admin\PurchasesController;
+use App\Http\Controllers\Admin\PurchasesRequestController;
 use App\Http\Controllers\Admin\RasiedAyniController;
 use App\Http\Controllers\Admin\Reports\AccountStatements\CustomerAccountStatementController;
 use App\Http\Controllers\Admin\Reports\AccountStatements\SupplierAccountStatmentController;
@@ -82,17 +85,20 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     // Area Management
     Route::resource('countries', CountryController::class);
     Route::resource('provinces', ProvinceController::class);
+    Route::resource('regions', RegionController::class);
 
     // Clients and Suppliers
     Route::resource('clients', ClientController::class);
     Route::get('getCitiesForGovernorate/{id}', [ClientController::class, 'getCitiesForGovernorate'])->name('admin.getCitiesForGovernorate');
+    Route::get('getRegionsForCity/{id}', [ClientController::class, 'getRegionsForCity'])->name('admin.getRegionsForCity');
     Route::resource('suppliers', SupplierController::class);
 
     // Item Installations
     Route::resource('itemInstallations', ItemInstallationController::class);
     Route::get('makeRowDetailsForItemInstallations', [ItemInstallationController::class, 'makeRowDetailsForItemInstallations'])->name('admin.makeRowDetailsForItemInstallations');
     Route::get('getSubProductive', [ItemInstallationController::class, 'getSubProductive'])->name('admin.getSubProductive');
-    Route::get('getProductiveDetails/{id}', [ItemInstallationController::class, 'getProductiveDetails'])->name('admin.getProductiveDetails');
+    Route::get('getProductiveDetails', [ItemInstallationController::class, 'getProductiveDetails'])->name('admin.getProductiveDetails');
+    Route::get('getProductiveDetailsForPurchase/{id}', [ItemInstallationController::class, 'getProductiveDetailsForPurchase'])->name('admin.getProductiveDetailsForPurchase');
     Route::get('getProductiveTypeKham', [ItemInstallationController::class, 'getProductiveTypeKham'])->name('admin.getProductiveTypeKham');
     Route::get('getProductiveTypeTam', [ItemInstallationController::class, 'getProductiveTypeTam'])->name('admin.getProductiveTypeTam');
     Route::get('getProductiveTamDetails/{id}', [ItemInstallationController::class, 'getProductiveTamDetails'])->name('admin.getProductiveTamDetails');
@@ -113,10 +119,14 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
     // Purchases and Sales
     Route::resource('purchases', PurchasesController::class);
+    Route::get('update-purchase-status/{id}', [PurchasesController::class, 'updatePurchaseStatus'])->name('update.purchase-status');
     Route::get('getPurchasesDetails/{id}', [PurchasesController::class, 'getPurchasesDetails'])->name('admin.getPurchasesDetails');
     Route::get('purchases-for-supplier/{supplier_id}', [PurchasesController::class, 'getPurchasesForSupplier'])->name('admin.getPurchasesForSupplier');
     Route::get('getStorages', [PurchasesController::class, 'getStorages'])->name('admin.getStorages');
     Route::get('makeRowDetailsForPurchasesDetails', [PurchasesController::class, 'makeRowDetailsForPurchasesDetails'])->name('admin.makeRowDetailsForPurchasesDetails');
+
+    // Purchases-requests and Sales
+    Route::resource('purchases-requests', PurchasesRequestController::class);
 
     Route::resource('head_back_purchases', HeadBackPurchasesController::class);
     Route::get('getHeadBackPurchasesDetails/{id}', [HeadBackPurchasesController::class, 'getHeadBackPurchasesDetails'])->name('admin.getHeadBackPurchasesDetails');
@@ -169,6 +179,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::resource('representatives', RepresentativeController::class);
     Route::get('representatives/{representative}/details', [RepresentativeController::class, 'details'])->name('representatives.details');
     Route::get('representatives-data', [RepresentativeController::class, 'getRepresentatives'])->name('admin.getRepresentatives');
+    Route::get('distributors-data', [RepresentativeController::class, 'getDistributors'])->name('admin.getDistributors');
 
     // representative-clients
     Route::get('representative-clients', [RepresentativeClientController::class, 'index'])->name('representative-clients.index');
@@ -200,5 +211,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::resource('/cheques', ChequeController::class)->only('index');
     Route::post('/update-cheque-status', [ChequeController::class, 'changeStatusChequeStatus'])->name('admin.changeStatusChequeStatus');
     Route::get('/customer-balance', [SalesController::class, 'customerBalance'])->name('admin.customerBalance');
+
+    //client_subscriptions
+    Route::resource('/client-subscriptions', ClientSubscriptionController::class);
 
 });

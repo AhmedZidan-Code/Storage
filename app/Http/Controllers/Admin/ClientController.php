@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enum\AreaType;
 use App\Enum\PaymentCategory;
 use App\Http\Controllers\Controller;
 use App\Models\Area;
 use App\Models\Client;
+use App\Models\ClientSubscription;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -22,7 +24,7 @@ class ClientController extends Controller
     {
 
         if ($request->ajax()) {
-            $rows = Client::query()->with(['city', 'governorate']);
+            $rows = Client::query()->with(['city', 'governorate', 'subscription']);
             return DataTables::of($rows)
                 ->addColumn('action', function ($row) {
 
@@ -47,15 +49,18 @@ class ClientController extends Controller
                             </span>
                             </button>
                        ';
-
                 })
 
+                ->addColumn('subscription', function ($admin) {
+                    if ($admin->subscription) {
+                        return $admin->subscription?->title . "({$admin->subscription?->discount}%)";
+                    }
+                })
                 ->editColumn('created_at', function ($admin) {
                     return date('Y/m/d', strtotime($admin->created_at));
                 })
                 ->escapeColumns([])
                 ->make(true);
-
         }
 
         return view('Admin.CRUDS.clients.index');
@@ -64,9 +69,10 @@ class ClientController extends Controller
     public function create()
     {
         $governorates = Area::where('from_id', null)->get();
+        $subscriptions = ClientSubscription::get();
         $paymentCategories = PaymentCategory::getCategoriesSelect();
 
-        return view('Admin.CRUDS.clients.parts.create', compact('governorates', 'paymentCategories'));
+        return view('Admin.CRUDS.clients.parts.create', compact('governorates', 'paymentCategories', 'subscriptions'));
     }
 
     public function store(Request $request)
@@ -81,6 +87,12 @@ class ClientController extends Controller
             'city_id' => 'required|exists:areas,id',
             'address' => 'nullable',
             'previous_indebtedness' => 'required|integer',
+            'client_subscription_id' => 'required|exists:client_subscriptions,id',
+            'region_id' => 'required|exists:areas,id',
+            'distributor_id' => 'required|exists:representatives,id',
+            'tele_sales' => 'required|in:1,2',
+            'commercial_register' => 'required|max:100',
+            'tax_card' => 'required|max:100',
         ]);
 
         $data['publisher'] = auth('admin')->user()->id;
@@ -91,7 +103,8 @@ class ClientController extends Controller
             [
                 'code' => 200,
                 'message' => 'تمت العملية بنجاح!',
-            ]);
+            ]
+        );
     }
 
     public function show(Client $client)
@@ -105,13 +118,14 @@ class ClientController extends Controller
     public function edit($id)
     {
 
-        $row = Client::find($id);
+        $row = Client::with(['representative', 'distributor'])->find($id);
         $governorates = Area::where('from_id', null)->get();
-        $cities = Area::where('from_id', $row->governorate_id)->get();
+        $cities = Area::where('type', AreaType::CITY)->where('from_id', $row->governorate_id)->get();
+        $regions = Area::where('type', AreaType::REGION)->where('from_id', $row->city_id)->get();
+        $subscriptions = ClientSubscription::get();
         $paymentCategories = PaymentCategory::getCategoriesSelect();
 
-        return view('Admin.CRUDS.clients.parts.edit', compact('row', 'governorates', 'cities', 'paymentCategories'));
-
+        return view('Admin.CRUDS.clients.parts.edit', compact('row', 'governorates', 'cities', 'regions', 'paymentCategories', 'subscriptions'));
     }
 
     public function update(Request $request, $id)
@@ -126,6 +140,13 @@ class ClientController extends Controller
             'city_id' => 'required|exists:areas,id',
             'address' => 'nullable',
             'previous_indebtedness' => 'required|integer',
+            'client_subscription_id' => 'required|exists:client_subscriptions,id',
+            'region_id' => 'required|exists:areas,id',
+            'distributor_id' => 'required|exists:representatives,id',
+            'tele_sales' => 'required|in:1,2',
+            'commercial_register' => 'required|max:100',
+            'tax_card' => 'required|max:100',
+
         ]);
 
         $row = Client::find($id);
@@ -135,7 +156,8 @@ class ClientController extends Controller
             [
                 'code' => 200,
                 'message' => 'تمت العملية بنجاح!',
-            ]);
+            ]
+        );
     }
 
     public function destroy($id)
@@ -149,13 +171,19 @@ class ClientController extends Controller
             [
                 'code' => 200,
                 'message' => 'تمت العملية بنجاح!',
-            ]);
+            ]
+        );
     } //end fun
 
     public function getCitiesForGovernorate($id)
     {
         $cities = Area::where('from_id', $id)->get();
         return view('Admin.CRUDS.clients.parts.cities', compact('cities'));
+    }
 
+    public function getRegionsForCity($id)
+    {
+        $regions = Area::where('from_id', $id)->get();
+        return view('Admin.CRUDS.clients.parts.regions', compact('regions'));
     }
 }

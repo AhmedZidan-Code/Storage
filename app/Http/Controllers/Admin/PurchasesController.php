@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enum\PurchaseStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Productive;
 use App\Models\Purchases;
 use App\Models\PurchasesDetails;
+use App\Services\ProductBalance;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -29,7 +31,7 @@ class PurchasesController extends Controller
         }
 
         return $this->generateDataTable(
-            Purchases::query()->with(['storage', 'supplier'])
+            Purchases::query()->where('status', PurchaseStatus::COMPLETED)->with(['storage', 'supplier'])
         );
     }
 
@@ -101,7 +103,6 @@ class PurchasesController extends Controller
             'pay_method' => 'required|in:debit,cash',
             'supplier_id' => 'required|exists:suppliers,id',
             'supplier_fatora_number' => 'required|unique:purchases,supplier_fatora_number' . ($id ? ',' . $id : ''),
-            'fatora_number' => 'required|unique:purchases,fatora_number' . ($id ? ',' . $id : ''),
         ]);
 
         $details = $request->validate([
@@ -113,11 +114,18 @@ class PurchasesController extends Controller
             'productive_buy_price.*' => 'required',
             'bouns' => 'required|array',
             'discount_percentage' => 'required|array',
+            'likely_discount' => 'required|array',
+            'first_discount' => 'required|array',
+            'second_discount' => 'required|array',
             'batch_number' => 'required|array',
             'bouns.*' => 'required',
             'discount_percentage.*' => 'required',
             'batch_number.*' => 'required',
             'exp_date.*' => 'required|date',
+            'likely_discount.*' => 'required',
+            'first_discount.*' => 'required',
+            'second_discount.*' => 'required',
+
         ]);
 
         if (count($request->amount) !== count($request->productive_id)) {
@@ -160,9 +168,14 @@ class PurchasesController extends Controller
 
         foreach ($request->productive_id as $i => $productiveId) {
             $productive = Productive::findOrFail($productiveId);
+            $latestProductFromPurchases = DB::table('purchases_details')->where('productive_id', $productiveId)->latest()->first();
+            $ProductBalance = new ProductBalance($productiveId);
             $buyPrice = $request->productive_buy_price[$i];
             $amount = $request->amount[$i];
             $discountPercentage = $request->discount_percentage[$i];
+            $likelyDiscount = $request->likely_discount[$i];
+            $totalAfterDiscount = $this->calculateTotal($buyPrice, $amount, $likelyDiscount);
+            $oneBuyPrice = $totalAfterDiscount / $amount;
 
             $detailsData[] = [
                 'storage_id' => $purchases->storage_id,
@@ -175,7 +188,8 @@ class PurchasesController extends Controller
                 'discount_percentage' => $discountPercentage,
                 'batch_number' => $request->batch_number[$i],
                 'productive_buy_price' => $buyPrice,
-                'total' => $this->calculateTotal($buyPrice, $amount, $discountPercentage),
+                'total' => $totalAfterDiscount,
+                'one_buy_price' => $oneBuyPrice,
                 'all_pieces' => $amount * $productive->num_pieces_in_package,
                 'date' => $purchases->date,
                 'year' => $purchases->year,
@@ -183,6 +197,10 @@ class PurchasesController extends Controller
                 'publisher' => $purchases->publisher,
                 'created_at' => $purchases->created_at ?? $now,
                 'updated_at' => $now,
+                'first_discount' => $request->first_discount[$i],
+                'second_discount' => $request->second_discount[$i],
+                'likely_discount' => $request->likely_discount[$i],
+                'active_likely_discount' => $ProductBalance->calculateActiveLikelyDiscount($amount, $buyPrice, $oneBuyPrice, $latestProductFromPurchases?->one_buy_price,  $request->likely_discount[$i]),
             ];
         }
 
@@ -290,11 +308,16 @@ class PurchasesController extends Controller
         $html = view('Admin.CRUDS.purchases.parts.details', compact('id'))->render();
         return response()->json(['status' => true, 'html' => $html, 'id' => $id]);
     }
+    public function updatePurchaseStatus($id)
+    {
+        Purchases::where('id', $id)->update(['status' => PurchaseStatus::COMPLETED]);
+        return response()->json(['status' => true]);
+    }
 
     public function getPurchasesForSupplier(Request $request, $supplier_id)
     {
         if ($request->ajax()) {
-            $numbers = DB::table('purchases')->where('supplier_id', $supplier_id)->select('id', 'fatora_number as text')
+            $numbers = DB::table('purchases')->where('supplier_id', $supplier_id)->select('id', 'id as text')
                 ->orderBy('id', 'asc')->simplePaginate(3);
             $morePages = true;
             $pagination_obj = json_encode($numbers);

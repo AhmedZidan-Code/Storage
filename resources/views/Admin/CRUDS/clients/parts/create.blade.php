@@ -5,7 +5,7 @@
     <div class="row g-4">
 
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
             <!--begin::Label-->
             <label for="name" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1">الاسم</span>
@@ -15,7 +15,7 @@
                 value="" />
         </div>
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
             <!--begin::Label-->
             <label for="code" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1">الكود</span>
@@ -26,7 +26,7 @@
         </div>
 
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
             <!--begin::Label-->
             <label for="phone" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1">الهاتف</span>
@@ -36,7 +36,7 @@
                 value="" />
         </div>
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
             <!--begin::Label-->
             <label for="payment_category" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> فئة السداد</span>
@@ -51,20 +51,42 @@
 
         </div>
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-3 ml-2">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
             <!--begin::Label-->
             <label for="representative_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> اختر المندوب</span>
             </label>
 
-            <select  name="representative_id" class="select2 representative_id"
-                id='representative_id' style='width: 200px;'>
+            <select name="representative_id" class="form-control select2 representative_id" id='representative_id'
+                style='width: 100%;'>
+            </select>
+
+        </div>
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
+            <!--begin::Label-->
+            <label for="distributor_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                <span class="required mr-1"> اختر الموزع</span>
+            </label>
+
+            <select name="distributor_id" class="form-control select2 distributor_id" id='distributor_id' style='width: 100%;'>
             </select>
 
         </div>
 
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
+            <!--begin::Label-->
+            <label for="tele_sales" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                <span class="required mr-1"> التلي سيلز</span>
+            </label>
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
+            <select id="tele_sales" name="tele_sales" class="form-control">
+                <option selected disabled>اختر المحافظة</option>
+                <option value="1"> صباحي</option>
+                <option value="2"> مسائي</option>
+            </select>
+        </div>
+
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
             <!--begin::Label-->
             <label for="governorate_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> المحافظة</span>
@@ -79,7 +101,7 @@
 
         </div>
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
             <!--begin::Label-->
             <label for="city_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> المدينة</span>
@@ -90,15 +112,55 @@
             </select>
 
         </div>
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
+            <!--begin::Label-->
+            <label for="region_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                <span class="required mr-1"> المنطقة</span>
+            </label>
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-3 ">
+            <select id="region_id" name="region_id" class="form-control">
+                <option selected disabled>اختر المدينة أولا</option>
+            </select>
+        </div>
+
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
+            <!--begin::Label-->
+            <label for="client_subscription_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                <span class="required mr-1">فئة خصم العميل</span>
+            </label>
+            <select id="client_subscription_id" name="client_subscription_id" class="form-control">
+                <option selected disabled>اختر الفئة</option>
+                @foreach ($subscriptions as $row)
+                    <option value="{{ $row->id }}"> {{ $row->title }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
+            <!--begin::Label-->
+            <label for="commercial_register" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                <span class="required mr-1">السجل التجاري</span>
+            </label>
+            <!--end::Label-->
+            <input id="commercial_register" required type="text" class="form-control form-control-solid"
+                name="commercial_register" value="" />
+        </div>
+        <div class="d-flex flex-column mb-7 fv-row col-sm-6">
+            <!--begin::Label-->
+            <label for="tax_card" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                <span class="required mr-1">البطاقة الضريبية</span>
+            </label>
+            <!--end::Label-->
+            <input id="tax_card" required type="text" class="form-control form-control-solid" name="tax_card"
+                value="" />
+        </div>
+        <div class="d-flex flex-column mb-7 fv-row col-sm-6">
             <!--begin::Label-->
             <label for="previous_indebtedness" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1">المديونية السابقة</span>
             </label>
             <!--end::Label-->
-            <input id="previous_indebtedness"  required type="number"
-                class="form-control form-control-solid" name="previous_indebtedness" value="" />
+            <input id="previous_indebtedness" required type="number" class="form-control form-control-solid"
+                name="previous_indebtedness" value="" />
         </div>
 
 

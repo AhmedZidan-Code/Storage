@@ -160,38 +160,6 @@
             })
         </script>
 
-        {{-- 
-        <script>
-            $(document).on('click', '#addNewDetails', function(e) {
-                e.preventDefault();
-                $.ajax({
-                    type: 'GET',
-                    url: "{{ route('admin.makeRowDetailsForSalesDetails') }}",
-
-                    success: function(res) {
-
-                        $('#details-container').append(res.html);
-                        $("html,body").animate({
-                            scrollTop: $(document).height()
-                        }, 1000);
-
-
-                        loadScript(res.id);
-                        callTotal();
-
-
-                    },
-                    error: function(data) {
-                        // location.reload();
-                    }
-                });
-
-
-            })
-        </script>
- --}}
-
-
         <script>
             function loadScript(id) {
                 $(`#productive_id-${id}`).select2({
@@ -216,53 +184,37 @@
         </script>
 
         <script>
-            function getPrice(id) {
-
-                let PRODUCT_ID = $(`#productive_id-${id}`).val();
-                let BATCH_NUMBER = $(`#batch_number-${id}`).val();
-
-                var route = "{{ route('admin.getProductPrice', ':id') }}";
-                route = route.replace(':id', PRODUCT_ID);
-                $.ajax({
-                    type: 'GET',
-                    url: route,
-                    data: {
-                        id: PRODUCT_ID,
-                        batch_number: BATCH_NUMBER,
-                    },
-                    success: function(res) {
-                        console.log(res);
-                        $(`#productive_sale_price-${id}`).val(res.sell_price);
-                        $(`#productive_buy_price-${id}`).val(res.buy_price);
-                        callTotal();
-
-                    },
-                    error: function(data) {
-                        toastr.error('هناك خطأ ما!');
-                    }
-                });
-            }
             $(document).on('change', '.changeKhamId', function() {
+                if (!$('#client_id').val()) {
+                    alert('لابد من اختيار العميل أولاً.');
+                    return;
+                }
 
                 var rowId = $(this).attr('data-id');
                 var id = $(this).val();
-                var route = "{{ route('admin.getProductiveDetails', ':id') }}";
-                route = route.replace(':id', id);
-                const selectElement = document.getElementById('batch_number-' + rowId);
+                var clientId = $('#client_id').val();
+                var route = "{{ route('admin.getProductiveDetails') }}";
 
                 $.ajax({
                     type: 'GET',
+                    data: {
+                        productId: id,
+                        clientId: clientId
+                    },
                     url: route,
 
                     success: function(res) {
-
                         $(`#productive_code-${rowId}`).val(res.code);
-                        // $(`#productive_sale_price-${rowId}`).val(res.productive_sale_price);
-                        $(`#company_id-${rowId}`).val(res.productive.company_id);
-                        let options = res.productive.batches;
+                        $(`#productive_sale_price-${rowId}`).val(res.productive_buy_price);
+                        $(`#likely_discount-${rowId}`).val(res.active_likely_discount);
+                        $(`#discount_percentage-${rowId}`).val(res.client_discount);
+                        const selectElement = document.getElementById('batch_number-' + rowId);
+                        let options = res.batches;
                         selectElement.innerHTML = '';
                         if (options && options.length > 0) {
                             options.forEach(option => {
+                                console.log(option);
+
                                 const opt = document.createElement('option');
                                 opt.value = option.batch_number;
                                 opt.textContent = option.batch_number;
@@ -274,23 +226,21 @@
                             opt.value = null;
                             selectElement.appendChild(opt);
                         }
-                        getPrice(rowId);
 
                         callTotal();
-
                     },
                     error: function(data) {
-                        // location.reload();
+
                     }
                 });
-
-            })
+            });
         </script>
         <script>
             function callTotal() {
                 var amounts = document.getElementsByName('amount[]');
                 var prices = document.getElementsByName('productive_sale_price[]');
                 var discounts = document.getElementsByName('discount_percentage[]');
+                var likely_discount = document.getElementsByName('likely_discount[]');
 
                 var total = 0;
                 var subTotal = 0;
@@ -298,8 +248,8 @@
                     subTotal = 1;
                     var amount = amounts[i];
                     var price = prices[i];
-                    var discount = discounts[i];
-                    subTotal = amount.value * price.value - (amount.value * price.value * discount.value / 100);
+                    var discount = parseFloat(likely_discount[i].value) - parseFloat(discounts[i].value);
+                    subTotal = amount.value * price.value - (amount.value * price.value * discount / 100);
                     var rowId = amount.getAttribute('data-id');
                     $(`#total-${rowId}`).val(subTotal);
                     total = total + subTotal;

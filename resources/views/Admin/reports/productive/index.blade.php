@@ -77,7 +77,7 @@
                 <table class="table table-bordered dt-responsive nowrap table-striped align-middle" style="width:20%">
                     <tbody>
                         <tr>
-                            <th> رصيد عيني </th>
+                            <th> رصيد أول المدة </th>
                             <th> {{ $rasied_ayni }} </th>
                         </tr>
                         <tr>

@@ -184,26 +184,24 @@ class SalesController extends Controller
             'sales_date' => 'required|date',
             'pay_method' => 'required|in:debit,cash',
             'client_id' => 'required|exists:clients,id',
-            'fatora_number' => 'required|unique:sales,fatora_number' . ($id ? ',' . $id : ''),
+            // 'fatora_number' => 'required|unique:sales,fatora_number' . ($id ? ',' . $id : ''),
         ]);
 
         $details = $request->validate([
-            'company_id' => 'required|array',
-            'company_id.*' => 'required|exists:companies,id',
             'productive_id' => 'required|array',
             'productive_id.*' => 'required',
             'amount' => 'required|array',
             'amount.*' => 'required',
             'productive_sale_price' => 'required|array',
             'productive_sale_price.*' => 'required',
-            'productive_buy_price' => 'required|array',
-            'productive_buy_price.*' => 'required',
             'bouns' => 'required|array',
             'discount_percentage' => 'required|array',
+            'likely_discount' => 'required|array',
             'batch_number' => 'required|array',
             'bouns.*' => 'required',
             'discount_percentage.*' => 'required|numeric|max:100|min:0',
             'batch_number.*' => 'required',
+            'likely_discount.*' => 'required',
         ]);
 
         if (count($request->amount) !== count($request->productive_id)) {
@@ -217,14 +215,25 @@ class SalesController extends Controller
     {
         $now = Carbon::now();
         $latestId = DB::table('sales')->latest('id')->value('id') ?? 0;
+        $client = DB::table('clients')->where('id', $data['client_id'])->first();
 
-        return Sales::create(array_merge($data, [
-            'publisher' => auth('admin')->user()->id,
-            'sales_number' => $latestId + 1,
-            'date' => $now->toDateString(),
-            'month' => $now->month,
-            'year' => $now->year,
-        ]));
+        return Sales::create(
+            array_merge($data, [
+                'publisher' => auth('admin')->user()->id,
+                'sales_number' => $latestId + 1,
+                'date' => $now->toDateString(),
+                'month' => $now->month,
+                'year' => $now->year,
+                'governorate_id' => $client->governorate_id,
+                'city_id' => $client->city_id,
+                'region_id' => $client->region_id,
+                'tele_sales' => $client->tele_sales,
+                'representative_id' => $client->representative_id,
+                'distributor_id' => $client->distributor_id,
+                'client_subscription_id' => $client->client_subscription_id,
+                'payment_category' => $client->payment_category,
+            ])
+        );
     }
 
     private function processDetailsAndUpdateTotals(Request $request, Sales $sales, $totalDiscount)
@@ -248,8 +257,8 @@ class SalesController extends Controller
             $productive = Productive::findOrFail($productiveId);
             $salePrice = $request->productive_sale_price[$i];
             $amount = $request->amount[$i];
-            $discountPercentage = $request->discount_percentage[$i];
-
+            $discountPercentage = $request->likely_discount[$i] - $request->discount_percentage[$i];
+            $total = $this->calculateTotal($salePrice, $amount, $discountPercentage);
             $detailsData[] = [
                 'storage_id' => $sales->storage_id,
                 'sales_id' => $sales->id,
@@ -259,10 +268,12 @@ class SalesController extends Controller
                 'amount' => $amount,
                 'bouns' => $request->bouns[$i],
                 'discount_percentage' => $discountPercentage,
+                'likely_discount' => $request->likely_discount[$i],
+                'profit_value' => ($request->discount_percentage[$i] * $salePrice / 100) * $amount,
                 'batch_number' => $request->batch_number[$i],
-                'productive_sale_price' => $salePrice,
-                'productive_buy_price' => $request->productive_buy_price[$i],
-                'total' => $this->calculateTotal($salePrice, $amount, $discountPercentage),
+                'productive_buy_price' => $salePrice,
+                'total' => $total,
+                'one_sell_price' => $total / $amount,
                 'all_pieces' => $amount * $productive->num_pieces_in_package,
                 'date' => $sales->date,
                 'year' => $sales->year,
@@ -371,7 +382,7 @@ class SalesController extends Controller
     public function getSalesForClient(Request $request, $client_id)
     {
         if ($request->ajax()) {
-            $numbers = DB::table('sales')->where('client_id', $client_id)->select('id', 'fatora_number as text')
+            $numbers = DB::table('sales')->where('client_id', $client_id)->select('id', 'id as text')
                 ->orderBy('id', 'asc')->simplePaginate(3);
             $morePages = true;
             $pagination_obj = json_encode($numbers);
@@ -386,9 +397,7 @@ class SalesController extends Controller
             );
 
             return \Response::json($results);
-
         }
-
     }
 
     public function customerBalance(Request $request)
@@ -396,7 +405,7 @@ class SalesController extends Controller
         return response()->json([
             'message' => 'success',
             'balance' => CustomerAccount::CustomerBalance($request->client_id),
-             'code'=>200
+            'code' => 200
         ]);
     }
 }

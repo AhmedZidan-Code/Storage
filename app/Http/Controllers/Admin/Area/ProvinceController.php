@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Area;
 
+use App\Enum\AreaType;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\LogActivityTrait;
 use App\Models\Area;
@@ -17,17 +18,17 @@ class ProvinceController extends Controller
     {
 
         if ($request->ajax()) {
-            $rows = Area::query()->latest()->where('from_id','!=',null);
+            $rows = Area::query()->where('type', AreaType::CITY)->latest()->where('from_id', '!=', null);
             return DataTables::of($rows)
                 ->addColumn('action', function ($row) {
 
-                    $edit='';
-                    $delete='';
+                    $edit = '';
+                    $delete = '';
 
 
 
                     return '
-                            <button '.$edit.'  class="editBtn btn rounded-pill btn-primary waves-effect waves-light"
+                            <button ' . $edit . '  class="editBtn btn rounded-pill btn-primary waves-effect waves-light"
                                     data-id="' . $row->id . '"
                             <span class="svg-icon svg-icon-3">
                                 <span class="svg-icon svg-icon-3">
@@ -35,7 +36,7 @@ class ProvinceController extends Controller
                                 </span>
                             </span>
                             </button>
-                            <button '.$delete.'  class="btn rounded-pill btn-danger waves-effect waves-light delete"
+                            <button ' . $delete . '  class="btn rounded-pill btn-danger waves-effect waves-light delete"
                                     data-id="' . $row->id . '">
                             <span class="svg-icon svg-icon-3">
                                 <span class="svg-icon svg-icon-3">
@@ -44,15 +45,12 @@ class ProvinceController extends Controller
                             </span>
                             </button>
                        ';
-
-
-
                 })
 
 
 
                 ->editColumn('from_id', function ($row) {
-                    return $row->country->title??'';
+                    return $row->country->title ?? '';
                 })
 
 
@@ -62,11 +60,7 @@ class ProvinceController extends Controller
                 })
                 ->escapeColumns([])
                 ->make(true);
-
-
-        }
-        else{
-
+        } else {
         }
         return view('Admin.CRUDS.areas.provinces.index');
     }
@@ -74,21 +68,22 @@ class ProvinceController extends Controller
 
     public function create()
     {
-        $countries=Area::where('from_id',null)->get();
+        $countries = Area::where('from_id', null)->get();
 
-        return view('Admin.CRUDS.areas.provinces.parts.create',compact('countries'));
+        return view('Admin.CRUDS.areas.provinces.parts.create', compact('countries'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
             'title' => 'required',
-            'from_id'=>'required|exists:areas,id',
+            'from_id' => 'required|exists:areas,id',
 
         ]);
 
+        $data['type'] = AreaType::CITY;
 
-        $row=   Area::create($data);
+        Area::create($data);
 
 
 
@@ -96,33 +91,33 @@ class ProvinceController extends Controller
             [
                 'code' => 200,
                 'message' => 'تمت العملية بنجاح!'
-            ]);
+            ]
+        );
     }
 
 
 
-    public function edit( $id)
+    public function edit($id)
     {
 
-        $row=Area::findOrFail($id);
+        $row = Area::findOrFail($id);
 
-        $countries=Area::where('from_id',null)->get();
+        $countries = Area::where('from_id', null)->get();
 
 
 
-        return view('Admin.CRUDS.areas.provinces.parts.edit', compact('row','countries'));
-
+        return view('Admin.CRUDS.areas.provinces.parts.edit', compact('row', 'countries'));
     }
 
-    public function update(Request $request, $id )
+    public function update(Request $request, $id)
     {
         $data = $request->validate([
             'title' => 'required',
-            'from_id'=>'required|exists:areas,id',
+            'from_id' => 'required|exists:areas,id',
 
         ]);
 
-        $row=Area::findOrFail($id);
+        $row = Area::findOrFail($id);
 
 
         $row->update($data);
@@ -133,14 +128,15 @@ class ProvinceController extends Controller
             [
                 'code' => 200,
                 'message' => 'تمت العملية بنجاح!',
-            ]);
+            ]
+        );
     }
 
 
     public function destroy($id)
     {
 
-        $row=Area::findOrFail($id);
+        $row = Area::findOrFail($id);
 
 
         $row->delete();
@@ -150,7 +146,8 @@ class ProvinceController extends Controller
             [
                 'code' => 200,
                 'message' => 'تمت العملية بنجاح!'
-            ]);
-    }//end fun
+            ]
+        );
+    } //end fun
 
 }

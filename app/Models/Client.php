@@ -22,6 +22,10 @@ class Client extends Model
     {
         return $this->belongsTo(Representative::class, 'representative_id');
     }
+    public function distributor()
+    {
+        return $this->belongsTo(Representative::class, 'distributor_id');
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\belongsToMany
@@ -29,5 +33,10 @@ class Client extends Model
     public function representatives()
     {
         return $this->belongsToMany(Representative::class, 'representative_clients');
+    }
+
+    public function subscription()
+    {
+        return $this->belongsTo(ClientSubscription::class, 'client_subscription_id');
     }
 }

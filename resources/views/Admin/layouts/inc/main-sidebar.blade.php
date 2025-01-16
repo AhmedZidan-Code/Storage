@@ -70,6 +70,9 @@
                                 <span>إعدادات تسديد العملاء </span></a>
                         </li>
                         @endcanAdminAny
+                        <li><a href="{{ route('client-subscriptions.index') }}"><i class="mdi mdi-album"></i>
+                                <span>اشتراكات العملاء</span></a>
+                        </li>
 
                     </ul>
                 </li>
@@ -188,13 +191,14 @@
                         <span> المشتريات </span>
                     </a>
                     <ul class="sub-menu" aria-expanded="false">
+                        <li><a href="{{ route('purchases-requests.index') }}"><i class="mdi mdi-album"></i> <span>
+                                    طلبات الشراء </span></a>
+                        </li>
                         <li><a href="{{ route('purchases.index') }}"><i class="mdi mdi-album"></i>
                                 <span> المشتريات</span></a></li>
                         <li><a href="{{ route('purchasesBills.index') }}"><i class="mdi mdi-album"></i> <span> تقرير
                                     المشتريات </span></a>
                         </li>
-
-
                     </ul>
                 </li>
                 @endcanAdminAny
@@ -302,6 +306,9 @@
                                 </span></a>
                         </li>
                         <li><a href="{{ route('provinces.index') }}"><i class="mdi mdi-album"></i> <span>المدن
+                                </span></a>
+                        </li>
+                        <li><a href="{{ route('regions.index') }}"><i class="mdi mdi-album"></i> <span>المناطق
                                 </span></a>
                         </li>
                         <li><a href="{{ route('categories.index') }}"><i class="mdi mdi-album"></i> <span>التصنيفات

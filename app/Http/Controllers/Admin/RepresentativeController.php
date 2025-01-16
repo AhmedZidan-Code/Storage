@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enum\RepresentativeType;
 use App\Http\Controllers\Controller;
 use App\Models\Branch;
 use App\Models\Representative;
@@ -57,16 +58,13 @@ class RepresentativeController extends Controller
                             </span>
                             </button>
                        ';
-
                 })
                 ->editColumn('created_at', function ($representative) {
                     return date('Y/m/d', strtotime($representative->created_at));
                 })
                 ->escapeColumns([])
                 ->make(true);
-
         } else {
-
         }
         return view('Admin.CRUDS.representative.index');
     }
@@ -109,7 +107,8 @@ class RepresentativeController extends Controller
             [
                 'code' => 200,
                 'message' => 'تمت العملية بنجاح!',
-            ]);
+            ]
+        );
     }
 
     /**
@@ -138,7 +137,6 @@ class RepresentativeController extends Controller
         $storages = Storage::all();
 
         return view('Admin.CRUDS.representative.parts.edit', compact('representative', 'branches', 'storages'));
-
     }
 
     /**
@@ -174,7 +172,8 @@ class RepresentativeController extends Controller
                 'message' => 'تمت العملية بنجاح!',
                 'html' => $html,
                 'name' => $representative->user_name,
-            ]);
+            ]
+        );
     }
 
     public function destroy(Representative $representative)
@@ -185,13 +184,14 @@ class RepresentativeController extends Controller
             [
                 'code' => 200,
                 'message' => 'تمت العملية بنجاح!',
-            ]);
+            ]
+        );
     }
 
     public function getRepresentatives(Request $request)
     {
         if ($request->ajax()) {
-            $representatives = DB::table('representatives')->select('id', 'full_name as text')
+            $representatives = DB::table('representatives')->where('type', RepresentativeType::REPRESENTATIVE->value)->select('id', 'full_name as text')
                 ->orderBy('full_name', 'asc')->simplePaginate(3);
             $morePages = true;
             $pagination_obj = json_encode($representatives);
@@ -206,7 +206,26 @@ class RepresentativeController extends Controller
             );
 
             return \Response::json($results);
+        }
+    }
+    public function getDistributors(Request $request)
+    {
+        if ($request->ajax()) {
+            $representatives = DB::table('representatives')->where('type', RepresentativeType::DISTRIBUTOR->value)->select('id', 'full_name as text')
+                ->orderBy('full_name', 'asc')->simplePaginate(3);
+            $morePages = true;
+            $pagination_obj = json_encode($representatives);
+            if (empty($representatives->nextPageUrl())) {
+                $morePages = false;
+            }
+            $results = array(
+                "results" => $representatives->items(),
+                "pagination" => array(
+                    "more" => $morePages,
+                ),
+            );
 
+            return \Response::json($results);
         }
     }
 
@@ -219,6 +238,5 @@ class RepresentativeController extends Controller
     {
         $representative = Representative::with('clients')->findOrFail($id);
         return view('Admin.CRUDS.representative.parts.details', compact('representative'));
-
     }
 }

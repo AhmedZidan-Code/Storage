@@ -21,6 +21,7 @@
                     <tr>
                         <th>#</th>
                         <th>الاسم</th>
+                        <th>فئة خصم العميل</th>
                         <th>الكود</th>
                         <th>الهاتف</th>
                         <th>المحافظة</th>
@@ -107,6 +108,35 @@
                 $('.representative_id').select2('destroy'); // Use the specific class here too
             });
         });
+
+        $(document).ready(function() {
+            $('#Modal').on('shown.bs.modal', function() {
+                setTimeout(() => {
+                    $('.distributor_id').select2({
+                        dropdownParent: $('#Modal'),
+                        placeholder: 'الموزع...',
+                        allowClear: true,
+                        ajax: {
+                            url: '{{ route('admin.getDistributors') }}',
+                            dataType: 'json',
+                            delay: 250,
+                            data: function(params) {
+                                return {
+                                    term: params.term || '',
+                                    page: params.page || 1
+                                }
+                            },
+                            cache: true
+                        }
+                    });
+                }, 2500);
+
+            });
+
+            $('#Modal').on('hidden.bs.modal', function() {
+                $('.distributor_id').select2('destroy'); 
+            });
+        });
     </script>
     <script>
         var columns = [{
@@ -116,6 +146,10 @@
             {
                 data: 'name',
                 name: 'name'
+            },
+            {
+                data: 'subscription',
+                name: 'subscription'
             },
             {
                 data: 'code',
@@ -164,6 +198,16 @@
 
             setTimeout(function() {
                 $('#city_id').load(route);
+            }, 1000)
+        })
+        $(document).on('change', '#city_id', function() {
+            var from_id = $(this).val();
+
+            var route = "{{ route('admin.getRegionsForCity', ':id') }}";
+            route = route.replace(':id', from_id);
+
+            setTimeout(function() {
+                $('#region_id').load(route);
             }, 1000)
         })
     </script>

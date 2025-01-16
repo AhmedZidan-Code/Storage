@@ -73,7 +73,7 @@
         <script>
             (function() {
 
-                $("#productive_id").select2({
+                $("#productive_id-1").select2({
                     placeholder: 'Channel...',
                     // width: '350px',
                     allowClear: true,
@@ -196,7 +196,7 @@
 
                 var rowId = $(this).attr('data-id');
                 var id = $(this).val();
-                var route = "{{ route('admin.getProductiveDetails', ':id') }}";
+                var route = "{{ route('admin.getProductiveDetailsForPurchase', ':id') }}";
                 route = route.replace(':id', id);
 
                 $.ajax({
@@ -220,6 +220,7 @@
         </script>
         <script>
             function callTotal() {
+
                 var amounts = document.getElementsByName('amount[]');
                 var prices = document.getElementsByName('productive_buy_price[]');
                 var discounts = document.getElementsByName('discount_percentage[]');
@@ -236,10 +237,10 @@
                     $(`#total-${rowId}`).val(subTotal);
                     total = total + subTotal;
                 }
-
-
                 $('#total_productive_buy_price').text(total);
                 totalAfterDiscount();
+                changeDiscount(rowId);
+
             }
 
             function totalAfterDiscount() {
@@ -316,5 +317,42 @@
                     processData: false
                 });
             });
+        </script>
+        <script>
+            function changeDiscount(id) {
+                if (!$('#productive_id-' + id).val()) {
+                    $('#first_discount-' + id).val(0);
+                    $('#second_discount-' + id).val(0);
+                    $('#likely_discount-' + id).val(0);
+                    return;
+                }
+                let first_discount = parseFloat($('#first_discount-' + id).val()) || 0;
+                let second_discount = parseFloat($('#second_discount-' + id).val()) || 0;
+                let totalDiscount = first_discount + second_discount;
+                let likely_discount = parseFloat($('#likely_discount-' + id).val()) || 0;
+                let tax = parseFloat($('#tax-' + id).val()) || 0;
+                let productTotal = parseFloat($('#total-' + id).val()) || 0;
+                let originalPrice = parseFloat($('#productive_buy_price-' + id).val()) * parseFloat($('#amount-' + id).val()) ||
+                    0;
+                let afterDiscount = productTotal - (productTotal / 100) * totalDiscount;
+                let LIKELYDISCOUNT = ((originalPrice - afterDiscount) / originalPrice) * 100;
+                console.log(LIKELYDISCOUNT);
+                console.log(originalPrice);
+                console.log(afterDiscount);
+
+                let afterTaxsAndDiscount = afterDiscount - tax;
+                $('#likely_discount-' + id).val(LIKELYDISCOUNT.toFixed(2));
+                $('#total-' + id).val(afterTaxsAndDiscount);
+                let totalForAll = document.getElementsByName('total[]');
+                let sumTotal = 0;
+                for (var i = 0; i < totalForAll.length; i++) {
+                    sumTotal += parseFloat(totalForAll[i].value) || 0;
+                }
+                console.log(sumTotal);
+
+                $('#total_productive_buy_price').text(sumTotal);
+                totalAfterDiscount();
+
+            }
         </script>
     @endsection

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Client;
 use App\Models\ItemInstallation;
 use App\Models\ItemInstallationDetails;
 use App\Models\Productive;
@@ -42,7 +43,6 @@ class ItemInstallationController extends Controller
                             </span>
                             </button>
                        ';
-
                 })
 
                 ->addColumn('details', function ($row) {
@@ -55,7 +55,6 @@ class ItemInstallationController extends Controller
                 })
                 ->escapeColumns([])
                 ->make(true);
-
         }
 
         return view('Admin.CRUDS.itemInstallations.index');
@@ -116,14 +115,14 @@ class ItemInstallationController extends Controller
                 array_push($sql, $details);
             }
             DB::table('item_installation_details')->insert($sql);
-
         }
 
         return response()->json(
             [
                 'code' => 200,
                 'message' => 'تمت العملية بنجاح!',
-            ]);
+            ]
+        );
     }
 
     public function edit($id)
@@ -132,7 +131,6 @@ class ItemInstallationController extends Controller
         $row = ItemInstallation::with(['productive'])->findOrFail($id);
 
         return view('Admin.CRUDS.itemInstallations.parts.edit', compact('row'));
-
     }
 
     public function update(Request $request, $id)
@@ -178,14 +176,14 @@ class ItemInstallationController extends Controller
                 array_push($sql, $details);
             }
             DB::table('item_installation_details')->insert($sql);
-
         }
 
         return response()->json(
             [
                 'code' => 200,
                 'message' => 'تمت العملية بنجاح!',
-            ]);
+            ]
+        );
     }
 
     public function destroy($id)
@@ -199,7 +197,8 @@ class ItemInstallationController extends Controller
             [
                 'code' => 200,
                 'message' => 'تمت العملية بنجاح!',
-            ]);
+            ]
+        );
     } //end fun
 
     public function getSubProductive()
@@ -216,7 +215,35 @@ class ItemInstallationController extends Controller
         return response()->json(['status' => true, 'html' => $html, 'id' => $id]);
     }
 
-    public function getProductiveDetails($id)
+    public function getProductiveDetails(Request $request)
+    {
+        $client = Client::with('subscription')->findOrFail($request->clientId);
+        $batches = DB::table('purchases_details')
+            ->select('batch_number', DB::raw('MAX(created_at) as latest_created_at'))
+            ->where('productive_id', $request->productId)
+            ->groupBy('batch_number')
+            ->orderBy('latest_created_at', 'desc')
+            ->get();
+
+        $productive = Productive::findOrFail($request->productId);
+        $productive_buy_price = $productive->one_buy_price;
+        $latestPurchaseForProductive = DB::table('purchases_details')->where('productive_id', $request->productId)->latest()->first();
+
+        return response()->json([
+            'status' => true,
+            'productive' => $productive,
+            'code' => $productive->code,
+            'unit' => $productive->unit->title ?? '',
+            'name' => $productive->name,
+            'productive_id' => $productive->id,
+            'productive_buy_price' => $productive_buy_price,
+            'batches' => $batches,
+            'active_likely_discount' => $latestPurchaseForProductive->active_likely_discount ?? 0,
+            'client_discount' => $client->subscription ? $client->subscription->discount : 0,
+        ]);
+    }
+
+    public function getProductiveDetailsForPurchase($id)
     {
         $productive = Productive::with(['batches' => function ($query) {
             $query->orderBy('created_at', 'desc');
@@ -232,7 +259,7 @@ class ItemInstallationController extends Controller
         $productive_sale_price = $productive->one_sell_price;
         $latestSalesForProductive = DB::table('sales_details')->where('productive_id', $id)->orderBy('id', 'desc')->first();
         if ($latestSalesForProductive) {
-            $productive_sale_price = $latestSalesForProductive->productive_sale_price;
+            $productive_sale_price = $latestSalesForProductive->productive_sale_price ?? 0;
         }
 
         return response()->json([
@@ -247,13 +274,11 @@ class ItemInstallationController extends Controller
             'batch_number' => $batch,
         ]);
     }
-
     public function getProductiveTamDetails($id)
     {
         $productive = Productive::where('product_type', 'tam')->findOrFail($id);
 
         return response()->json(['status' => true, 'productive' => $productive, 'code' => $productive->code, 'unit' => $productive->unit->title ?? '', 'name' => $productive->name, 'productive_id' => $productive->id]);
-
     }
 
     public function getProductiveTypeKham(Request $request)
@@ -278,7 +303,6 @@ class ItemInstallationController extends Controller
             );
 
             return \Response::json($results);
-
         }
     }
 
@@ -304,9 +328,7 @@ class ItemInstallationController extends Controller
             );
 
             return \Response::json($results);
-
         }
-
     }
 
     public function getAllProductive(Request $request)
@@ -332,9 +354,6 @@ class ItemInstallationController extends Controller
             );
 
             return \Response::json($results);
-
         }
-
     }
-
 }

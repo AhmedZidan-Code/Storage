@@ -10,7 +10,7 @@
             <h5 class="card-title mb-0 flex-grow-1">المشتريات</h5>
 
             <div>
-                <a href="{{ route('purchases.create') }}" class="btn btn-primary">اضافة عملية شراء</a>
+                <a href="{{ route('purchases-requests.create') }}" class="btn btn-primary">اضافة عملية شراء</a>
             </div>
 
         </div>
@@ -25,7 +25,6 @@
                         <th>المخزن</th>
                         <th>طريقة الدفع</th>
                         <th>المورد</th>
-                        <th>رقم الفاتورة</th>
                         <th>رقم فاتورة المورد</th>
                         <th> الاجمالي قبل الخصم</th>
                         <th> نسبة الخصم</th>
@@ -100,10 +99,6 @@
             {
                 data: 'supplier_name',
                 name: 'supplier_name'
-            },
-            {
-                data: 'fatora_number',
-                name: 'fatora_number'
             },
             {
                 data: 'supplier_fatora_number',
