@@ -172,10 +172,12 @@ class PurchasesController extends Controller
             $ProductBalance = new ProductBalance($productiveId);
             $buyPrice = $request->productive_buy_price[$i];
             $amount = $request->amount[$i];
+            $bouns = $request->bouns[$i];
             $discountPercentage = $request->discount_percentage[$i];
             $likelyDiscount = $request->likely_discount[$i];
             $totalAfterDiscount = $this->calculateTotal($buyPrice, $amount, $likelyDiscount);
-            $oneBuyPrice = $totalAfterDiscount / $amount;
+
+            $oneBuyPrice = $totalAfterDiscount / ($amount + $bouns);
 
             $detailsData[] = [
                 'storage_id' => $purchases->storage_id,
@@ -183,7 +185,7 @@ class PurchasesController extends Controller
                 'productive_id' => $productiveId,
                 'productive_code' => $productive->code,
                 'amount' => $amount,
-                'bouns' => $request->bouns[$i],
+                'bouns' => $bouns,
                 'exp_date' => $request->exp_date[$i],
                 'discount_percentage' => $discountPercentage,
                 'batch_number' => $request->batch_number[$i],
@@ -200,7 +202,7 @@ class PurchasesController extends Controller
                 'first_discount' => $request->first_discount[$i],
                 'second_discount' => $request->second_discount[$i],
                 'likely_discount' => $request->likely_discount[$i],
-                'active_likely_discount' => $ProductBalance->calculateActiveLikelyDiscount($amount, $buyPrice, $oneBuyPrice, $latestProductFromPurchases?->one_buy_price,  $request->likely_discount[$i]),
+                'active_likely_discount' => $ProductBalance->calculateActiveLikelyDiscount($amount, $buyPrice, $oneBuyPrice, $latestProductFromPurchases?->one_buy_price,  $request->likely_discount[$i],  $request->bouns[$i]),
             ];
         }
 

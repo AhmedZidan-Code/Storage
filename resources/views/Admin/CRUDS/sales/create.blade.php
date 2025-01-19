@@ -251,20 +251,20 @@
                     var discount = parseFloat(likely_discount[i].value) - parseFloat(discounts[i].value);
                     subTotal = amount.value * price.value - (amount.value * price.value * discount / 100);
                     var rowId = amount.getAttribute('data-id');
-                    $(`#total-${rowId}`).val(subTotal);
+                    $(`#total-${rowId}`).val(subTotal.toFixed(2));
                     total = total + subTotal;
                 }
 
-                $('#total_productive_sale_price').text(total);
+                $('#total_productive_sale_price').text(total.toFixed(2));
                 totalAfterDiscount();
             }
 
             function totalAfterDiscount() {
                 let total = parseFloat($('#total_productive_sale_price').text());
                 let after_disc = total - (total * $('#total_discount').val() / 100);
-                $('#total_after_discount').val(after_disc)
+                $('#total_after_discount').val(after_disc.toFixed(2))
                 let balance = parseFloat(after_disc) + parseFloat($('#initial_balance').val());
-                $('#balance_after_sale').val(balance);
+                $('#balance_after_sale').val(balance.toFixed(2));
             }
         </script>
         <script>

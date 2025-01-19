@@ -317,6 +317,12 @@
                         <li><a href="{{ route('unites.index') }}"><i class="mdi mdi-album"></i> <span>الوحدات
                                 </span></a>
                         </li>
+                        <li><a href="{{ route('companies.index') }}"><i class="mdi mdi-album"></i> <span>الشركات
+                                </span></a>
+                        </li>
+                        <li><a href="{{ route('shapes.index') }}"><i class="mdi mdi-album"></i> <span>الاشكال
+                                </span></a>
+                        </li>
                     </ul>
                 </li>
                 @endcanAdminAny

@@ -207,7 +207,6 @@
 
                         $(`#productive_code-${rowId}`).val(res.code);
                         $(`#productive_buy_price-${rowId}`).val(res.productive_buy_price);
-                        $(`#batch_number-${rowId}`).val(res.batch_number);
                         callTotal();
 
                     },

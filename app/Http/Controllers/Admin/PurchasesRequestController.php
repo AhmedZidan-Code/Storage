@@ -209,7 +209,7 @@ class PurchasesRequestController extends Controller
                 'first_discount' => $request->first_discount[$i],
                 'second_discount' => $request->second_discount[$i],
                 'likely_discount' => $request->likely_discount[$i],
-                'active_likely_discount' => $ProductBalance->calculateActiveLikelyDiscount($amount, $buyPrice, $oneBuyPrice, $latestProductFromPurchases?->one_buy_price,  $request->likely_discount[$i]),
+                'active_likely_discount' => $ProductBalance->calculateActiveLikelyDiscount($amount, $buyPrice, $oneBuyPrice, $latestProductFromPurchases?->one_buy_price,  $request->likely_discount[$i], $request->bouns[$i]),
             ];
         }
 

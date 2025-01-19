@@ -40,6 +40,7 @@ use App\Http\Controllers\Admin\RepresentativeController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SalesController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\ShapeController;
 use App\Http\Controllers\Admin\StorageController;
 use App\Http\Controllers\Admin\StoreManagerController;
 use App\Http\Controllers\Admin\SupplierController;
@@ -166,7 +167,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
     // Employees and Companies
     Route::resource('employees', EmployeeController::class);
+    Route::resource('companies', CompanyController::class);
     Route::get('getCompanies', [CompanyController::class, 'getCompanies'])->name('admin.get-companies');
+    Route::resource('shapes', ShapeController::class);
+    Route::get('getShapes', [ShapeController::class, 'getShapes'])->name('admin.get-shapes');
 
     // Prepare Items
     Route::resource('prepare-items', PreparingItemController::class);
@@ -214,5 +218,4 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
 
     //client_subscriptions
     Route::resource('/client-subscriptions', ClientSubscriptionController::class);
-
 });

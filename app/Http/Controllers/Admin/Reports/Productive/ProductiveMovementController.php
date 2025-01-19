@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Admin\Reports\Productive;
 
+use App\Enum\PurchaseStatus;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Services\ProductBalance;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\PurchasesDetails;
 use Yajra\DataTables\Facades\DataTables;
 use DateTime;
 
@@ -25,7 +27,7 @@ class ProductiveMovementController extends Controller
 
             $previousBalance = 0;
             if ($startDate != null) {
-                $previousBalance = DB::table('purchases_details')
+                $previousBalance = PurchasesDetails::whereHas('purchases', fn($q) => $q->where('status', PurchaseStatus::COMPLETED))
                     ->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
                     ->when($storage, fn($q) => $q->where('storage_id', $storage))
                     ->when($startDate, fn($q) => $q->where('created_at', '<', $startDate))
@@ -96,8 +98,14 @@ class ProductiveMovementController extends Controller
                         ->when($startDate, fn($q) => $q->where('created_at', '>=', $startDate))
                         ->when($endDate, fn($q) => $q->where('created_at', '<=', $endDate))
                         ->groupBy(DB::raw('created_at'))
+                )->unionAll(
+                    PurchasesDetails::whereHas('purchases', fn($q) => $q->where('status', PurchaseStatus::COMPLETED))->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
+                        ->when($storage, fn($q) => $q->where('storage_id', $storage))
+                        ->selectRaw('SUM(amount) as total_amount, created_at as created_at, SUM(bouns) as bouns, ? as type , ? as process', ['مشتريات', 3])
+                        ->when($startDate, fn($q) => $q->where('created_at', '>=', $startDate))
+                        ->when($endDate, fn($q) => $q->where('created_at', '<=', $endDate))
+                        ->groupBy(DB::raw('created_at'))
                 )
-                ->unionAll($buildQuery('purchases_details', 'created_at', 'مشتريات', 3))
                 ->unionAll($buildQuery('head_back_sales_details', 'created_at', 'مرتجع مبيعات', 4))
                 ->unionAll($buildQuery('head_back_purchases_details', 'created_at', 'مرتجع مشتريات', 5))
                 ->unionAll(
@@ -186,7 +194,7 @@ class ProductiveMovementController extends Controller
             ->when($endDate, fn($q) => $q->where('created_at', '<=', $endDate))
             ->first();
 
-        $purchases_details = DB::table('purchases_details')
+        $purchases_details = PurchasesDetails::whereHas('purchases', fn($q) => $q->where('status', PurchaseStatus::COMPLETED))
             ->selectRaw('SUM(amount) as total_amount, SUM(bouns) as total_bouns')
             ->when($productive_id, fn($q) => $q->where('productive_id', $productive_id))
             ->when($storage, fn($q) => $q->where('storage_id', $storage))

@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Enum\PurchaseStatus;
+use App\Models\PurchasesDetails;
 use DateTime;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
@@ -32,10 +34,10 @@ class ProductBalance
         };
 
         // Query summaries
-        $salesDetails = $applyFilters(DB::table('sales_details')->selectRaw('SUM(amount) as total_amount')->where('is_prepared', 1)->where('productive_id', $this->productId))->first();
-        $purchasesDetails = $applyFilters(DB::table('purchases_details')->selectRaw('SUM(amount) as total_amount')->where('productive_id', $this->productId))->first();
-        $headBackSalesDetails = $applyFilters(DB::table('head_back_sales_details')->selectRaw('SUM(amount) as total_amount')->where('productive_id', $this->productId))->first();
-        $headBackPurchasesDetails = $applyFilters(DB::table('head_back_purchases_details')->selectRaw('SUM(amount) as total_amount')->where('productive_id', $this->productId))->first();
+        $salesDetails = $applyFilters(DB::table('sales_details')->selectRaw('SUM(amount+ bouns) as total_amount')->where('is_prepared', 1)->where('productive_id', $this->productId))->first();
+        $purchasesDetails = $applyFilters(PurchasesDetails::whereHas('purchases', fn($q) => $q->where('status', PurchaseStatus::COMPLETED))->selectRaw('SUM(amount+ bouns) as total_amount')->where('productive_id', $this->productId))->first();
+        $headBackSalesDetails = $applyFilters(DB::table('head_back_sales_details')->selectRaw('SUM(amount+ bouns) as total_amount')->where('productive_id', $this->productId))->first();
+        $headBackPurchasesDetails = $applyFilters(DB::table('head_back_purchases_details')->selectRaw('SUM(amount+ bouns) as total_amount')->where('productive_id', $this->productId))->first();
 
         // Individual sums
         $destructionDetails = $applyFilters(DB::table('destruction_details')->where('productive_id', $this->productId))->sum('amount');
@@ -56,10 +58,12 @@ class ProductBalance
         int|float $newGrossPrice,
         int|float $newNetPrice,
         int|float|null $oldNetPrice,
-        int|float $likelyDiscount
+        int|float $likelyDiscount,
+        int|float|null $bouns
     ): float {
         if (!$oldNetPrice) {
-            return $likelyDiscount;
+            return \number_format(
+                $this->firstPrice($bouns, $newAmount, $newNetPrice, $newGrossPrice), 2);
         }
         // Guard clause for zero gross price
         if ($newGrossPrice === 0) {
@@ -79,7 +83,7 @@ class ProductBalance
         // Calculate price difference percentage
         $priceDifference = $newGrossPrice - $averagePrice;
 
-        return $this->calculateDiscountPercentage($priceDifference, $newGrossPrice);
+        return \number_format($this->calculateDiscountPercentage($priceDifference, $newGrossPrice), 2);
     }
 
     /**
@@ -108,6 +112,21 @@ class ProductBalance
      */
     private function calculateDiscountPercentage(float $priceDifference, int $newGrossPrice): float
     {
+        if ($priceDifference > 0) {
+            return ($priceDifference / $newGrossPrice) * 100;
+        }
+
+        return (abs($priceDifference) / $newGrossPrice) * 100 + 1;
+    }
+
+
+    public function firstPrice($bouns, $newAmount, $newNetPrice, $newGrossPrice)
+    {
+        $itemPrice = $newNetPrice / $newAmount + $bouns;
+        $priceOfBouns = $itemPrice * $bouns;
+        $totalNetPrice = $newNetPrice - $priceOfBouns;
+        $priceDifference = $newGrossPrice - $totalNetPrice;
+
         if ($priceDifference > 0) {
             return ($priceDifference / $newGrossPrice) * 100;
         }

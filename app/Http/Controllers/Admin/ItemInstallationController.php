@@ -226,7 +226,7 @@ class ItemInstallationController extends Controller
             ->get();
 
         $productive = Productive::findOrFail($request->productId);
-        $productive_buy_price = $productive->one_buy_price;
+        $productive_buy_price = $productive->audience_price;
         $latestPurchaseForProductive = DB::table('purchases_details')->where('productive_id', $request->productId)->latest()->first();
 
         return response()->json([
@@ -248,20 +248,7 @@ class ItemInstallationController extends Controller
         $productive = Productive::with(['batches' => function ($query) {
             $query->orderBy('created_at', 'desc');
         }])->findOrFail($id);
-        $productive_buy_price = $productive->one_buy_price;
-        $latestPurchaseForProductive = DB::table('purchases_details')->where('productive_id', $id)->orderBy('id', 'desc')->first();
-        $batch = 0;
-        if ($latestPurchaseForProductive) {
-            $productive_buy_price = $latestPurchaseForProductive->productive_buy_price;
-            $batch = $latestPurchaseForProductive->batch_number;
-        }
-
-        $productive_sale_price = $productive->one_sell_price;
-        $latestSalesForProductive = DB::table('sales_details')->where('productive_id', $id)->orderBy('id', 'desc')->first();
-        if ($latestSalesForProductive) {
-            $productive_sale_price = $latestSalesForProductive->productive_sale_price ?? 0;
-        }
-
+        
         return response()->json([
             'status' => true,
             'productive' => $productive,
@@ -269,9 +256,8 @@ class ItemInstallationController extends Controller
             'unit' => $productive->unit->title ?? '',
             'name' => $productive->name,
             'productive_id' => $productive->id,
-            'productive_buy_price' => $productive_buy_price,
-            'productive_sale_price' => $productive_sale_price,
-            'batch_number' => $batch,
+            'productive_buy_price' => $productive->audience_price,
+            'productive_sale_price' => $productive->audience_price,
         ]);
     }
     public function getProductiveTamDetails($id)

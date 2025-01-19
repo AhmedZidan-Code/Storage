@@ -27,6 +27,10 @@ class Productive extends Model
     {
         return $this->belongsTo(Company::class, 'company_id');
     }
+    public function shape()
+    {
+        return $this->belongsTo(Shape::class, 'shape_id');
+    }
     public function batches()
     {
         return $this->hasMany(PurchasesDetails::class, 'productive_id')

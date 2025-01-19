@@ -25,11 +25,7 @@
                         <th> الوحدة</th>
                         <th> التصنيف</th>
                         <th> الشركة</th>
-                        <th> سعر الشراء</th>
-                        {{-- <th> سعر شراء المجموعة</th> --}}
-                        <th> سعر البيع </th>
-                        {{-- <th> سعر بيع المجموعة</th> --}}
-                        {{-- <th> عدد الوحدات داخل القطعة</th> --}}
+                        <th> سعر الجمهور</th>
                         <th> تاريخ الانشاء</th>
                         <th>العمليات</th>
                     </tr>
@@ -104,25 +100,9 @@
                 name: 'company.title'
             },
             {
-                data: 'one_buy_price',
-                name: 'one_buy_price'
+                data: 'audience_price',
+                name: 'audience_price'
             },
-            // {
-            //     data: 'packet_buy_price',
-            //     name: 'packet_buy_price'
-            // },
-            {
-                data: 'one_sell_price',
-                name: 'one_sell_price'
-            },
-            // {
-            //     data: 'packet_sell_price',
-            //     name: 'packet_sell_price'
-            // },
-            // {
-            //     data: 'num_pieces_in_package',
-            //     name: 'num_pieces_in_package'
-            // },
             {
                 data: 'created_at',
                 name: 'created_at'
@@ -148,6 +128,25 @@
                     allowClear: true,
                     ajax: {
                         url: '{{ route('admin.get-companies') }}',
+                        dataType: 'json',
+                        delay: 250,
+                        data: function(params) {
+                            return {
+                                term: params.term || '',
+                                page: params.page || 1
+                            }
+                        },
+                        cache: true
+                    }
+                });
+            }, 1500);
+            setTimeout(() => {
+                $(`#shape_id`).select2({
+                    placeholder: 'searching For Supplier...',
+                    dropdownParent: $('#Modal'),
+                    allowClear: true,
+                    ajax: {
+                        url: '{{ route('admin.get-shapes') }}',
                         dataType: 'json',
                         delay: 250,
                         data: function(params) {

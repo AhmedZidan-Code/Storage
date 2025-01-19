@@ -10,7 +10,7 @@
             <h5 class="card-title mb-0 flex-grow-1">المشتريات</h5>
 
             <div>
-                <a href="{{ route('purchases-requests.create') }}" class="btn btn-primary">اضافة عملية شراء</a>
+                <a href="{{ route('purchases.create') }}" class="btn btn-primary">اضافة عملية شراء</a>
             </div>
 
         </div>
