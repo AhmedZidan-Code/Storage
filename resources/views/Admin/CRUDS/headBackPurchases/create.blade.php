@@ -3,6 +3,24 @@
     اضافة عملية ارجاع
 @endsection
 @section('css')
+    <style>
+        /* For all browsers */
+        input[type="number"] {
+            -moz-appearance: textfield;
+            /* Firefox */
+            -webkit-appearance: none;
+            /* Chrome, Safari, and Edge */
+            appearance: none;
+            /* Standard */
+        }
+
+        /* Optional: Remove extra margin/padding in Firefox */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
 @endsection
 @section('content')
     <div class="card">

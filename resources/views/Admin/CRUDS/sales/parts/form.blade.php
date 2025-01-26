@@ -113,9 +113,18 @@
                             </select>
                         </th>
                         <th>
-                            <input data-id="1" onkeyup="callTotal()" class="form-control navigable"
-                                onkeyup="callTotal()" type="number" value="1" min="1" name="amount[]"
+                            <input data-id="1" onkeyup="callTotal(); checkBalance(this);" class="form-control navigable"
+                                 type="number" value="1" min="1" name="amount[]"
                                 id="amount-1" style="width: 100px; text-align: center;">
+                            <input data-id="1" class="form-control navigable"
+                                type="hidden" 
+                                id="limit_for_request-1" style="width: 100px; text-align: center;" disabled>
+                            <input data-id="1" class="form-control navigable"
+                                type="hidden" 
+                                id="limit_for_sale-1" style="width: 100px; text-align: center;" disabled>
+                            <input data-id="1" class="form-control navigable"
+                                type="hidden" 
+                                id="product_balance-1" style="width: 100px; text-align: center;" disabled>
 
                         </th>
                         <th>

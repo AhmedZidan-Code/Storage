@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\PreparingItemController;
 use App\Http\Controllers\Admin\ProductAdjustmentController;
 use App\Http\Controllers\Admin\ProductionController;
 use App\Http\Controllers\Admin\ProductiveController;
+use App\Http\Controllers\Admin\ProductLowBalanceController;
 use App\Http\Controllers\Admin\PurchasesController;
 use App\Http\Controllers\Admin\PurchasesRequestController;
 use App\Http\Controllers\Admin\RasiedAyniController;
@@ -215,6 +216,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::resource('/cheques', ChequeController::class)->only('index');
     Route::post('/update-cheque-status', [ChequeController::class, 'changeStatusChequeStatus'])->name('admin.changeStatusChequeStatus');
     Route::get('/customer-balance', [SalesController::class, 'customerBalance'])->name('admin.customerBalance');
+    
+    //products-low-balance
+    Route::get('/products-low-balance', [ProductLowBalanceController::class, 'index'])->name('admin.products-low-balance');
 
     //client_subscriptions
     Route::resource('/client-subscriptions', ClientSubscriptionController::class);

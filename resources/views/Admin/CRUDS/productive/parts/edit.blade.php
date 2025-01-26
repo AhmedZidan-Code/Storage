@@ -29,11 +29,20 @@
         <div class="d-flex flex-column mb-7 fv-row col-sm-3">
             <!--begin::Label-->
             <label for="limit_for_request" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                <span class="required mr-1">حد الطلب</span>
+                <span class="required mr-1">حد الإعتماد</span>
             </label>
             <!--end::Label-->
             <input id="limit_for_request" required type="text" class="form-control form-control-solid" name="limit_for_request"
                 value="{{ @$row->limit_for_request }}" />
+        </div>
+        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
+            <!--begin::Label-->
+            <label for="limit_for_sale" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                <span class="required mr-1">حد البيع</span>
+            </label>
+            <!--end::Label-->
+            <input id="limit_for_sale" required type="text" class="form-control form-control-solid" name="limit_for_sale"
+                value="{{ @$row->limit_for_sale }}" />
         </div>
         <div class="d-flex flex-column mb-7 fv-row col-sm-3">
             <!--begin::Label-->
@@ -51,7 +60,7 @@
 
         </div>
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
             <!--begin::Label-->
             <label for="unit_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1">الوحدة </span>
@@ -67,7 +76,7 @@
 
         </div>
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
             <!--begin::Label-->
             <label for="one_buy_price" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1">سعر الجمهور </span>
@@ -78,7 +87,7 @@
         </div>
 
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-4 ">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-3 ">
             <label for="company_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> الشركة</span>
             </label>
@@ -87,7 +96,7 @@
                 <option selected value="{{ $row->company_id }}">{{ $row->company->title }}</option>
             </select>
         </div>
-        <div class="d-flex flex-column mb-7 fv-row col-sm-4 ">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-3 ">
             <label for="shape_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> شكل المنتج</span>
             </label>
@@ -96,7 +105,7 @@
             </select>
         </div>
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-4 ">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-3 ">
             <label for="zone_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> المنطقة</span>
             </label>
@@ -109,12 +118,12 @@
                 @endforeach
             </select>
         </div>
-        <div class="d-flex flex-column mb-7 fv-row col-sm-4 ">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-3 ">
             <label for="zone_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                <span class="required mr-1"> المدينة</span>
+                <span class="required mr-1"> الرف</span>
             </label>
             <select class="form-control" id="city_id" name="zones_setting_id">
-                <option value="" disabled>اختر المدينة</option>
+                <option value="" disabled>اختر الرف</option>
                 @if ($city)
                     <option value="{{ $city->id }}" selected>
                         {{ $city->title }}</option>

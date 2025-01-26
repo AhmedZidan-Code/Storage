@@ -101,8 +101,8 @@
                             </th>
                             <th>
                                 <select class="form-control selectClass" data-id="{{ $key }}"
-                                    name="batch_number[]" id="batch_number-{{ $key }}" style="width: 100px; text-align: center;"
-                                    onchange="getPrice({{ $key }})">
+                                    name="batch_number[]" id="batch_number-{{ $key }}"
+                                    style="width: 100px; text-align: center;" onchange="getPrice({{ $key }})">
                                     @forelse ($pivot->product->batches ?? [] as $batch)
                                         <option value="{{ $batch->batch_number }}"
                                             {{ $batch->batch_number == $pivot->batch_number ? 'selected' : '' }}>
@@ -114,16 +114,24 @@
                                 </select>
                             </th>
                             <th>
-                                <input data-id="{{ $key }}" onchange="callTotal()" onkeyup="callTotal()"
+                                <input data-id="{{ $key }}"  onkeyup="callTotal(); checkBalance(this);"
                                     type="number" value="{{ $pivot->amount }}" min="1" name="amount[]"
                                     id="amount-{{ $key }}" class="form-control navigable"
                                     style="width: 100px; text-align: center;">
+                                <input data-id="{{ $key }}" class="form-control navigable" type="hidden"
+                                    id="limit_for_request-{{ $key }}"
+                                    style="width: 100px; text-align: center;" disabled>
+                                <input data-id="{{ $key }}" class="form-control navigable" type="hidden"
+                                    id="limit_for_sale-{{ $key }}" style="width: 100px; text-align: center;"
+                                    disabled>
+                                <input data-id="{{ $key }}" class="form-control navigable" type="hidden"
+                                    id="product_balance-{{ $key }}"
+                                    style="width: 100px; text-align: center;" disabled>
 
                             </th>
                             <th>
-                                <input data-id="{{ $key }}" step=".1" type="number" 
-                                    min="1" name="productive_sale_price[]"
-                                    value="{{ $pivot->productive_buy_price }}"
+                                <input data-id="{{ $key }}" step=".1" type="number" min="1"
+                                    name="productive_sale_price[]" value="{{ $pivot->productive_buy_price }}"
                                     id="productive_sale_price-{{ $key }}" class="form-control"
                                     style="width: 100px; text-align: center;">
 
@@ -136,21 +144,21 @@
                             </th>
                             <th style="padding: 8px;">
                                 <input data-id="{{ $key }}" step=".1" type="number"
-                                    value="{{ $pivot->likely_discount - $pivot->discount_percentage }}" min="0"
-                                    name="discount_percentage[]" id="discount_percentage-{{ $key }}"
-                                    class="form-control navigable" style="width: 100px; text-align: center;"
-                                    onkeyup="callTotal()">
+                                    value="{{ $pivot->likely_discount - $pivot->discount_percentage }}"
+                                    min="0" name="discount_percentage[]"
+                                    id="discount_percentage-{{ $key }}" class="form-control navigable"
+                                    style="width: 100px; text-align: center;" onkeyup="callTotal()">
                             </th>
                             <th style="padding: 8px;">
                                 <input data-id="{{ $key }}" step=".1" type="number" readonly
-                                    value="{{ $pivot->likely_discount }}" min="0"
-                                    name="likely_discount[]" id="likely_discount-{{ $key }}"
-                                    class="form-control " style="width: 100px; text-align: center;"
-                                    {{-- onkeyup="callTotal()" --}}>
+                                    value="{{ $pivot->likely_discount }}" min="0" name="likely_discount[]"
+                                    id="likely_discount-{{ $key }}" class="form-control "
+                                    style="width: 100px; text-align: center;" {{-- onkeyup="callTotal()" --}}>
                             </th>
                             <th>
                                 <input type="number" disabled value="{{ $pivot->total }}" min="1"
-                                    name="total[]" id="total-{{ $key }}" style="width: 100px; text-align: center;">
+                                    name="total[]" id="total-{{ $key }}"
+                                    style="width: 100px; text-align: center;">
 
                             </th>
                             <th>
@@ -176,8 +184,9 @@
                         <th colspan="1" style="text-align: center; background-color: aqua">نسبة الخصم الكلية</th>
                         <th colspan="2" style="text-align: center; background-color: gray">
                             <input type="number" id="total_discount" value="{{ $row->total_discount }}"
-                                min="0" max="99" name="total_discount" style="width: 100px; text-align: center;"
-                                onkeyup="totalAfterDiscount()"> <!-- Adjusted width -->
+                                min="0" max="99" name="total_discount"
+                                style="width: 100px; text-align: center;" onkeyup="totalAfterDiscount()">
+                            <!-- Adjusted width -->
                         </th>
                         <th colspan="2" style="text-align: center; background-color: rgb(196, 251, 30)"> الاجمالي
                             بعد الخصم الكلي</th>

@@ -24,7 +24,7 @@
         </select>
     </th>
     <th>
-        <input data-id="{{ $id }}" class="form-control navigable" onkeyup="callTotal()" type="number"
+        <input data-id="{{ $id }}" class="form-control navigable" onkeyup="callTotal(); checkBalance(this);" type="number"
             value="1" min="1" name="amount[]" id="amount-{{ $id }}"
             style="width: 100px; text-align: center;">
 

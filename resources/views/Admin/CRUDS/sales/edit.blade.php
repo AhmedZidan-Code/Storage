@@ -3,6 +3,25 @@
     تعديل عملية بيع
 @endsection
 @section('css')
+    <style>
+        /* For all browsers */
+        input[type="number"] {
+            -moz-appearance: textfield;
+            /* Firefox */
+            -webkit-appearance: none;
+            /* Chrome, Safari, and Edge */
+            appearance: none;
+            /* Standard */
+        }
+
+        /* Optional: Remove extra margin/padding in Firefox */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 @endsection
 @section('content')
     <div class="card">
@@ -21,6 +40,8 @@
     @section('js')
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const form = document.getElementById('form');
@@ -161,38 +182,6 @@
             })
         </script>
 
-
-        <script>
-            // $(document).on('click', '#addNewDetails', function(e) {
-            //     e.preventDefault();
-            //     $.ajax({
-            //         type: 'GET',
-            //         url: "{{ route('admin.makeRowDetailsForSalesDetails') }}",
-
-            //         success: function(res) {
-
-            //             $('#details-container').append(res.html);
-            //             $("html,body").animate({
-            //                 scrollTop: $(document).height()
-            //             }, 1000);
-
-
-            //             loadScript(res.id);
-            //             callTotal();
-
-
-            //         },
-            //         error: function(data) {
-            //             // location.reload();
-            //         }
-            //     });
-
-
-            // })
-        </script>
-
-
-
         <script>
             function loadScript(id) {
                 $(`#productive_id-${id}`).select2({
@@ -241,6 +230,9 @@
                         $(`#productive_sale_price-${rowId}`).val(res.productive_buy_price);
                         $(`#likely_discount-${rowId}`).val(res.active_likely_discount);
                         $(`#discount_percentage-${rowId}`).val(res.client_discount);
+                        $(`#limit_for_sale-${rowId}`).val(res.productive.limit_for_sale);
+                        $(`#limit_for_request-${rowId}`).val(res.productive.limit_for_request);
+                        $(`#product_balance-${rowId}`).val(res.product_balance);
                         const selectElement = document.getElementById('batch_number-' + rowId);
                         let options = res.batches;
                         selectElement.innerHTML = '';
@@ -261,6 +253,8 @@
                         }
 
                         callTotal();
+                        $('#client_id').prop('disabled', true);
+                        $('#storage_id').prop('disabled', true);
                     },
                     error: function(data) {
 
@@ -298,6 +292,25 @@
                 $('#total_after_discount').val(after_disc.toFixed(2))
                 let balance = parseFloat(after_disc) + parseFloat($('#initial_balance').val());
                 $('#balance_after_sale').val(balance.toFixed(2));
+            }
+
+            function checkBalance(element) {
+                let rowId = $(element).data('id');
+                let amount = element.value;
+                let limit_for_sale = $('#limit_for_sale-' + rowId).val();
+                let limit_for_request = $('#limit_for_request-' + rowId).val();
+                let product_balance = $('#product_balance-' + rowId).val();
+                if (!$('#productive_id-' + rowId).val()) {
+                    toastr.error('من فضلك اختر الصنف أولاً');
+                    return;
+                }
+                if (product_balance < amount) {
+                    toastr.error('الكمية المطلوبة غير متاحة');
+                }
+                if (limit_for_sale < amount && limit_for_sale != 0) {
+                    toastr.error('هذه الكمية غير مسموح بخروجها');
+                }
+
             }
         </script>
         <script>

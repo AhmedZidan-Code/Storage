@@ -7,6 +7,7 @@ use App\Models\Client;
 use App\Models\ItemInstallation;
 use App\Models\ItemInstallationDetails;
 use App\Models\Productive;
+use App\Services\ProductBalance;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
@@ -228,10 +229,11 @@ class ItemInstallationController extends Controller
         $productive = Productive::findOrFail($request->productId);
         $productive_buy_price = $productive->audience_price;
         $latestPurchaseForProductive = DB::table('purchases_details')->where('productive_id', $request->productId)->latest()->first();
-
+        $productBalance = (new ProductBalance($request->productId))->calculateBalance();
         return response()->json([
             'status' => true,
             'productive' => $productive,
+            'product_balance' => $productBalance,
             'code' => $productive->code,
             'unit' => $productive->unit->title ?? '',
             'name' => $productive->name,
