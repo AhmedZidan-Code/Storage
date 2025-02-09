@@ -69,7 +69,8 @@
                         <th>سعر الجمهور</th>
                         <th>بونص</th>
                         <th>نسبة الخصم</th>
-                        <th> الخصم المرجح</th>
+                        <th>مرجح الشراء</th>
+                        <th>مرجح البيع</th>
                         <th> القيمة الاجمالية</th>
                         <th>العمليات</th>
                     </tr>
@@ -114,7 +115,7 @@
                                 </select>
                             </th>
                             <th>
-                                <input data-id="{{ $key }}"  onkeyup="callTotal(); checkBalance(this);"
+                                <input data-id="{{ $key }}" onkeyup="callTotal(); checkBalance(this);"
                                     type="number" value="{{ $pivot->amount }}" min="1" name="amount[]"
                                     id="amount-{{ $key }}" class="form-control navigable"
                                     style="width: 100px; text-align: center;">
@@ -149,11 +150,17 @@
                                     id="discount_percentage-{{ $key }}" class="form-control navigable"
                                     style="width: 100px; text-align: center;" onkeyup="callTotal()">
                             </th>
+
                             <th style="padding: 8px;">
                                 <input data-id="{{ $key }}" step=".1" type="number" readonly
                                     value="{{ $pivot->likely_discount }}" min="0" name="likely_discount[]"
                                     id="likely_discount-{{ $key }}" class="form-control "
                                     style="width: 100px; text-align: center;" {{-- onkeyup="callTotal()" --}}>
+                            </th>
+                            <th>
+                                <input data-id="{{ $key }}" type="number" class="form-control" value="{{ $pivot->likely_sale }}" min="0" readonly
+                                    name="likely_sale[]" id="likely_sale-{{ $key }}"
+                                    style="width: 100px; text-align: center;">
                             </th>
                             <th>
                                 <input type="number" disabled value="{{ $pivot->total }}" min="1"

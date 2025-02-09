@@ -68,7 +68,8 @@
                 <span class="required mr-1"> اختر الموزع</span>
             </label>
 
-            <select name="distributor_id" class="form-control select2 distributor_id" id='distributor_id' style='width: 100%;'>
+            <select name="distributor_id" class="form-control select2 distributor_id" id='distributor_id'
+                style='width: 100%;'>
             </select>
 
         </div>
@@ -76,13 +77,28 @@
         <div class="d-flex flex-column mb-7 fv-row col-sm-4">
             <!--begin::Label-->
             <label for="tele_sales" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                <span class="required mr-1"> التلي سيلز</span>
+                <span class="required mr-1"> التلي سيلز الصباحي</span>
             </label>
 
-            <select id="tele_sales" name="tele_sales" class="form-control">
-                <option selected disabled>اختر المحافظة</option>
-                <option value="1"> صباحي</option>
-                <option value="2"> مسائي</option>
+            <select id="tele_sales" name="tele_sales_am" class="form-control">
+                <option selected disabled>اختر التلي سيلز الصباحي</option>
+                @foreach ($employees as $employee)
+                    <option value="{{ $employee->id }}"> {{ $employee->name }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
+            <!--begin::Label-->
+            <label for="tele_sales" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                <span class="required mr-1"> التلي سيلز المسائي</span>
+            </label>
+
+            <select id="tele_sales" name="tele_sales_pm" class="form-control">
+                <option selected disabled>اختر التلي سيلز المسائي</option>
+                @foreach ($employees as $employee)
+                    <option value="{{ $employee->id }}"> {{ $employee->name }}</option>
+                @endforeach
             </select>
         </div>
 
@@ -144,7 +160,7 @@
             <input id="commercial_register" required type="text" class="form-control form-control-solid"
                 name="commercial_register" value="" />
         </div>
-        <div class="d-flex flex-column mb-7 fv-row col-sm-6">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
             <!--begin::Label-->
             <label for="tax_card" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1">البطاقة الضريبية</span>
@@ -153,7 +169,7 @@
             <input id="tax_card" required type="text" class="form-control form-control-solid" name="tax_card"
                 value="" />
         </div>
-        <div class="d-flex flex-column mb-7 fv-row col-sm-6">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
             <!--begin::Label-->
             <label for="previous_indebtedness" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1">المديونية السابقة</span>

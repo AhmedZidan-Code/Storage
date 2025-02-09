@@ -81,6 +81,7 @@
                         <th>سعر الجمهور</th>
                         <th>بونص</th>
                         <th>نسبة الخصم</th>
+                        <th>مرجح الشراء</th>
                         <th>مرجح البيع</th>
                         <th> القيمة الاجمالية</th>
                         <th>العمليات</th>
@@ -103,7 +104,8 @@
                         </th>
                         <th>
                             <input type="text" disabled id="productive_code-1">
-                            <input name="company_id[]" data-id="1" type="hidden" value="" id="company_id-1" style="width: 100px; text-align: center;">
+                            <input name="company_id[]" data-id="1" type="hidden" value="" id="company_id-1"
+                                style="width: 100px; text-align: center;">
 
                         </th>
                         <th>
@@ -113,40 +115,45 @@
                             </select>
                         </th>
                         <th>
-                            <input data-id="1" onkeyup="callTotal(); checkBalance(this);" class="form-control navigable"
-                                 type="number" value="1" min="1" name="amount[]"
-                                id="amount-1" style="width: 100px; text-align: center;">
-                            <input data-id="1" class="form-control navigable"
-                                type="hidden" 
-                                id="limit_for_request-1" style="width: 100px; text-align: center;" disabled>
-                            <input data-id="1" class="form-control navigable"
-                                type="hidden" 
-                                id="limit_for_sale-1" style="width: 100px; text-align: center;" disabled>
-                            <input data-id="1" class="form-control navigable"
-                                type="hidden" 
+                            <input data-id="1" onkeyup="callTotal(); checkBalance(this);"
+                                class="form-control navigable" type="number" value="1" min="1"
+                                name="amount[]" id="amount-1" style="width: 100px; text-align: center;">
+                            <input data-id="1" class="form-control navigable" type="hidden" id="limit_for_request-1"
+                                style="width: 100px; text-align: center;" disabled>
+                            <input data-id="1" class="form-control navigable" type="hidden" id="limit_for_sale-1"
+                                style="width: 100px; text-align: center;" disabled>
+                            <input data-id="1" class="form-control navigable" type="hidden"
                                 id="product_balance-1" style="width: 100px; text-align: center;" disabled>
 
                         </th>
                         <th>
                             <input data-id="1" step=".1" onchange="callTotal()" onkeyup="callTotal()"
                                 type="number" value="1" min="1" name="productive_sale_price[]"
-                                id="productive_sale_price-1" class="form-control navigable" style="width: 100px; text-align: center;">
+                                id="productive_sale_price-1" class="form-control navigable"
+                                style="width: 100px; text-align: center;">
 
                         </th>
                         <th>
                             <input type="number" class="form-control navigable" value="0" min="0"
-                                name="bouns[]" id="bouns-1" style="width: 100px; text-align: center;"> <!-- Adjusted width -->
+                                name="bouns[]" id="bouns-1" style="width: 100px; text-align: center;">
+                            <!-- Adjusted width -->
                         </th>
                         <th>
                             <input type="number" value="0" min="0" name="discount_percentage[]"
-                                id="discount_percentage-1" class="form-control navigable" style="width: 100px; text-align: center;"
-                                onkeyup="callTotal()"> <!-- Adjusted width -->
+                                id="discount_percentage-1" class="form-control navigable"
+                                style="width: 100px; text-align: center;" onkeyup="callTotal()">
+                            <!-- Adjusted width -->
                         </th>
                         <th>
-                            <input type="number" class="form-control navigable" value="0" min="0" readonly
-                                name="likely_discount[]" id="likely_discount-1" style="width: 100px; text-align: center;"
-                                {{-- onkeyup="callTotal()" --}}>
+                            <input type="number" class="form-control" value="0" min="0"
+                                readonly name="likely_discount[]" id="likely_discount-1"
+                                style="width: 100px; text-align: center;" {{-- onkeyup="callTotal()" --}}>
                             <!-- Adjusted width -->
+                        </th>
+                        <th>
+                            <input type="number" class="form-control" value="0" min="0"
+                                readonly name="likely_sale[]" id="likely_sale-1"
+                                style="width: 100px; text-align: center;">
                         </th>
                         <th>
                             <input type="number" disabled value="1" min="1" name="total[]"
@@ -176,10 +183,11 @@
                         <th style=" background-color: #6c757d;color: white">الاجمالي</th>
                         <th id="total_productive_sale_price" style=" background-color: #6c757d;color: white">1
                         </th>
-                        <th  style=" background-color: #6c757d;color: white">نسبة الخصم الكلية</th>
+                        <th style=" background-color: #6c757d;color: white">نسبة الخصم الكلية</th>
                         <th style=" background-color: #6c757d;color: white">
                             <input type="number" id="total_discount" value="0" min="0" max="99"
-                                name="total_discount" style="width: 100px; text-align: center;" onkeyup="totalAfterDiscount()">
+                                name="total_discount" style="width: 100px; text-align: center;"
+                                onkeyup="totalAfterDiscount()">
                             <!-- Adjusted width -->
                         </th>
                         <th style=" background-color: #6c757d;color: white"> الاجمالي

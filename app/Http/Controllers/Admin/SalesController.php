@@ -197,11 +197,13 @@ class SalesController extends Controller
             'bouns' => 'required|array',
             'discount_percentage' => 'required|array',
             'likely_discount' => 'required|array',
+            'likely_sale' => 'required|array',
             'batch_number' => 'required|array',
             'bouns.*' => 'required',
             'discount_percentage.*' => 'required|numeric|max:100|min:0',
             'batch_number.*' => 'required',
             'likely_discount.*' => 'required',
+            'likely_sale.*' => 'required',
         ]);
 
         if (count($request->amount) !== count($request->productive_id)) {
@@ -227,7 +229,8 @@ class SalesController extends Controller
                 'governorate_id' => $client->governorate_id,
                 'city_id' => $client->city_id,
                 'region_id' => $client->region_id,
-                'tele_sales' => $client->tele_sales,
+                'tele_sales_am' => $client->tele_sales_am,
+                'tele_sales_pm' => $client->tele_sales_pm,
                 'representative_id' => $client->representative_id,
                 'distributor_id' => $client->distributor_id,
                 'client_subscription_id' => $client->client_subscription_id,
@@ -269,6 +272,7 @@ class SalesController extends Controller
                 'bouns' => $request->bouns[$i],
                 'discount_percentage' => $discountPercentage,
                 'likely_discount' => $request->likely_discount[$i],
+                'likely_sale' => $request->likely_sale[$i],
                 'profit_value' => ($request->discount_percentage[$i] * $salePrice / 100) * $amount,
                 'batch_number' => $request->batch_number[$i],
                 'productive_buy_price' => $salePrice,

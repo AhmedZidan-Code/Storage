@@ -24,8 +24,8 @@
         </select>
     </th>
     <th>
-        <input data-id="{{ $id }}" class="form-control navigable" onkeyup="callTotal(); checkBalance(this);" type="number"
-            value="1" min="1" name="amount[]" id="amount-{{ $id }}"
+        <input data-id="{{ $id }}" class="form-control navigable" onkeyup="callTotal(); checkBalance(this);"
+            type="number" value="1" min="1" name="amount[]" id="amount-{{ $id }}"
             style="width: 100px; text-align: center;">
 
     </th>
@@ -36,19 +36,23 @@
 
     </th>
     <th>
-        <input type="number" data-id="{{ $id }}" class="form-control navigable" value="0" min="0" name="bouns[]"
-            id="bouns-{{ $id }}" style="width: 100px; text-align: center;">
+        <input type="number" data-id="{{ $id }}" class="form-control navigable" value="0"
+            min="0" name="bouns[]" id="bouns-{{ $id }}" style="width: 100px; text-align: center;">
     </th>
     <th>
-        <input type="number" class="form-control navigable" data-id="{{ $id }}" value="0" min="0" name="discount_percentage[]"
-            id="discount_percentage-{{ $id }}" style="width: 100px; text-align: center;"
-            onkeyup="callTotal()">
+        <input type="number" class="form-control navigable" data-id="{{ $id }}" value="0"
+            min="0" name="discount_percentage[]" id="discount_percentage-{{ $id }}"
+            style="width: 100px; text-align: center;" onkeyup="callTotal()">
     </th>
     <th>
-        <input type="number" class="form-control navigable" data-id="{{ $id }}" value="0" min="0" readonly
-            name="likely_discount[]" id="likely_discount-{{ $id }}" style="width: 100px; text-align: center;"
-            {{-- onkeyup="callTotal()" --}}>
+        <input type="number" class="form-control navigable" data-id="{{ $id }}" value="0"
+            min="0" readonly name="likely_discount[]" id="likely_discount-{{ $id }}"
+            style="width: 100px; text-align: center;" {{-- onkeyup="callTotal()" --}}>
         <!-- Adjusted width -->
+    </th>
+    <th>
+        <input type="number" data-id="{{ $id }}" class="form-control" value="0" min="0" readonly
+            name="likely_sale[]" id="likely_sale-{{ $id }}" style="width: 100px; text-align: center;">
     </th>
     <th>
         <input type="number" disabled value="1" min="1" name="total[]" id="total-{{ $id }}"

@@ -227,6 +227,8 @@
                         $(`#productive_code-${rowId}`).val(res.code);
                         $(`#productive_sale_price-${rowId}`).val(res.productive_buy_price);
                         $(`#likely_discount-${rowId}`).val(res.active_likely_discount);
+                        $(`#likely_sale-${rowId}`).val(parseFloat(res.active_likely_discount) - parseFloat(
+                            res.client_discount));
                         $(`#discount_percentage-${rowId}`).val(res.client_discount);
                         $(`#limit_for_sale-${rowId}`).val(res.productive.limit_for_sale);
                         $(`#limit_for_request-${rowId}`).val(res.productive.limit_for_request);
@@ -251,8 +253,11 @@
                         }
 
                         callTotal();
-                        $('#client_id').prop('disabled', true);
-                        $('#storage_id').prop('disabled', true);
+                        // $('#client_id').prop('readonly', true);
+                        // $('#storage_id').prop('disabled', true);
+                        $('#client_id, #storage_id').on('select2:opening', function(e) {
+                            e.preventDefault(); // Prevent opening the dropdown
+                        });
                     },
                     error: function(data) {
 

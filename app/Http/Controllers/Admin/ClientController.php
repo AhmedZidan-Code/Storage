@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Area;
 use App\Models\Client;
 use App\Models\ClientSubscription;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 
@@ -70,9 +71,10 @@ class ClientController extends Controller
     {
         $governorates = Area::where('from_id', null)->get();
         $subscriptions = ClientSubscription::get();
+        $employees = Employee::get();
         $paymentCategories = PaymentCategory::getCategoriesSelect();
 
-        return view('Admin.CRUDS.clients.parts.create', compact('governorates', 'paymentCategories', 'subscriptions'));
+        return view('Admin.CRUDS.clients.parts.create', compact('governorates', 'paymentCategories', 'subscriptions', 'employees'));
     }
 
     public function store(Request $request)
@@ -124,8 +126,9 @@ class ClientController extends Controller
         $regions = Area::where('type', AreaType::REGION)->where('from_id', $row->city_id)->get();
         $subscriptions = ClientSubscription::get();
         $paymentCategories = PaymentCategory::getCategoriesSelect();
+        $employees = Employee::get();
 
-        return view('Admin.CRUDS.clients.parts.edit', compact('row', 'governorates', 'cities', 'regions', 'paymentCategories', 'subscriptions'));
+        return view('Admin.CRUDS.clients.parts.edit', compact('row', 'governorates', 'cities', 'regions', 'paymentCategories', 'subscriptions', 'employees'));
     }
 
     public function update(Request $request, $id)

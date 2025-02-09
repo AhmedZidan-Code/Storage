@@ -58,7 +58,7 @@
                 <span class="required mr-1"> اختر المندوب</span>
             </label>
 
-            <select name="representative_id" class="form-control select2 representative_id" id='representative_id' >
+            <select name="representative_id" class="form-control select2 representative_id" id='representative_id'>
                 <option value="{{ @$row->representative_id }}" selected>
                     {{ @$row->representative?->full_name }}</option>
             </select>
@@ -79,13 +79,29 @@
         <div class="d-flex flex-column mb-7 fv-row col-sm-4">
             <!--begin::Label-->
             <label for="tele_sales" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                <span class="required mr-1"> التلي سيلز</span>
+                <span class="required mr-1"> التلي سيلز الصباحي</span>
             </label>
 
-            <select id="tele_sales" name="tele_sales" class="form-control">
-                <option selected disabled>اختر المحافظة</option>
-                <option value="1" {{ @$row->tele_sales == 1 ? 'selected' : '' }}> صباحي</option>
-                <option value="2" {{ @$row->tele_sales == 2 ? 'selected' : '' }}> مسائي</option>
+            <select id="tele_sales" name="tele_sales_am" class="form-control">
+                <option selected disabled>اختر التلي سيلز الصباحي</option>
+                @foreach ($employees as $employee)
+                    <option value="{{ $employee->id }}" {{ @$row->tele_sales_am == $employee->id ? 'selected' : '' }}>
+                        {{ $employee->name }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
+            <!--begin::Label-->
+            <label for="tele_sales" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                <span class="required mr-1"> التلي سيلز المسائي</span>
+            </label>
+
+            <select id="tele_sales" name="tele_sales_pm" class="form-control">
+                <option selected disabled>اختر التلي سيلز المسائي</option>
+                @foreach ($employees as $employee)
+                    <option value="{{ $employee->id }}" {{ @$row->tele_sales_pm == $employee->id ? 'selected' : '' }}>
+                        {{ $employee->name }}</option>
+                @endforeach
             </select>
         </div>
 
@@ -158,7 +174,7 @@
             <input id="commercial_register" required type="text" class="form-control form-control-solid"
                 name="commercial_register" value="{{ @$row->commercial_register }}" />
         </div>
-        <div class="d-flex flex-column mb-7 fv-row col-sm-6">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
             <!--begin::Label-->
             <label for="tax_card" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1">البطاقة الضريبية</span>
@@ -168,7 +184,7 @@
                 value="{{ @$row->tax_card }}" />
         </div>
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-6">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
             <!--begin::Label-->
             <label for="previous_indebtedness" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1">المديونية السابقة</span>

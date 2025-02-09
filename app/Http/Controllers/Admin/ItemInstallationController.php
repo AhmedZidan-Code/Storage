@@ -241,7 +241,7 @@ class ItemInstallationController extends Controller
             'productive_buy_price' => $productive_buy_price,
             'batches' => $batches,
             'active_likely_discount' => $latestPurchaseForProductive->active_likely_discount ?? 0,
-            'client_discount' => $client->subscription ? $client->subscription->discount : 0,
+            'client_discount' => $client->subscription?->discount ?? 0,
         ]);
     }
 
