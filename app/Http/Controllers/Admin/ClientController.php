@@ -95,6 +95,8 @@ class ClientController extends Controller
             'tele_sales' => 'required|in:1,2',
             'commercial_register' => 'required|max:100',
             'tax_card' => 'required|max:100',
+            'tele_sales_am' => 'required',
+            'tele_sales_pm' => 'required',
         ]);
 
         $data['publisher'] = auth('admin')->user()->id;
@@ -146,7 +148,8 @@ class ClientController extends Controller
             'client_subscription_id' => 'required|exists:client_subscriptions,id',
             'region_id' => 'required|exists:areas,id',
             'distributor_id' => 'required|exists:representatives,id',
-            'tele_sales' => 'required|in:1,2',
+            'tele_sales_am' => 'required',
+            'tele_sales_pm' => 'required',
             'commercial_register' => 'required|max:100',
             'tax_card' => 'required|max:100',
 
