@@ -207,6 +207,8 @@
             $(document).on('change', '.changeKhamId', function() {
                 if (!$('#client_id').val()) {
                     alert('لابد من اختيار العميل أولاً.');
+                    $(this).val(null).trigger('change.select2');
+
                     return;
                 }
 
