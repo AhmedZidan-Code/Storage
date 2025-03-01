@@ -25,11 +25,9 @@
 @endsection
 @section('content')
     <div class="card">
-        <div class="card-header d-flex align-items-center">
+        <!-- <div class="card-header d-flex align-items-center">
             <h5 class="card-title mb-0 flex-grow-1">عملية بيع</h5>
-
-
-        </div>
+        </div> -->
         <div class="card-body">
 
             @include('Admin.CRUDS.sales.parts.form')
