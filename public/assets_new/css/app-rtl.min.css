@@ -4616,7 +4616,7 @@ div.dataTables_wrapper div.dataTables_filter input {
 
 .input_style {
   background-color: transparent !important;
-  height: 50px;
+  height: 40px;
   border: 2px solid #ddd;
   border-radius: 10px;
   padding: 0px 10px 0px 10px;
@@ -4627,7 +4627,7 @@ div.dataTables_wrapper div.dataTables_filter input {
   background-color: transparent !important;
   opacity: 1;
   width: 100% !important;
-  height: 50px !important;
+  height: 40px !important;
   border: 2px solid #ddd;
   border-radius: 10px !important;
   font-size: 15px;
@@ -4649,9 +4649,6 @@ div.dataTables_wrapper div.dataTables_filter input {
 .card {
   background: #f4fff8;
 }
-
-
-
 
 .table-responsive tr .th_bg {
   background: #0c6073 !important;
@@ -4703,7 +4700,7 @@ table .form-control.selectClass{
   width: 200px !important;
   background-color: transparent !important;
   opacity: 1;
-  height: 50px !important;
+  height: 40px !important;
   border:1px solid #b6b8b7;
   border-radius: 10px !important;
   font-size: 15px;
