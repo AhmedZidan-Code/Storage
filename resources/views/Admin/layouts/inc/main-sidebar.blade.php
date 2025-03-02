@@ -1,12 +1,10 @@
-<!-- ========== Left Sidebar Start ========== -->
-<div class="vertical-menu">
+ ========== Left Sidebar Start ==========
+<div class="vertical-menu no_sidebar">
 
     <div data-simplebar class="h-100">
 
-        <!--- Sidemenu -->
         <div id="sidebar-menu">
-            <!-- Left Menu Start -->
-            <!-- App Search-->
+
             <ul class="metismenu list-unstyled">
                 <li>
                     <form class="app-search d-none d-lg-block">
@@ -269,10 +267,6 @@
                 @endcanAdminAny
 
 
-
-
-
-
                 @canAdminAny('عرض الاهلاك')
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="{{ route('destruction.index') }}">
@@ -330,13 +324,10 @@
                 </li>
                 @endcanAdminAny
 
-                <!--</div>-->
             </ul>
         </div>
-        <!-- Sidebar -->
     </div>
 </div>
-<!-- Left Sidebar End -->
 
 <script>
     function myFunction() {
@@ -355,4 +346,4 @@
             }
         }
     }
-</script>
+</script> 
