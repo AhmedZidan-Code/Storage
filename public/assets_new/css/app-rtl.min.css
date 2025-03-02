@@ -4701,6 +4701,13 @@ table .select2-container{
 
 table .form-control.selectClass{
   width: 200px !important;
+  background-color: transparent !important;
+  opacity: 1;
+  height: 50px !important;
+  border:1px solid #b6b8b7;
+  border-radius: 10px !important;
+  font-size: 15px;
+  padding: 10px 0px 0px 10px;
 }
 
 body:not(:has(.no_sidebar)) .main-content .footer {
