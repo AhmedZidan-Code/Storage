@@ -1,5 +1,5 @@
  ========== Left Sidebar Start ==========
-<div class="vertical-menu no_sidebar">
+<!-- <div class="vertical-menu no_sidebar">
 
     <div data-simplebar class="h-100">
 
@@ -327,7 +327,7 @@
             </ul>
         </div>
     </div>
-</div>
+</div> -->
 
 <script>
     function myFunction() {
