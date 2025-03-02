@@ -4699,6 +4699,10 @@ table .select2-container{
   width: 200px !important;
 }
 
+table .form-control.selectClass{
+  width: 200px !important;
+}
+
 body:not(:has(.no_sidebar)) .main-content .footer {
   right: 0;
   width: 100%;

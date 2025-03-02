@@ -5,7 +5,7 @@ $locale = app()->getLocale();
 
 <header id="page-topbar">
     <div class="navbar-header">
-         <!-- <div class="d-flex no_sidebar">
+         <div class="d-flex no_sidebar">
             <div class="navbar-brand-box">
                 <a href="{{ url('/' . ($page = 'home')) }}" class="logo logo-dark">
                     <span class="logo-sm">
@@ -45,7 +45,7 @@ $locale = app()->getLocale();
             {{--                    </div> --}}
             {{--                </div> --}}
             {{--            </div> --}}
-        </div>  -->
+        </div> 
 
         <div class="d-flex">
             {{--            <form class="app-search d-none d-lg-block"> --}}
