@@ -1,6 +1,7 @@
 <form id="form" enctype="multipart/form-data" method="POST" action="{{ route('sales.store') }}">
     @csrf
 
+<h1 class="title_card">عملية البيع</h1>
     <!-- our_buttons -->
     <div class="buttons_sec">
         <a href="#" class="bttn_ref" data-bs-toggle="modal" data-bs-target="#exampleModal">حجم التعامل <i
@@ -180,21 +181,21 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <th style=" background-color: #6c757d;color: white">المديونية السابقة</th>
-                    <th style=" background-color: #6c757d;"> <input type="number" readonly id="initial_balance">
+                    <th colspan="1" style=" background-color: #6c757d;color: white">المديونية السابقة</th>
+                    <th  style=" background-color: #6c757d;"> <input type="number" readonly id="initial_balance">
                     </th>
-                    <th style=" background-color: #6c757d;color: white">المديونية بعد الفاتورة</th>
-                    <th style=" background-color: #6c757d;"><input type="number" readonly id="balance_after_sale"></th>
+                    <th  style=" background-color: #6c757d;color: white">المديونية بعد الفاتورة</th>
+                    <th colspan="2" style=" background-color: #6c757d;"><input type="number" readonly id="balance_after_sale"></th>
                     <th style=" background-color: #6c757d;color: white">الاجمالي</th>
                     <th id="total_productive_sale_price" style=" background-color: #6c757d;color: white">1
                     </th>
-                    <th style=" background-color: #6c757d;color: white">نسبة الخصم الكلية</th>
+                    <th  style=" background-color: #6c757d;color: white">نسبة الخصم الكلية</th>
                     <th style=" background-color: #6c757d;color: white">
                         <input type="number" id="total_discount" value="0" min="0" max="99" name="total_discount"
                             style="width: 100px; text-align: center;" onkeyup="totalAfterDiscount()">
                         <!-- Adjusted width -->
                     </th>
-                    <th style=" background-color: #6c757d;color: white"> الاجمالي
+                    <th  style=" background-color: #6c757d;color: white"> الاجمالي
                         بعد الخصم الكلي</th>
                     <th style=" background-color: #6c757d;color: white">
                         <input type="text" id="total_after_discount" value="" name="total_discount"

@@ -4724,6 +4724,24 @@ margin-right: 0;
 .done_bttn.close{
   background: #ee3158;
   border: unset;
-
 }
 
+.title_card {
+  text-align: center;
+  font-size: 25px;
+  padding-bottom: 13px;
+  border-bottom: 1px solid darkslateblue;
+  width: max-content;
+  margin: auto;
+  color: darkslateblue;
+  margin-bottom: 25px;
+}
+
+.table > :not(caption) > * > *{
+  padding: 3px;
+}
+
+tfoot th{
+  text-align: center;
+  font-size: 15px;
+}
