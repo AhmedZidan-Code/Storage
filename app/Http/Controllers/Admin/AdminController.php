@@ -18,7 +18,7 @@ class AdminController extends Controller
 
     public function __construct()
     {
-          $this->middleware('permission:عرض المستخدمين,admin')->only('index');
+        $this->middleware('permission:عرض المستخدمين,admin')->only('index');
         $this->middleware('permission:تعديل المستخدمين,admin')->only(['edit', 'update', 'activate']);
         $this->middleware('permission:إنشاء المستخدمين,admin')->only(['create', 'store']);
         $this->middleware('permission:حذف المستخدمين,admin')->only('destroy');
