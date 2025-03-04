@@ -4549,9 +4549,6 @@ div.dataTables_wrapper div.dataTables_filter input {
 }
 
 /* my css */
-
-
-
 .main-content {
   margin-right: 200px;
 }
@@ -4623,7 +4620,7 @@ div.dataTables_wrapper div.dataTables_filter input {
   font-size: 15px;
 }
 
-.select2-container--default .select2-selection--single {
+.multy_select .select2-container--default .select2-selection--single {
   background-color: transparent !important;
   opacity: 1;
   width: 100% !important;
@@ -4634,7 +4631,7 @@ div.dataTables_wrapper div.dataTables_filter input {
   padding: 10px 0px 0px 10px;
 }
 
-.select2-container--default .select2-selection--single .select2-selection__arrow {
+.multy_select .select2-container--default .select2-selection--single .select2-selection__arrow {
   height: 26px;
   position: absolute;
   top: 12px !important;
@@ -4642,7 +4639,7 @@ div.dataTables_wrapper div.dataTables_filter input {
   width: 20px;
 }
 
-.form-control.select2-hidden-accessible {
+.multy_select .form-control.select2-hidden-accessible {
   width: 100% !important;
 }
 
@@ -4688,15 +4685,15 @@ div.dataTables_wrapper div.dataTables_filter input {
   background: #3ec86c;
 }
 
-.select2-container{
+.multy_select .select2-container{
   width: 100% !important;
 }
 
-table .select2-container{
+.tabel_salle table .select2-container{
   width: 200px !important;
 }
 
-table .form-control.selectClass{
+.tabel_salle table .form-control.selectClass{
   width: 200px !important;
   background-color: transparent !important;
   opacity: 1;
@@ -4737,11 +4734,15 @@ margin-right: 0;
   margin-bottom: 25px;
 }
 
-.table > :not(caption) > * > *{
-  padding: 3px;
+.tabel_salle .table > :not(caption) > * > *{
+  padding: 5px;
 }
 
 tfoot th{
   text-align: center;
   font-size: 15px;
+}
+
+.table > thead{
+  vertical-align: middle;
 }
