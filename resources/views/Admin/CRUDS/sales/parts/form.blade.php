@@ -34,12 +34,12 @@
                 name="sales_date" value="{{ date('Y-m-d') }}" />
         </div>
 
-        <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="col-lg-4 col-md-6 col-sm-12 ">
             <!--begin::Label-->
             <label for="pay_method" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> طريقة الشراء </span>
             </label>
-            <select id='pay_method' name="pay_method" class="form-control input_style">
+            <select  id='pay_method' name="pay_method" class="form-control input_style">
                 <option selected disabled>اختر طريقة الشراء</option>
                 <option value="cash">كاش</option>
                 <option value="debit">اجل</option>
@@ -47,7 +47,7 @@
             </select>
         </div>
 
-        <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="col-lg-4 col-md-6 col-sm-12 multy_select">
             <!--begin::Label-->
             <label for="storage_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> المخزن</span>
@@ -57,7 +57,7 @@
             </select>
         </div>
 
-        <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="col-lg-4 col-md-6 col-sm-12 multy_select">
             <!--begin::Label-->
             <label for="client_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> العميل</span>
@@ -80,7 +80,7 @@
     </div>
 
 
-    <div class="table-responsive">
+    <div class="table-responsive tabel_salle">
         <table id="table-details" class="table table-bordered dt-responsive nowrap table-striped align-middle"
             style="width: 100%;">
             <thead>
@@ -102,7 +102,7 @@
                 <tr id="tr-1">
                     {{--                <th>1</th> --}}
                     <th>
-                        <div class="d-flex flex-column mb-7 fv-row col-sm-2 " style="width: 100%;">
+                        <div class="multy_select d-flex flex-column mb-7 fv-row col-sm-2 " style="width: 100%;">
                             <label for="productive_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                                 <span class="required mr-1"> </span>
                             </label>
