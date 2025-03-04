@@ -4745,3 +4745,7 @@ tfoot th{
   text-align: center;
   font-size: 15px;
 }
+
+.table > thead{
+  vertical-align: middle;
+}
