@@ -1,4 +1,4 @@
-<form id="form" enctype="multipart/form-data" method="POST" action="{{ route('sales.store') }}">
+<form class="page_for_process_buy" id="form" enctype="multipart/form-data" method="POST" action="{{ route('sales.store') }}">
     @csrf
 
 <h1 class="title_card">عملية البيع</h1>
@@ -89,12 +89,12 @@
                     <th class="th_bg"> كود المنتج</th>
                     <th class="th_bg">رقم التشغيلة</th>
                     <th class="th_bg"> الكمية</th>
-                    <th class="th_bg">سعر الجمهور</th>
+                    <th class="th_bg">س ج</th>
                     <th class="th_bg">بونص</th>
                     <th class="th_bg">نسبة الخصم</th>
                     <th class="th_bg">مرجح الشراء</th>
                     <th class="th_bg">مرجح البيع</th>
-                    <th class="th_bg"> القيمة الاجمالية</th>
+                    <th class="th_bg">الاجمالي</th>
                     <th class="th_bg">العمليات</th>
                 </tr>
             </thead>

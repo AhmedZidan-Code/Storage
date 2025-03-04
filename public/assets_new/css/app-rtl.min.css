@@ -4549,9 +4549,6 @@ div.dataTables_wrapper div.dataTables_filter input {
 }
 
 /* my css */
-
-
-
 .main-content {
   margin-right: 200px;
 }
@@ -4744,4 +4741,8 @@ margin-right: 0;
 tfoot th{
   text-align: center;
   font-size: 15px;
+}
+
+.table > thead{
+  vertical-align: middle;
 }
