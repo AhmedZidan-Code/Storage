@@ -47,17 +47,17 @@
             </select>
         </div>
 
-        <div class="col-lg-4 col-md-6 col-sm-12 multy_select">
+        <div class="pagenate_select col-lg-4 col-md-6 col-sm-12 ">
             <!--begin::Label-->
             <label for="storage_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> المخزن</span>
             </label>
-            <select id='storage_id' name="storage_id" class="form-control input_style" style='width: 200px;'>
+            <select id='storage_id' name="storage_id" class=" form-control input_style" style='width: 200px;'>
                 <option selected disabled>- ابحث عن المخزن</option>
             </select>
         </div>
 
-        <div class="col-lg-4 col-md-6 col-sm-12 multy_select">
+        <div class="col-lg-4 col-md-6 col-sm-12 pagenate_select">
             <!--begin::Label-->
             <label for="client_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> العميل</span>
@@ -102,7 +102,7 @@
                 <tr id="tr-1">
                     {{--                <th>1</th> --}}
                     <th>
-                        <div class="multy_select d-flex flex-column mb-7 fv-row col-sm-2 " style="width: 100%;">
+                        <div class="pagenate_select d-flex flex-column mb-7 fv-row col-sm-2 " style="width: 100%;">
                             <label for="productive_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                                 <span class="required mr-1"> </span>
                             </label>
@@ -169,7 +169,7 @@
 
                     </th>
                     <th>
-                        <button class="btn rounded-pill btn-danger waves-effect waves-light delete-sup" data-id="1">
+                        <button class="btn rounded-pill btn-danger waves-effect waves-light delete-sup center_delet_btn" data-id="1">
                             <span class="svg-icon svg-icon-3">
                                 <span class="svg-icon svg-icon-3">
                                     <i class="fa fa-trash"></i>

@@ -4615,33 +4615,49 @@ div.dataTables_wrapper div.dataTables_filter input {
   background-color: transparent !important;
   height: 40px;
   border: 2px solid #ddd;
-  border-radius: 10px;
+  border-radius: 5px;
   padding: 0px 10px 0px 10px;
   font-size: 15px;
 }
 
-.multy_select .select2-container--default .select2-selection--single {
+.pagenate_select .select2-container--default .select2-selection--single {
   background-color: transparent !important;
   opacity: 1;
   width: 100% !important;
   height: 40px !important;
   border: 2px solid #ddd;
-  border-radius: 10px !important;
+  border-radius: 5px !important;
   font-size: 15px;
-  padding: 10px 0px 0px 10px;
+  padding: 4px 0px 0px 0px;
 }
 
-.multy_select .select2-container--default .select2-selection--single .select2-selection__arrow {
+.pagenate_select .select2-container--default .select2-selection--single .select2-selection__arrow {
   height: 26px;
   position: absolute;
-  top: 12px !important;
+  top: 7px !important;
   right: 1px;
   width: 20px;
 }
 
-.multy_select .form-control.select2-hidden-accessible {
+.pagenate_select .form-control.select2-hidden-accessible {
   width: 100% !important;
 }
+
+.page_for_process_buy .select2-container--default .select2-selection--single{
+  background-color: transparent !important;
+  opacity: 1;
+  width: 100% !important;
+  height:38px !important;
+  border: 2px solid #ddd;
+  border-radius: 5px !important;
+  font-size: 15px;
+  padding: 4px 0px 0px 0px;
+}
+
+.page_for_process_buy .select2-container--default .select2-selection--single .select2-selection__arrow {
+  top: 7px;
+}
+
 
 .card {
   background: #f4fff8;
@@ -4685,7 +4701,7 @@ div.dataTables_wrapper div.dataTables_filter input {
   background: #3ec86c;
 }
 
-.multy_select .select2-container{
+.pagenate_select .select2-container{
   width: 100% !important;
 }
 
@@ -4697,9 +4713,9 @@ div.dataTables_wrapper div.dataTables_filter input {
   width: 200px !important;
   background-color: transparent !important;
   opacity: 1;
-  height: 40px !important;
-  border:1px solid #b6b8b7;
-  border-radius: 10px !important;
+  height: 38px !important;
+  border: 2px solid #dddddd;
+  border-radius: 5px !important;
   font-size: 15px;
   padding: 10px 0px 0px 10px;
 }
@@ -4745,4 +4761,11 @@ tfoot th{
 
 .table > thead{
   vertical-align: middle;
+}
+
+.delete-sup{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
 }
