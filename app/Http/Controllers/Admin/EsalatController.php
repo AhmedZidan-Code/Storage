@@ -20,7 +20,7 @@ class EsalatController extends Controller
     //
     public function index(Request $request)
     {
-
+        
         if ($request->ajax()) {
             $rows = Esalat::query()->with(['client']);
             return DataTables::of($rows)
@@ -56,7 +56,8 @@ class EsalatController extends Controller
     public function create()
     {
         $banks = Bank::all();
-        return view('Admin.CRUDS.esalat.parts.create', compact('banks'));
+        $lastEsal = Esalat::orderBy('id', 'desc')->first();
+        return view('Admin.CRUDS.esalat.parts.create', compact('banks','lastEsal'));
     }
 
     public function store(Request $request)
@@ -71,6 +72,8 @@ class EsalatController extends Controller
             'type' => 'required|in:1,2',
             'bank_id' => 'required_if:type,2|exists:banks,id',
             'cheque_number' => 'required_if:type,2|numeric',
+            'rkm_esal' => 'nullable|numeric|unique:esalats,rkm_esal',
+           'dafter_rkm_esal' => 'nullable|numeric|unique:esalats,dafter_rkm_esal',
             'cheque_issue_date' => 'required_if:type,2|date',
             'cheque_due_date' => 'required_if:type,2|date',
         ]);

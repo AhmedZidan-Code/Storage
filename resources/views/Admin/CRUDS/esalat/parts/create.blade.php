@@ -4,8 +4,26 @@
     @csrf
     <div class="row g-4">
 
+     <div class="d-flex flex-column mb-7 fv-row col-sm-4">
+            <!--begin::Label-->
+            <label for="rkm_esal" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                <span class="required mr-1"> رقم الايصال التسلسلي</span>
+            </label>
+            <!--end::Label-->
+            <input id="rkm_esal" required type="text" readonly class="form-control form-control-solid" name="rkm_esal"
+                value="{{ $lastEsal ? $lastEsal->rkm_esal + 1 : 1 }}" />
+        </div>
+  <div class="d-flex flex-column mb-7 fv-row col-sm-4">
+            <!--begin::Label-->
+            <label for="rkm_esal" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                <span class="required mr-1"> رقم الايصال الدفتري  </span>
+            </label>
+            <!--end::Label-->
+            <input id="dafter_rkm_esal" required type="text"  class="form-control form-control-solid" name="dafter_rkm_esal"
+                value="" />
+        </div>
 
-        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
             <!--begin::Label-->
             <label for="date_esal" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1">تاريخ الايصال</span>
@@ -14,25 +32,7 @@
             <input id="date_esal" required type="date" class="form-control form-control-solid" name="date_esal"
                 value="{{ date('Y-m-d') }}" />
         </div>
-        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
-            <label for="channel_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                <span class="required mr-1"> العميل</span>
-            </label>
-            <select name="client_id" id='channel_id' style='width: 100%;'>
-                <option value='0'>- Search Channel -</option>
-            </select>
-        </div>
-
-        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
-            <!--begin::Label-->
-            <label for="paid" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
-                <span class="required mr-1"> المبلغ</span>
-            </label>
-            <!--end::Label-->
-            <input id="paid" min="1" required type="number" class="form-control form-control-solid"
-                name="paid" value="" />
-        </div>
-        <div class="d-flex flex-column mb-7 fv-row col-sm-3">
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
             <label for="type" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
                 <span class="required mr-1"> النوع</span>
             </label>
@@ -42,6 +42,25 @@
                 <option value="2">شيك</option>
             </select>
         </div>
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
+            <label for="channel_id" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                <span class="required mr-1"> العميل</span>
+            </label>
+            <select name="client_id" id='channel_id' style='width: 100%;'>
+                <option value='0'>- Search Channel -</option>
+            </select>
+        </div>
+
+        <div class="d-flex flex-column mb-7 fv-row col-sm-4">
+            <!--begin::Label-->
+            <label for="paid" class="d-flex align-items-center fs-6 fw-bold form-label mb-2">
+                <span class="required mr-1"> المبلغ</span>
+            </label>
+            <!--end::Label-->
+            <input id="paid" min="1" required type="number" class="form-control form-control-solid"
+                name="paid" value="" />
+        </div>
+        
         <div class="d-flex flex-column mb-7 fv-row col-sm-4 " id="payment_category">
 
         </div>

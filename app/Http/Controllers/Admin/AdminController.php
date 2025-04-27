@@ -11,6 +11,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
 use Yajra\DataTables\DataTables;
+use Illuminate\Validation\Rule;
 
 class AdminController extends Controller
 {
@@ -98,11 +99,19 @@ class AdminController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'employee_id' => 'required|exists:employees,id',
+           'employee_id' => [
+        'required',
+        'exists:employees,id',
+        function ($attribute, $value, $fail) {
+            if (\DB::table('admins')->where('employee_id', $value)->exists()) {
+                $fail("تمت اضافه الموظف كمستخدم من قبل");
+            }
+        },
+    ],
             'email' => 'required|email|unique:admins,email',
             'password' => 'required',
 //             'business_name'=>'required',
-            'image' => 'required|mimes:jpeg,jpg,png,gif,svg,webp,avif',
+            'image' => 'nullable|mimes:jpeg,jpg,png,gif,svg,webp,avif',
             'is_active' => 'required',
             'role_id' => 'required|exists:roles,id',
 
@@ -156,7 +165,7 @@ class AdminController extends Controller
     public function update(Request $request, Admin $admin)
     {
         $data = $request->validate([
-            'employee_id' => 'required|exists:employees,id',
+          //  'employee_id' => 'required|exists:employees,id',
             'email' => 'required|email|unique:admins,email,' . $admin->id,
             'password' => 'nullable',
 //            'business_name'=>'required',
