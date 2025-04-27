@@ -15,3 +15,4 @@ yarn-error.log
 /.vscode
 /vendor
 .env
+/storage/debugbar
